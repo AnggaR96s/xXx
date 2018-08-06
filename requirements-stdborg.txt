@@ -1,3 +1,5 @@
 regex
 urbandict
+requests
+Pillow
 

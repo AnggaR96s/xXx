@@ -17,6 +17,7 @@ async def _(event):
     p = await borg.get_participants(event.chat_id, aggressive=True)
     await event.edit("Searching through {} users for deleted accounts ...".format(len(p)))
     c = 0
+    d = 0
     e = []
     for i in p:
         #
@@ -27,6 +28,7 @@ async def _(event):
             view_messages=True
         )
         if i.deleted:
+            d = d + 1
             try:
                 await borg(EditBannedRequest(event.chat_id, i, rights))
                 c = c + 1
@@ -35,6 +37,6 @@ async def _(event):
                 break
             except:
                 e.append("ERROR")
-    await event.edit("Kicked {} / {} users".format(c, len(p)))
+    await event.edit("Found {} Deleted Accounts. Kicked {} / {} users".format(d, c, len(p)))
 
 

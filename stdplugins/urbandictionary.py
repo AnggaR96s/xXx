@@ -17,6 +17,6 @@ async def _(event):
             await event.edit('Text: **'+str+'**\n\nMeaning: **'+mean[0]['def']+'**\n\n'+'Example: \n__'+mean[0]['example']+'__')
         else:
             await event.edit("No result found for **"+str+"**")
-    except e:
+    except:
         await event.edit("No result found for **"+str+"**")
 
