@@ -11,7 +11,7 @@ async def _(event):
         return
     i = 1
     msgs = []
-    async for message in borg.iter_messages(event.chat_id, min_id=event.reply_to_msg_id):
+    async for message in borg.iter_messages(event.chat_id, min_id=event.reply_to_msg_id, from_user="me"):
         i = i + 1
         msgs.append(message)
     if len(msgs) <= 100:

@@ -42,3 +42,13 @@ async def _(event):
 async def _(event):
     if event.fwd_from:
         return
+    await event.edit("Processing ...")
+    input_str = event.pattern_match.group(1)
+    if os.path.exists(input_str):
+        start = datetime.now()
+        await borg.send_file(event.chat_id, input_str, force_document=True, use_cache=False)
+        end = datetime.now()
+        ms = (end - start).seconds
+        await event.edit("Uploaded in {} seconds.".format(ms))
+    else:
+        await event.edit("404: File Not Found")
