@@ -1,0 +1,18 @@
+{
+  "name": "UniBorg",
+  "description": "Modular UserBot powered by @TelethonChat!",
+  "keywords": [
+    "telegram",
+    "userbot",
+    "plugin",
+    "modular"
+  ],
+  "repository": "https://github.com/uniborg/uniborg",
+  "env": {
+    "ENV": {
+      "description": "Setting this to ANYTHING will enable env variables. But, you need to understand the code to know what to set here!",
+      "value": "ANYTHING"
+    }
+  },
+  "addons": []
+}
