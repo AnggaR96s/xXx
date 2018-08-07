@@ -23,5 +23,6 @@ async def _(event):
         try:
             await event.edit(x_reponse)
         except MessageEmptyError as exc:
-            await event.edit("process did not return anything")
+            await event.edit("✅ Exited correctly.")
+
 
