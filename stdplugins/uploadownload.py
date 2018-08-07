@@ -10,6 +10,13 @@ from datetime import datetime
 current_date_time = "./DOWNLOADS/"
 
 
+def progress(current, total):
+    percent = str((current / total) * 100)
+    await event.edit(
+        "Upload Progress: {}".format(percent)
+    )
+
+
 @borg.on(events.NewMessage(pattern=r".download (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
@@ -19,16 +26,19 @@ async def _(event):
         os.makedirs(current_date_time)
     if event.reply_to_msg_id:
         start = datetime.now()
-        downloaded_file_name = await borg.download_media(await event.get_reply_message(), current_date_time)
+        downloaded_file_name = await borg.download_media(
+            await event.get_reply_message(),
+            current_date_time
+        )
         end = datetime.now()
         ms = (end - start).seconds
         await event.edit("Downloaded to {} in {} seconds.".format(downloaded_file_name, ms))
     elif input_str:
         url, file_name = input_str.split("|")
-        r = requests.get(url, stream=True)
         await event.edit("Processing ...")
         required_file_name = current_date_time + "" + file_name
         start = datetime.now()
+        r = requests.get(url, stream=True)
         with open(required_file_name, "wb") as fd:
             for chunk in r.iter_content(chunk_size=128):
                 fd.write(chunk)
@@ -46,7 +56,14 @@ async def _(event):
     input_str = event.pattern_match.group(1)
     if os.path.exists(input_str):
         start = datetime.now()
-        await borg.send_file(event.chat_id, input_str, force_document=True, use_cache=False)
+        await borg.send_file(
+            event.chat_id,
+            input_str,
+            force_document=True,
+            use_cache=False,
+            reply_to=event.message.reply_to_msg_id,
+            progress_callback=progress
+        )
         end = datetime.now()
         ms = (end - start).seconds
         await event.edit("Uploaded in {} seconds.".format(ms))

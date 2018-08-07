@@ -10,9 +10,7 @@ async def _(event):
     if event.fwd_from:
         return
     if event.reply_to_msg_id:
-        message_id = event.reply_to_msg_id
-        previous_message = await borg.get_messages(event.chat_id, limit=1, max_id=message_id+1, min_id=message_id-1)
-        await event.edit(previous_message[0].stringify())
+        previous_message = await event.get_reply_message()
+        await event.edit(previous_message.stringify())
     else:
         await event.edit(event.stringify())
-

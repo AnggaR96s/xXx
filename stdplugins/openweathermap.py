@@ -17,6 +17,6 @@ async def _(event):
     input_str = event.pattern_match.group(1)
     response_api = requests.get(sample_url.format(input_str, APP_ID)).json()
     if response_api["cod"] == 200:
-        await event.edit(json.dumps(response_api["main"]))
+        await event.edit(input_str + "\n `" + json.dumps(response_api["main"]) + "`\n")
     else:
         await event.edit(response_api["message"])

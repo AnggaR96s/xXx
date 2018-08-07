@@ -5,6 +5,7 @@
 from telethon import events
 import urbandict
 
+
 @borg.on(events.NewMessage(pattern="^.ud (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
@@ -14,9 +15,17 @@ async def _(event):
     try:
         mean = urbandict.define(str)
         if len(mean) > 0:
-            await event.edit('Text: **'+str+'**\n\nMeaning: **'+mean[0]['def']+'**\n\n'+'Example: \n__'+mean[0]['example']+'__')
+            await event.edit(
+                'Text: **' +
+                str +
+                '**\n\nMeaning: **' +
+                mean[0]['def'] +
+                '**\n\n' +
+                'Example: \n__' +
+                mean[0]['example'] +
+                '__'
+            )
         else:
-            await event.edit("No result found for **"+str+"**")
+            await event.edit("No result found for **" + str + "**")
     except:
-        await event.edit("No result found for **"+str+"**")
-
+        await event.edit("No result found for **" + str + "**")

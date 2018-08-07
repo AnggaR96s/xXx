@@ -10,4 +10,4 @@ async def _(event):
     if event.fwd_from:
         return
     chat = await event.get_input_chat()
-    await event.edit("-100" + str(chat.channel_id))
+    await event.edit(event.chat_id)
