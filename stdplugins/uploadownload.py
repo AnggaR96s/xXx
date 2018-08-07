@@ -10,13 +10,6 @@ from datetime import datetime
 current_date_time = "./DOWNLOADS/"
 
 
-def progress(current, total):
-    percent = str((current / total) * 100)
-    await event.edit(
-        "Upload Progress: {}".format(percent)
-    )
-
-
 @borg.on(events.NewMessage(pattern=r".download (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
@@ -50,6 +43,11 @@ async def _(event):
 
 @borg.on(events.NewMessage(pattern=r".upload (.*)", outgoing=True))
 async def _(event):
+    async def progress(current, total):
+        percent = str((current / total) * 100)
+        await event.edit(
+            "Upload Progress: {}".format(percent)
+        )
     if event.fwd_from:
         return
     await event.edit("Processing ...")
@@ -69,3 +67,4 @@ async def _(event):
         await event.edit("Uploaded in {} seconds.".format(ms))
     else:
         await event.edit("404: File Not Found")
+

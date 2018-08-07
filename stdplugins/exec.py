@@ -4,6 +4,8 @@
 
 from telethon import events
 import subprocess
+from telethon.errors import MessageEmptyError
+
 
 @borg.on(events.NewMessage(pattern=r"\.exec (.*)", outgoing=True))
 async def _(event):
@@ -15,7 +17,11 @@ async def _(event):
     try:
         t_response = subprocess.check_output(input_command, stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError as exc:
-        await event.edit("Status : FAIL", exc.returncode, exc.output)
+        await event.edit("process returned {}\n output: {}".format(exc.returncode, exc.output))
     else:
         x_reponse = t_response.decode("UTF-8")
-        await event.edit(x_reponse)
+        try:
+            await event.edit(x_reponse)
+        except MessageEmptyError as exc:
+            await event.edit("process did not return anything")
+
