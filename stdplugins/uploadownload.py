@@ -6,6 +6,9 @@ from telethon import events
 import os
 import requests
 from datetime import datetime
+from hachoir.metadata import extractMetadata
+from hachoir.parser import createParser
+from telethon.tl.types import DocumentAttributeVideo
 
 current_date_time = "./DOWNLOADS/"
 
@@ -41,13 +44,9 @@ async def _(event):
     else:
         await event.edit("Reply to a message to download to my local server.")
 
+
 @borg.on(events.NewMessage(pattern=r".upload (.*)", outgoing=True))
 async def _(event):
-    async def progress(current, total):
-        percent = str((current / total) * 100)
-        await event.edit(
-            "Upload Progress: {}".format(percent)
-        )
     if event.fwd_from:
         return
     await event.edit("Processing ...")
@@ -58,13 +57,47 @@ async def _(event):
             event.chat_id,
             input_str,
             force_document=True,
-            use_cache=False,
-            reply_to=event.message.reply_to_msg_id,
-            progress_callback=progress
+            allow_cache=False,
+            reply_to=event.message.reply_to_msg_id
         )
         end = datetime.now()
         ms = (end - start).seconds
         await event.edit("Uploaded in {} seconds.".format(ms))
     else:
         await event.edit("404: File Not Found")
+
+
+@borg.on(events.NewMessage(pattern=r".uploadasstream (.*)", outgoing=True))
+async def _(event):
+    if event.fwd_from:
+        return
+    await event.edit("Processing ...")
+    input_str = event.pattern_match.group(1)
+    if os.path.exists(input_str):
+        start = datetime.now()
+        metadata = extractMetadata(createParser(input_str))
+        await borg.send_file(
+            event.chat_id,
+            input_str,
+            force_document=False,
+            allow_cache=False,
+            reply_to=event.message.reply_to_msg_id,
+            supports_streaming=True,
+            attributes=[
+                DocumentAttributeVideo(
+                    duration=metadata.get("duration").seconds,
+                    w=metadata.get("width"),
+                    h=metadata.get("height"),
+                    round_message=False,
+                    supports_streaming=True
+                )
+            ]
+        )
+        end = datetime.now()
+        ms = (end - start).seconds
+        await event.edit("Uploaded in {} seconds.".format(ms))
+    else:
+        await event.edit("404: File Not Found")
+
+
 

@@ -3,6 +3,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 from telethon import events
+from telethon.errors import MessageTooLongError
 
 
 @borg.on(events.NewMessage(pattern=r"\.json", outgoing=True))
@@ -11,6 +12,13 @@ async def _(event):
         return
     if event.reply_to_msg_id:
         previous_message = await event.get_reply_message()
-        await event.edit(previous_message.stringify())
+        try:
+            await event.edit(previous_message.stringify())
+        except MessageTooLongError as e:
+            await event.delete()
     else:
-        await event.edit(event.stringify())
+        try:
+            await event.edit(event.stringify())
+        except MessageTooLongError as e:
+            await event.delete()
+

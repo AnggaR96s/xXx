@@ -22,6 +22,11 @@
       "description": "Get your own ACCESS_KEY from http://api.screenshotlayer.com/api/capture",
       "value": "",
       "required": false
+    },
+    "PRIVATE_GROUP_BOT_API_ID": {
+      "description": "Send .get_id in any group to fill this value. AFK mode (and other sensitive plugins) will not work without this!",
+      "value": "",
+      "required": false
     }
   },
   "addons": []

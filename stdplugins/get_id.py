@@ -10,4 +10,4 @@ async def _(event):
     if event.fwd_from:
         return
     chat = await event.get_input_chat()
-    await event.edit(event.chat_id)
+    await event.edit("The current chat's ID is `{}`!".format(str(event.chat_id)))
