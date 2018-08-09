@@ -82,7 +82,6 @@ async def _(event):
             force_document=False,
             allow_cache=False,
             reply_to=event.message.reply_to_msg_id,
-            supports_streaming=True,
             attributes=[
                 DocumentAttributeVideo(
                     duration=metadata.get("duration").seconds,

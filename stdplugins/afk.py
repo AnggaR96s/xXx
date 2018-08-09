@@ -15,13 +15,17 @@ global USERS
 USERS={}
 global COUNT_MSG
 COUNT_MSG=0
-
-
-PRIVATE_GROUP_BOT_API_ID = int(os.environ.get("PRIVATE_GROUP_BOT_API_ID"))
+global PRIVATE_GROUP_BOT_API_ID
+PRIVATE_GROUP_BOT_API_ID = os.environ.get("PRIVATE_GROUP_BOT_API_ID")
 
 
 @borg.on(events.NewMessage(incoming=True))
 async def _(event):
+    global PRIVATE_GROUP_BOT_API_ID
+    if not PRIVATE_GROUP_BOT_API_ID:
+        await event.edit("This functionality will not work")
+        return false
+    PRIVATE_GROUP_BOT_API_ID = int(PRIVATE_GROUP_BOT_API_ID)
     global COUNT_MSG
     global USERS
     global ISAFK
@@ -55,6 +59,11 @@ async def _(event):
 
 @borg.on(events.NewMessage(outgoing=True, pattern=r'.iamafk (.*)'))
 async def _(event):
+    global PRIVATE_GROUP_BOT_API_ID
+    if not PRIVATE_GROUP_BOT_API_ID:
+        await event.edit("This functionality will not work")
+        return false
+    PRIVATE_GROUP_BOT_API_ID = int(PRIVATE_GROUP_BOT_API_ID)
     if event.fwd_from:
         return
     string = event.pattern_match.group(1)
@@ -68,6 +77,11 @@ async def _(event):
 
 @borg.on(events.NewMessage(outgoing=True, pattern='.notafk'))
 async def _(event):
+    global PRIVATE_GROUP_BOT_API_ID
+    if not PRIVATE_GROUP_BOT_API_ID:
+        await event.edit("This functionality will not work")
+        return false
+    PRIVATE_GROUP_BOT_API_ID = int(PRIVATE_GROUP_BOT_API_ID)
     global ISAFK
     global COUNT_MSG
     global USERS
