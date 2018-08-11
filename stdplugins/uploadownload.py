@@ -10,7 +10,7 @@ from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
 from telethon.tl.types import DocumentAttributeVideo
 
-current_date_time = "./DOWNLOADS/"
+current_date_time = "./../DOWNLOADS/"
 
 
 @borg.on(events.NewMessage(pattern=r".download (.*)", outgoing=True))

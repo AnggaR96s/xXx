@@ -24,7 +24,7 @@ async def _(event):
     global PRIVATE_GROUP_BOT_API_ID
     if not PRIVATE_GROUP_BOT_API_ID:
         await event.edit("This functionality will not work")
-        return false
+        return
     PRIVATE_GROUP_BOT_API_ID = int(PRIVATE_GROUP_BOT_API_ID)
     global COUNT_MSG
     global USERS
@@ -62,7 +62,7 @@ async def _(event):
     global PRIVATE_GROUP_BOT_API_ID
     if not PRIVATE_GROUP_BOT_API_ID:
         await event.edit("This functionality will not work")
-        return false
+        return
     PRIVATE_GROUP_BOT_API_ID = int(PRIVATE_GROUP_BOT_API_ID)
     if event.fwd_from:
         return
@@ -80,7 +80,7 @@ async def _(event):
     global PRIVATE_GROUP_BOT_API_ID
     if not PRIVATE_GROUP_BOT_API_ID:
         await event.edit("This functionality will not work")
-        return false
+        return
     PRIVATE_GROUP_BOT_API_ID = int(PRIVATE_GROUP_BOT_API_ID)
     global ISAFK
     global COUNT_MSG
