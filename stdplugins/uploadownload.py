@@ -58,7 +58,7 @@ async def _(event):
             input_str,
             force_document=True,
             allow_cache=False,
-            reply_to=event.message.reply_to_msg_id
+            reply_to=event.message.id
         )
         end = datetime.now()
         ms = (end - start).seconds
@@ -79,9 +79,10 @@ async def _(event):
         await borg.send_file(
             event.chat_id,
             input_str,
+            caption=input_str,
             force_document=False,
             allow_cache=False,
-            reply_to=event.message.reply_to_msg_id,
+            reply_to=event.message.id,
             attributes=[
                 DocumentAttributeVideo(
                     duration=metadata.get("duration").seconds,
