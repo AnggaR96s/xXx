@@ -11,21 +11,26 @@ from bs4 import BeautifulSoup
 import urllib.parse
 
 
-@borg.on(events.NewMessage(pattern=r".torrentz search (.*)", outgoing=True))
+@borg.on(events.NewMessage(pattern=r".torrentz (.*) (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
     start = datetime.now()
     await event.edit("Processing ...")
-    input_str = event.pattern_match.group(1)
-    search_results = Scrapper.SearchTorrentz(input_str)
+    input_type = event.pattern_match.group(1)
+    input_str = event.pattern_match.group(2)
+    search_results = []
+    if input_type == "torrentz2.eu":
+        search_results = Scrapper.SearchTorrentz(input_str)
+    elif input_type == "idop.se":
+        search_results = Scrapper.SearchIdopeSe(input_str)
     output_str = ""
     i = 0
     for result in search_results:
         if i > 5:
             break
-        url = "https://torrentz2.eu/" + result["hash"] + ""
-        message_text = "[" + result["title"] + "](" + url + ") \r\n"
+        url = "`" + result["hash"] + "`"
+        message_text = " 👉🏻 " + result["title"] + ": " + url + " \r\n"
         message_text += " FILE SIZE: " + result["size"] + "\r\n"
         # message_text += " Uploaded " + result["date"] + "\r\n"
         message_text += " SEEDS: " + result["seeds"] + " PEERS: " + result["peers"] + " \r\n"
@@ -34,7 +39,7 @@ async def _(event):
         i = i + 1
     end = datetime.now()
     ms = (end - start).seconds
-    await event.edit("Scrapped Torrentz2.EU for {} in {} seconds. Obtained Results: \n {}".format(input_str, ms, output_str))
+    await event.edit("Scrapped {} for {} in {} seconds. Obtained Results: \n {}".format(input_type, input_str, ms, output_str))
 
 
 @borg.on(events.NewMessage(pattern=r".torrentz hash (.*)", outgoing=True))
@@ -52,6 +57,29 @@ async def _(event):
 
 
 class Scrapper:
+  def SearchIdopeSe(search_query):
+    r = []
+    url = "https://idope.top/search/{}/".format(search_query)
+    raw_html = requests.get(url).content
+    soup = BeautifulSoup(raw_html, "html.parser")
+    results = soup.find_all("div", {"class": "resultdiv"})
+    for item in results:
+      """ The content scrapped on 12.08.2018 22:00:45
+      """
+      title = item.find_all("div", {"class":"resultdivtopname"})[0].get_text().strip()
+      hash = item.find_all("div", {"class":"resultdivbottonseed"})[0].get_text().strip()
+      age = item.find_all("div", {"class":"resultdivbottontime"})[0].get_text().strip()
+      size = item.find_all("div", {"class":"resultdivbottonlength"})[0].get_text().strip()
+      r.append({
+        "title": title,
+        "hash": hash,
+        "age": age,
+        "size": size,
+        "seeds": "NA",
+        "peers": "NA"
+      })
+    return r
+
   def SearchTorrentz(search_query):
     r = []
     url = "https://torrentz2.eu/searchA?safe=1&f=" + search_query + ""
@@ -62,21 +90,7 @@ class Scrapper:
     results = soup.find_all("div", {"class": "results"})[0]
     for item in results.find_all("dl"):
       # print(item)
-      """
-     The content scrapped on 23.06.2018 15:40:35
-      <dt>
-        <a href="/06f8a85906520e018db4a3cbec25219e00d7a704">
-          www.TamilMV.cam - Shikkari Shambhu (2018) Malayalam DVDRip - 720p - x264 - AC3 5.1 - 1.2GB - ESub.mkv
-        </a>
-         » video movie hd
-      </dt>
-      <dd>
-        <span> </span>
-        <span title="1529692527">16 hours</span>
-        <span>1266 MB</span>
-        <span>6</span>
-        <span>4</span>
-      </dd>
+      """The content scrapped on 23.06.2018 15:40:35
       """
       dt = item.find_all("dt")[0]
       dd = item.find_all("dd")[0]
