@@ -4,4 +4,6 @@ requests
 Pillow
 hachoir
 cryptg
+cfscrape
+beautifulsoup4
 
