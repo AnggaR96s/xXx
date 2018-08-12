@@ -37,27 +37,18 @@ async def _(event):
     await event.edit("Scrapped Torrentz2.EU for {} in {} seconds. Obtained Results: \n {}".format(input_str, ms, output_str))
 
 
-@borg.on(events.NewMessage(pattern=r".upload (.*)", outgoing=True))
+@borg.on(events.NewMessage(pattern=r".torrentz hash (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
+    start = datetime.now()
     await event.edit("Processing ...")
     input_str = event.pattern_match.group(1)
-    if os.path.exists(input_str):
-        start = datetime.now()
-        await borg.send_file(
-            event.chat_id,
-            input_str,
-            force_document=True,
-            allow_cache=False,
-            reply_to=event.message.reply_to_msg_id
-        )
-        end = datetime.now()
-        ms = (end - start).seconds
-        await event.edit("Uploaded in {} seconds.".format(ms))
-    else:
-        await event.edit("404: File Not Found")
-
+    magnetic_link = Scrapper.GetMagneticLink(input_str)
+    end = datetime.now()
+    ms = (end - start).seconds
+    output_str = "Obtained Magnetic Link `{}` for the Info Hash: {} in {} seconds.".format(magnetic_link, input_str, ms)
+    await event.edit(output_str)
 
 
 class Scrapper:
