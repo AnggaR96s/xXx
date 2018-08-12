@@ -20,8 +20,9 @@ async def _(event):
         await event.edit("process returned {}\n output: {}".format(exc.returncode, exc.output))
     else:
         x_reponse = t_response.decode("UTF-8")
+        final_output = "**EXEC**: {} \n\n **OUTPUT**: \n{} \n".format(input_str, x_reponse)
         try:
-            await event.edit(x_reponse)
+            await event.edit(final_output)
         except MessageEmptyError as exc:
             await event.edit("✅ Exited correctly.")
 

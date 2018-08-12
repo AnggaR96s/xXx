@@ -26,12 +26,17 @@ async def _(event):
         end = datetime.now()
         ms = (end - start).seconds
         await event.edit("Downloaded to {} in {} seconds.".format(downloaded_file_name, ms))
-        start = datetime.now()
-        media_urls = upload_file(downloaded_file_name)
-        end = datetime.now()
-        ms = (end - start).seconds
-        os.remove(downloaded_file_name)
-        await event.edit("Uploaded to {} in {} seconds.".format(media_urls[0], ms))
+        try:
+            start = datetime.now()
+            media_urls = upload_file(downloaded_file_name)
+        except TelegraphException as e:
+            await event.edit("ERROR: " + str(e))
+            os.remove(downloaded_file_name)
+        else:
+            end = datetime.now()
+            ms = (end - start).seconds
+            os.remove(downloaded_file_name)
+            await event.edit("Uploaded to {} in {} seconds.".format(media_urls[0], ms))
     else:
         await event.edit("Reply to a message to get a permanent telegra.ph link. (Inspired by @ControllerBot)")
 
@@ -57,8 +62,7 @@ def upload_file(f):
         error = response.get('error')
 
     if error:
-        # raise TelegraphException(error)
-        pass
+        raise TelegraphException(error)
 
     return ["https://telegra.ph" + i['src'] for i in response]
 
@@ -115,3 +119,6 @@ class FilesOpener(object):
 
         self.opened_files = []
 
+
+class TelegraphException(Exception):
+    pass
