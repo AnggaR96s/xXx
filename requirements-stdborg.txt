@@ -6,4 +6,5 @@ hachoir
 cryptg
 cfscrape
 beautifulsoup4
+wikipedia
 

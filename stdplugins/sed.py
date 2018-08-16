@@ -85,7 +85,7 @@ async def on_edit(event):
             break
 
 @borg.on(events.NewMessage(
-    pattern=re.compile(r"^s/((?:\\/|[^/])+)/((?:\\/|[^/])*)(/.*)?")))
+    pattern=re.compile(r"^s/((?:\\/|[^/])+)/((?:\\/|[^/])*)(/.*)?"), outgoing=True))
 async def on_regex(event):
     if event.fwd_from:
         return
