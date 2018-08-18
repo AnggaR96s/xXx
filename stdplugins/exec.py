@@ -17,10 +17,10 @@ async def _(event):
     try:
         t_response = subprocess.check_output(input_command, stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError as exc:
-        await event.edit("process returned {}\n output: {}".format(exc.returncode, exc.output))
+        await event.edit("**EXEC**: `{}` \nprocess returned {}\n output: {}".format(input_str, exc.returncode, exc.output))
     else:
         x_reponse = t_response.decode("UTF-8")
-        final_output = "**EXEC**: {} \n\n **OUTPUT**: \n{} \n".format(input_str, x_reponse)
+        final_output = "**EXEC**: `{}` \n\n **OUTPUT**: \n{} \n".format(input_str, x_reponse)
         try:
             await event.edit(final_output)
         except MessageEmptyError as exc:

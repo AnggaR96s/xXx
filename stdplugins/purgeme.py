@@ -5,7 +5,7 @@
 from telethon import events
 
 
-@borg.on(events.NewMessage(pattern=".delmsg", outgoing=True))
+@borg.on(events.NewMessage(pattern=".purgeme", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return

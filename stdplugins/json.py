@@ -15,10 +15,11 @@ async def _(event):
         try:
             await event.edit(previous_message.stringify())
         except MessageTooLongError as e:
-            await event.delete()
+            await event.edit(str(e))
     else:
         try:
             await event.edit(event.stringify())
         except MessageTooLongError as e:
-            await event.delete()
+            await event.edit(str(e))
+
 

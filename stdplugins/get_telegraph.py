@@ -34,9 +34,9 @@ async def _(event):
             os.remove(downloaded_file_name)
         else:
             end = datetime.now()
-            ms = (end - start).seconds
+            ms_two = (end - start).seconds
             os.remove(downloaded_file_name)
-            await event.edit("Uploaded to {} in {} seconds.".format(media_urls[0], ms))
+            await event.edit("Uploaded to {} in {} seconds.".format(media_urls[0], (ms + ms_two)))
     else:
         await event.edit("Reply to a message to get a permanent telegra.ph link. (Inspired by @ControllerBot)")
 

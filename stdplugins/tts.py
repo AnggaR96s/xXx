@@ -6,6 +6,8 @@ from telethon import events
 import requests
 import os
 from datetime import datetime
+from gtts import gTTS
+
 
 current_date_time = "./../DOWNLOADS/"
 
@@ -16,24 +18,25 @@ async def _(event):
         return
     input_str = event.pattern_match.group(1)
     start = datetime.now()
-    tts_url = "https://tts.baidu.com/text2audio?lan={}&ie=UTF-8&text={}"
-    lan, text = input_str.split("|")
-    input_url = tts_url.format(lan.strip(), text.strip())
-    response = requests.get(input_url, stream=True)
+    if event.reply_to_msg_id:
+        previous_message = await event.get_reply_message()
+        text = previous_message.message
+        lan = input_str
+    else:
+        lan, text = input_str.split("|")
+    tts = gTTS(text, lan)
     required_file_name = current_date_time + "voice.ogg"
-    with open(required_file_name, "wb") as fd:
-        for chunk in response.iter_content(chunk_size=128):
-            fd.write(chunk)
+    tts.save(required_file_name)
+    end = datetime.now()
+    ms = (end - start).seconds
     await borg.send_file(
         event.chat_id,
         required_file_name,
-        reply_to=event.message.id,
+        caption="Processed {} ({}) in {} seconds!".format(text, lan, ms),
+        reply_to=event.message.reply_to_msg_id,
         allow_cache=False,
         voice_note=True
     )
     os.remove(required_file_name)
-    end = datetime.now()
-    ms = (end - start).seconds
-    output_str = "Processed {} ({}) in {} seconds!"
-    await event.edit(output_str.format(text, lan, ms))
+    await event.delete()
 

@@ -3,9 +3,15 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 from telethon import events
+import time
 
-@borg.on(events.NewMessage(pattern=r".helpme", outgoing=True))
+
+@borg.on(events.NewMessage(pattern=r".sd (.*) (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
-    await event.edit('UserBot Forked from https://github.com/uniborg/uniborg')
+    counter = event.pattern_match.group(1)
+    text = event.pattern_match.group(2)
+    await event.edit(text)
+    time.sleep(int(counter))
+    await event.delete()

@@ -11,7 +11,6 @@ from telethon.errors import ChatAdminRequiredError
 async def _(event):
     if event.fwd_from:
         return
-    await event.delete()
     mentions = "**Admins in this Chat**: \n"
     input_str = event.pattern_match.group(1)
     to_write_chat = await event.get_input_chat()
@@ -28,3 +27,4 @@ async def _(event):
         mentions += " " + str(e) + "\n"
     await borg.send_message(
         to_write_chat, mentions, reply_to=event.message.reply_to_msg_id)
+    await event.delete()

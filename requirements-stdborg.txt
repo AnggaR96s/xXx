@@ -7,4 +7,5 @@ cryptg
 cfscrape
 beautifulsoup4
 wikipedia
+gtts
 

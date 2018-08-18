@@ -38,5 +38,3 @@ async def _(event):
             except:
                 e.append("ERROR")
     await event.edit("Found {} Deleted Accounts. Kicked {} / {} users".format(d, c, len(p)))
-
-
