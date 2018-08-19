@@ -11,7 +11,7 @@ from telethon.tl.types import MessageEntityMentionName
 current_date_time = "./../DOWNLOADS/"
 
 
-@borg.on(events.NewMessage(pattern=".get_info (.*)", outgoing=True))
+@borg.on(events.NewMessage(pattern=".info (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
@@ -33,13 +33,23 @@ async def _(event):
                 # the disgusting CRAP way, of doing the thing
                 user_object = await borg.get_entity(input_str)
                 user_id = user_object.id
-                replied_user = await borg(GetFullUserRequest(user_id))
+                try:
+                    replied_user = await borg(GetFullUserRequest(user_id))
+                except TypeError as e:
+                    await event.edit(str(e))
+                    return None
+                except ValueError as e:
+                    await event.edit(str(e))
+                    return None
     user_id = replied_user.user.id
     first_name = replied_user.user.first_name
+    # some weird people (like me) have more than 4096 characters in their names
+    first_name = first_name.replace("\u2060", "")
+    # inspired by https://telegram.dog/afsaI181
     user_bio = replied_user.about
     photo = await borg.download_profile_photo(
         user_id,
-        current_date_time,
+        current_date_time + str(user_id) + ".jpg",
         download_big=True
     )
     caption = "ID: {} \nName: [{}](tg://user?id={}) \nBio: {}".format(user_id, first_name, user_id, user_bio)
