@@ -1,10 +1,9 @@
-# This Source Code Form is subject to the terms of the Mozilla Public
-# License, v. 2.0. If a copy of the MPL was not distributed with this
-# file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
 from telethon import events
 import time
 
+"""DO NOT TRY THIS WITH YOUR ACCOUNT
+
+telethon.errors.rpcerrorlist.FloodWaitError: A wait of 280 seconds is required"""
 
 @borg.on(events.NewMessage(pattern=r"\.bigspam (.*)", outgoing=True))
 async def _(event):
@@ -23,5 +22,6 @@ async def _(event):
             await event.respond(message_text)
         await event.delete()
     else:
-        await event.edit("send me a message in the format `.bigspam count | spam message` and admins won't see it in recent actions \n Courtesy: @shiiinabot")
+        await event.edit("send me a message in the format `.bigspam count | spam message` and admins won't see it in recent actions" +
+                         " \n Courtesy: @shiiinabot")
 
