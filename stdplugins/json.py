@@ -12,6 +12,7 @@ async def _(event):
         return
     if event.reply_to_msg_id:
         previous_message = await event.get_reply_message()
+        print(previous_message.stringify())
         try:
             await event.edit(previous_message.stringify())
         except MessageTooLongError as e:

@@ -3,7 +3,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 from telethon import events
-import subprocess
+import subprocess, os
 from datetime import datetime
 import requests
 
@@ -33,5 +33,5 @@ async def _(event):
         output_str = x_reponse
     end = datetime.now()
     ms = (end - start).microseconds / 1000
+    os.remove(required_file_name)
     await event.edit("**SpeedTest** completed in {} seconds \n\n {}".format(ms, output_str))
-

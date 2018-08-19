@@ -15,13 +15,16 @@ async def _(event):
     cmd = event.pattern_match.group(1)
     evaluation = None
     # https://t.me/telethonofftopic/43873
-    if inspect.isawaitable(eval(cmd)):
-        evaluation = await eval(cmd)
+    try:
+        if inspect.isawaitable(eval(cmd)):
+            evaluation = await eval(cmd)
+        # https://t.me/telethonofftopic/43873
+        else:
+            evaluation = eval(cmd)
+    except ZeroDivisionError as e:
+        evaluation = "ERROR: " + str(e)
     # https://t.me/telethonofftopic/43873
-    else:
-        evaluation = eval(cmd)
-    # https://t.me/telethonofftopic/43873
-    final_output = "**EXEC**: `{}` \n\n **OUTPUT**: \n`{}` \n".format(cmd, evaluation)
+    final_output = "**EVAL**: `{}` \n\n **OUTPUT**: \n`{}` \n".format(cmd, evaluation)
     await event.edit(final_output)
 
 
