@@ -6,7 +6,15 @@ import logging
 
 from uniborg import Uniborg
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
+
+import os
+if "APP_ID" not in os.environ and "API_HASH" not in os.environ:
+    import sys
+    print("Please fill in the required values from app.json "
+          "Do not steal the values from the official application. "
+          "Doing that WILL backfire on you. \nBot quitting.", file=sys.stderr)
+    quit(1)
 
 borg = Uniborg("stdborg", plugin_path="stdplugins", connection_retries=None)
 

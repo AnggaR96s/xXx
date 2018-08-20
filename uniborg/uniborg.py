@@ -4,6 +4,7 @@
 import asyncio
 import importlib.util
 import logging
+import os
 from pathlib import Path
 
 from telethon import TelegramClient
@@ -29,7 +30,7 @@ class Uniborg(TelegramClient):
         self._plugin_path = plugin_path
 
         kwargs = {
-            "api_id": 6, "api_hash": "eb06d4abfb49dc3eeb1aeb98ae0f581e",
+            "api_id": int(os.environ.get("APP_ID")), "api_hash": os.environ.get("API_HASH"),
             **kwargs}
         super().__init__(session, **kwargs)
 

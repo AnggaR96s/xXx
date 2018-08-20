@@ -27,6 +27,14 @@
       "description": "Send .get_id in any group to fill this value. AFK mode (and other sensitive plugins) will not work without this!",
       "value": "",
       "required": false
+    },
+    "APP_ID": {
+      "description": "Get this value from my.telegram.org! Please do not steal",
+      "value": ""
+    },
+    "API_HASH": {
+      "description": "Get this value from my.telegram.org! Please do not steal",
+      "value": ""
     }
   },
   "addons": []
