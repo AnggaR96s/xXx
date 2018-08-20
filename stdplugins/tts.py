@@ -24,15 +24,18 @@ async def _(event):
         lan = input_str
     else:
         lan, text = input_str.split("|")
-    tts = gTTS(text, lan)
     required_file_name = current_date_time + "voice.ogg"
-    tts.save(required_file_name)
+    try:
+        tts = gTTS(text, lan)
+        tts.save(required_file_name)
+    except AssertionError as e:
+        await event.edit(str(e))
     end = datetime.now()
     ms = (end - start).seconds
     await borg.send_file(
         event.chat_id,
         required_file_name,
-        caption="Processed {} ({}) in {} seconds!".format(text, lan, ms),
+        caption="Processed {} ({}) in {} seconds!".format(text[0:97], lan, ms),
         reply_to=event.message.reply_to_msg_id,
         allow_cache=False,
         voice_note=True

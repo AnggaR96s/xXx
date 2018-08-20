@@ -19,7 +19,11 @@ async def _(event):
         chat = to_write_chat
     else:
         mentions = "Admins in {} channel: \n".format(input_str)
-        chat = await borg.get_entity(input_str)
+        try:
+            chat = await borg.get_entity(input_str)
+        except ValueError as e:
+            await event.edit(str(e))
+            return None
     try:
         async for x in borg.iter_participants(chat, filter=ChannelParticipantsAdmins):
             mentions += f"\n[{x.first_name}](tg://user?id={x.id})"

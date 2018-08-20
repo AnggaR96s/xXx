@@ -8,4 +8,5 @@ cfscrape
 beautifulsoup4
 wikipedia
 gtts
+googletrans
 
