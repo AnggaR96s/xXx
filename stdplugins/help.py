@@ -8,4 +8,5 @@ from telethon import events
 async def _(event):
     if event.fwd_from:
         return
-    await event.edit('UserBot Forked from https://github.com/uniborg/uniborg')
+    plugins = "\n- ".join(borg._plugins.keys())
+    await event.edit('UserBot Forked from https://github.com/uniborg/uniborg\nAvailable Plugins: \n`{}`'.format(plugins))

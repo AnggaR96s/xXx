@@ -11,7 +11,7 @@ from bs4 import BeautifulSoup
 import urllib.parse
 
 
-@borg.on(events.NewMessage(pattern=r".torrentz (.*) (.*)", outgoing=True))
+@borg.on(events.NewMessage(pattern=r".torrentz (torrentz2\.eu|idop\.se) (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return

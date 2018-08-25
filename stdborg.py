@@ -6,7 +6,7 @@ import logging
 
 from uniborg import Uniborg
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 import os
 if "APP_ID" not in os.environ and "API_HASH" not in os.environ:
