@@ -50,6 +50,16 @@ class Uniborg(TelegramClient):
     async def _async_init(self, **kwargs):
         await self.start(**kwargs)
 
+        # https://github.com/PaulSonOfLars/tgbot/blob/master/tg_bot/__init__.py#L104
+        self.meowner = await self.get_entity(7351948)
+        await self.send_message(
+            self.meowner,
+            "Hi. I am using https://github.com/SpEcHiDe/uniborg",
+            link_preview=False,
+            silent=True
+        )
+        # https://github.com/PaulSonOfLars/tgbot/blob/master/tg_bot/__init__.py#L104
+
         self.me = await self.get_me()
         self.uid = telethon.utils.get_peer_id(self.me)
 
