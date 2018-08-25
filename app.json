@@ -37,8 +37,8 @@
       "value": ""
     },
     "TMP_DOWNLOAD_DIRECTORY": {
-      "description": "",
-      "value": "../DOWNLOADS",
+      "description": "This is required for the uploaddownload, speedtest, and telegra.ph file generator plugins.",
+      "value": "../DOWNLOADS/",
       "required": false
     }
   },
