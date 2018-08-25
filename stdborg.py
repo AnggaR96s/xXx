@@ -9,13 +9,19 @@ from uniborg import Uniborg
 logging.basicConfig(level=logging.INFO)
 
 import os
+import sys
+
 if "APP_ID" not in os.environ and "API_HASH" not in os.environ:
-    import sys
     print("Please fill in the required values from app.json "
           "Do not steal the values from the official application. "
           "Doing that WILL backfire on you. \nBot quitting.", file=sys.stderr)
     quit(1)
 
-borg = Uniborg("stdborg", plugin_path="stdplugins", connection_retries=None)
 
-borg.run_until_disconnected()
+if len(sys.argv) == 2:
+    borg = Uniborg(str(sys.argv[1]), plugin_path="stdplugins", connection_retries=None)
+    borg.run_until_disconnected()
+else:
+    print("USAGE EXAMPLE:\n"
+          "python3 -m stdborg <SESSION_NAME>"
+          "\n 🙄👆👆Please follow the above format to run your userbot. \nBot quitting.", file=sys.stderr)

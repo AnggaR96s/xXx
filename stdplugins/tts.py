@@ -9,7 +9,7 @@ from datetime import datetime
 from gtts import gTTS
 
 
-current_date_time = "./../DOWNLOADS/"
+current_date_time = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./../DOWNLOADS/")
 
 
 @borg.on(events.NewMessage(pattern=r".tts (.*)", outgoing=True))

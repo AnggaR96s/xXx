@@ -7,6 +7,8 @@ import subprocess, os
 from datetime import datetime
 import requests
 
+temporary_download_directory = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./../DOWNLOADS/")
+
 
 @borg.on(events.NewMessage(pattern=r".speedtest", outgoing=True))
 async def _(event):
@@ -15,7 +17,7 @@ async def _(event):
     start = datetime.now()
     await event.edit("Downloading speedtest-cli binary to my local ... Thus might take some time")
     url = "https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py"
-    required_file_name = "./../DOWNLOADS/speedtest.cli"
+    required_file_name = temporary_download_directory + "speedtest.cli"
     r = requests.get(url, stream=True)
     with open(required_file_name, "wb") as fd:
         for chunk in r.iter_content(chunk_size=128):
@@ -35,3 +37,4 @@ async def _(event):
     ms = (end - start).microseconds / 1000
     os.remove(required_file_name)
     await event.edit("**SpeedTest** completed in {} seconds \n\n {}".format(ms, output_str))
+

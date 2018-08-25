@@ -12,7 +12,7 @@ from hachoir.parser import createParser
 from telethon.tl.types import DocumentAttributeVideo
 from telethon.errors import MessageNotModifiedError
 
-current_date_time = "./../DOWNLOADS/"
+current_date_time = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./../DOWNLOADS/")
 
 
 @borg.on(events.NewMessage(pattern=r".download (.*)", outgoing=True))
@@ -31,7 +31,7 @@ async def _(event):
         )
         end = datetime.now()
         ms = (end - start).seconds
-        await event.edit("Downloaded to {} in {} seconds.".format(downloaded_file_name, ms))
+        await event.edit("Downloaded to `{}` in {} seconds.".format(downloaded_file_name, ms))
     elif input_str:
         url, file_name = input_str.split("|")
         url = url.strip()
@@ -63,7 +63,7 @@ async def _(event):
                     logger.info(download_progress_string)
         end = datetime.now()
         ms = (end - start).seconds
-        await event.edit("Downloaded to {} in {} seconds.".format(required_file_name, ms))
+        await event.edit("Downloaded to `{}` in {} seconds.".format(required_file_name, ms))
     else:
         await event.edit("Reply to a message to download to my local server.")
 
@@ -146,6 +146,3 @@ async def _(event):
         await event.edit("Uploaded in {} seconds.".format(ms))
     else:
         await event.edit("404: File Not Found")
-
-
-

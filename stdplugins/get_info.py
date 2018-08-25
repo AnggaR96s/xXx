@@ -8,7 +8,7 @@ import os
 from telethon.tl.types import MessageEntityMentionName
 
 
-current_date_time = "./../DOWNLOADS/"
+current_date_time = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./../DOWNLOADS/")
 
 
 @borg.on(events.NewMessage(pattern=".info (.*)", outgoing=True))
