@@ -41,6 +41,7 @@ async def _(event):
                 except ValueError as e:
                     await event.edit(str(e))
                     return None
+    print(replied_user.stringify())
     user_id = replied_user.user.id
     first_name = replied_user.user.first_name
     # some weird people (like me) have more than 4096 characters in their names
