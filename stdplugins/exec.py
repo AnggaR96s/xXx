@@ -4,7 +4,7 @@
 
 from telethon import events
 import subprocess
-from telethon.errors import MessageEmptyError
+from telethon.errors import MessageEmptyError, MessageTooLongError
 
 
 @borg.on(events.NewMessage(pattern=r"\.exec (.*)", outgoing=True))
@@ -25,5 +25,6 @@ async def _(event):
             await event.edit(final_output)
         except MessageEmptyError as exc:
             await event.edit("✅ Exited correctly.")
-
+        except MessageTooLongError as exc:
+            await event.edit("message is greater than 4096 characters")
 

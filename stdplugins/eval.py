@@ -22,8 +22,12 @@ async def _(event):
         else:
             evaluation = eval(cmd)
     except ZeroDivisionError as e:
-        evaluation = "ERROR: " + str(e)
+        evaluation = "ZDERROR: " + str(e)
     # https://t.me/telethonofftopic/43873
+    except ValueError as e:
+        evaluation = "VALUEERROR: " + str(e)
+    except SyntaxError as e:
+        evaluation = "SYNTAXERROR: " + str(e)
     final_output = "**EVAL**: `{}` \n\n **OUTPUT**: \n`{}` \n".format(cmd, evaluation)
     await event.edit(final_output)
 
