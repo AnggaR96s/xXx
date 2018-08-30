@@ -40,6 +40,16 @@
       "description": "This is required for the uploaddownload, speedtest, and telegra.ph file generator plugins.",
       "value": "../DOWNLOADS/",
       "required": false
+    },
+    "IBM_WATSON_CRED_USERNAME": {
+      "description": "This is required for the speech to text module. Get your USERNAME from https://console.bluemix.net/docs/services/speech-to-text/getting-started.html",
+      "value": "",
+      "required": false
+    },
+    "IBM_WATSON_CRED_PASSWORD": {
+      "description": "This is required for the speech to text module. Get your PASSWORD from https://console.bluemix.net/docs/services/speech-to-text/getting-started.html",
+      "value": "",
+      "required": false
     }
   },
   "addons": []
