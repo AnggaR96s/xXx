@@ -24,18 +24,21 @@ async def _(event):
     try:
         tts = gTTS(text, lan)
         tts.save(required_file_name)
+        command_to_execute = "ffmpeg -i {} -map 0:a -codec:a libopus -b:a 100k -vbr on {}".format(required_file_name, required_file_name + ".opus")
+        os.system(command_to_execute)
+        end = datetime.now()
+        ms = (end - start).seconds
+        await borg.send_file(
+            event.chat_id,
+            required_file_name + ".opus",
+            # caption="Processed {} ({}) in {} seconds!".format(text[0:97], lan, ms),
+            reply_to=event.message.reply_to_msg_id,
+            allow_cache=False,
+            voice_note=True
+        )
+        os.remove(required_file_name)
+        os.remove(required_file_name + ".opus")
+        await event.delete()
     except AssertionError as e:
         await event.edit(str(e))
-    end = datetime.now()
-    ms = (end - start).seconds
-    await borg.send_file(
-        event.chat_id,
-        required_file_name,
-        caption="Processed {} ({}) in {} seconds!".format(text[0:97], lan, ms),
-        reply_to=event.message.reply_to_msg_id,
-        allow_cache=False,
-        voice_note=True
-    )
-    os.remove(required_file_name)
-    await event.delete()
 

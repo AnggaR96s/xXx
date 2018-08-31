@@ -38,16 +38,21 @@ async def _(event):
                 auth=(IBM_WATSON_CRED_USERNAME, IBM_WATSON_CRED_PASSWORD)
             )
             r = response.json()
-            # process the json to appropriate string format
-            results = r["results"]
-            alternatives = results[0]["alternatives"][0]
-            # take the 0th element, because it is assumed to have maximum confidence
-            transcript_response = alternatives["transcript"]
-            transcript_confidence = alternatives["confidence"]
-            end = datetime.now()
-            ms = (end - start).seconds
-            string_to_show = "Language: `{}`\nTRANSCRIPT: `{}`\nTime Taken: {} seconds\nConfidence: `{}`".format(lan, transcript_response, ms, transcript_confidence)
-            await event.edit(string_to_show)
+            if "results" in r:
+                # process the json to appropriate string format
+                results = r["results"]
+                transcript_response = ""
+                transcript_confidence = ""
+                for alternative in results:
+                    alternatives = alternative["alternatives"][0]
+                    transcript_response += " " + str(alternatives["transcript"]) + " + "
+                    transcript_confidence += " " + str(alternatives["confidence"]) + " + "
+                end = datetime.now()
+                ms = (end - start).seconds
+                string_to_show = "Language: `{}`\nTRANSCRIPT: `{}`\nTime Taken: {} seconds\nConfidence: `{}`".format(lan, transcript_response, ms, transcript_confidence)
+                await event.edit(string_to_show)
+            else:
+                await event.edit(r["error"])
             # now, remove the temporary file
             os.remove(required_file_name)
     else:

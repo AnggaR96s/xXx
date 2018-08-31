@@ -30,7 +30,7 @@ class Uniborg(TelegramClient):
         self._plugin_path = plugin_path
 
         kwargs = {
-            "api_id": int(os.environ.get("APP_ID")), "api_hash": os.environ.get("API_HASH"),
+            "api_id": 6, "api_hash": "eb06d4abfb49dc3eeb1aeb98ae0f581e",
             **kwargs}
         super().__init__(session, **kwargs)
 
@@ -48,6 +48,7 @@ class Uniborg(TelegramClient):
             self.load_plugin_from_file(p)
 
     async def _async_init(self, **kwargs):
+        print(self)
         await self.start(**kwargs)
 
         # https://github.com/PaulSonOfLars/tgbot/blob/master/tg_bot/__init__.py#L104

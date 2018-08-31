@@ -19,7 +19,15 @@ if "APP_ID" not in os.environ and "API_HASH" not in os.environ:
 
 
 if len(sys.argv) == 2:
-    borg = Uniborg(str(sys.argv[1]), plugin_path="stdplugins", connection_retries=None)
+    api_id = int(os.environ.get("APP_ID"))
+    api_hash = os.environ.get("API_HASH")
+    borg = Uniborg(
+        str(sys.argv[1]),
+        plugin_path="stdplugins",
+        connection_retries=None,
+        api_id=api_id,
+        api_hash=api_hash
+    )
     borg.run_until_disconnected()
 else:
     print("USAGE EXAMPLE:\n"
