@@ -226,10 +226,11 @@ async def _(event):
             )
         end = datetime.now()
         ms = (end - start).seconds
-        try:
+        """try:
             os.remove("a_random_f_file_name" + ".jpg")
         except:
-            pass
+            pass"""
+        os.remove(thumb)
         await event.edit("Uploaded in {} seconds.".format(ms))
     else:
         await event.edit("404: File Not Found")

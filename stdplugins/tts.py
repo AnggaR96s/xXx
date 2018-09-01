@@ -44,6 +44,9 @@ async def _(event):
         except subprocess.CalledProcessError as exc:
             await event.edit("process returned {}\n output: {}".format(input_str, exc.returncode, exc.output))
             # continue sending required_file_name
+        except FileNotFoundErroras as exc:
+            await event.edit("process returned {}\n output: {}".format(input_str, exc.returncode, exc.output))
+            # continue sending required_file_name
         else:
             os.remove(required_file_name)
             required_file_name = required_file_name + ".opus"
