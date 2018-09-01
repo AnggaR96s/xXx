@@ -1,6 +1,7 @@
 from telethon import events
 import requests
 import os
+import subprocess
 from datetime import datetime
 from gtts import gTTS
 
@@ -24,21 +25,39 @@ async def _(event):
     try:
         tts = gTTS(text, lan)
         tts.save(required_file_name)
-        command_to_execute = "ffmpeg -i {} -map 0:a -codec:a libopus -b:a 100k -vbr on {}".format(required_file_name, required_file_name + ".opus")
-        os.system(command_to_execute)
+        command_to_execute = [
+            "ffmpeg",
+            "-i",
+             required_file_name,
+             "-map",
+             "0:a",
+             "-codec:a",
+             "libopus",
+             "-b:a",
+             "100k",
+             "-vbr",
+             "on",
+             required_file_name + ".opus"
+        ]
+        try:
+            t_response = subprocess.check_output(command_to_execute, stderr=subprocess.STDOUT)
+        except subprocess.CalledProcessError as exc:
+            await event.edit("process returned {}\n output: {}".format(input_str, exc.returncode, exc.output))
+            # continue sending required_file_name
+        else:
+            os.remove(required_file_name)
+            required_file_name = required_file_name + ".opus"
         end = datetime.now()
         ms = (end - start).seconds
         await borg.send_file(
             event.chat_id,
-            required_file_name + ".opus",
+            required_file_name,
             # caption="Processed {} ({}) in {} seconds!".format(text[0:97], lan, ms),
             reply_to=event.message.reply_to_msg_id,
             allow_cache=False,
             voice_note=True
         )
         os.remove(required_file_name)
-        os.remove(required_file_name + ".opus")
-        await event.delete()
+        await event.edit("Processed {} ({}) in {} seconds!".format(text[0:97], lan, ms))
     except AssertionError as e:
         await event.edit(str(e))
-

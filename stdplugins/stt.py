@@ -28,7 +28,7 @@ async def _(event):
         else:
             await event.edit("Starting analysis, using IBM WatSon Speech To Text")
             headers = {
-                "Content-Type": "audio/ogg",
+                "Content-Type": previous_message.media.document.mime_type,
             }
             data = open(required_file_name, "rb").read()
             response = requests.post(
