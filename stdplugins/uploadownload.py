@@ -185,52 +185,51 @@ async def _(event):
             im = Image.open(thumb)
             # https://stackoverflow.com/a/6444612/4723940
             width, height = im.size"""
-        if supports_streaming:
-            await borg.send_file(
-                event.chat_id,
-                file_name,
-                thumb=thumb,
-                caption=input_str,
-                force_document=False,
-                allow_cache=False,
-                reply_to=event.message.id,
-                attributes=[
-                    DocumentAttributeVideo(
-                        duration=duration,
-                        w=width,
-                        h=height,
-                        round_message=False,
-                        supports_streaming=True
-                    )
-                ],
-                progress_callback=progress
-            )
-        if round_message:
-            await borg.send_file(
-                event.chat_id,
-                file_name,
-                thumb=thumb,
-                allow_cache=False,
-                reply_to=event.message.id,
-                video_note=True,
-                attributes=[
-                    DocumentAttributeVideo(
-                        duration=0,
-                        w=1,
-                        h=1,
-                        round_message=True,
-                        supports_streaming=True
-                    )
-                ],
-                progress_callback=progress
-            )
-        end = datetime.now()
-        ms = (end - start).seconds
-        """try:
-            os.remove("a_random_f_file_name" + ".jpg")
-        except:
-            pass"""
-        os.remove(thumb)
-        await event.edit("Uploaded in {} seconds.".format(ms))
+        try:
+            if supports_streaming:
+                await borg.send_file(
+                    event.chat_id,
+                    file_name,
+                    thumb=thumb,
+                    caption=input_str,
+                    force_document=False,
+                    allow_cache=False,
+                    reply_to=event.message.id,
+                    attributes=[
+                        DocumentAttributeVideo(
+                            duration=duration,
+                            w=width,
+                            h=height,
+                            round_message=False,
+                            supports_streaming=True
+                        )
+                    ],
+                    progress_callback=progress
+                )
+            if round_message:
+                await borg.send_file(
+                    event.chat_id,
+                    file_name,
+                    thumb=thumb,
+                    allow_cache=False,
+                    reply_to=event.message.id,
+                    video_note=True,
+                    attributes=[
+                        DocumentAttributeVideo(
+                            duration=0,
+                            w=1,
+                            h=1,
+                            round_message=True,
+                            supports_streaming=True
+                        )
+                    ],
+                    progress_callback=progress
+                )
+            end = datetime.now()
+            ms = (end - start).seconds
+            os.remove(thumb)
+            await event.edit("Uploaded in {} seconds.".format(ms))
+        except FileNotFoundError as e:
+            await event.edit(str(e))
     else:
         await event.edit("404: File Not Found")
