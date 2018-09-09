@@ -27,9 +27,9 @@ async def _(event):
     try:
         async for x in borg.iter_participants(chat, filter=ChannelParticipantsAdmins):
             if not x.deleted:
-                mentions += f"\n[{x.first_name}](tg://user?id={x.id})"
+                mentions += f"\n[{x.first_name}](tg://user?id={x.id}) `{x.id}`"
             else:
-                mentions += f"\n InputUserDeactivatedError"
+                mentions += f"\n InputUserDeactivatedError `{x.id}`"
     except ChatAdminRequiredError as e:
         mentions += " " + str(e) + "\n"
     await borg.send_message(

@@ -166,9 +166,9 @@ async def _(event):
         if thumb == "1":
             thumb_path = "a_random_f_file_name" + ".jpg"
             thumb = get_video_thumb(file_name, output=thumb_path)
-        duration = None
-        width = None
-        height = None
+        duration = 0
+        width = 0
+        height = 0
         if metadata.has("duration"):
             duration = metadata.get('duration').seconds
         if metadata.has("width"):

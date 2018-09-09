@@ -6,12 +6,13 @@ from telethon import events
 from telethon.tl.functions.users import GetFullUserRequest
 import os
 from telethon.tl.types import MessageEntityMentionName
+from telethon.utils import get_input_location
 
 
 current_date_time = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./../DOWNLOADS/")
 
 
-@borg.on(events.NewMessage(pattern=".info (.*)", outgoing=True))
+@borg.on(events.NewMessage(pattern=".info ?(.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
@@ -24,16 +25,16 @@ async def _(event):
     else:
         input_str = event.pattern_match.group(1)
         mention_entity = event.message.entities
-        if len(mention_entity) > 0:
+        if mention_entity is not None:
             probable_user_mention_entity = mention_entity[0]
             if type(probable_user_mention_entity) == MessageEntityMentionName:
                 user_id = probable_user_mention_entity.user_id
                 replied_user = await borg(GetFullUserRequest(user_id))
             else:
                 # the disgusting CRAP way, of doing the thing
-                user_object = await borg.get_entity(input_str)
-                user_id = user_object.id
                 try:
+                    user_object = await borg.get_entity(input_str)
+                    user_id = user_object.id
                     replied_user = await borg(GetFullUserRequest(user_id))
                 except TypeError as e:
                     await event.edit(str(e))
@@ -41,19 +42,23 @@ async def _(event):
                 except ValueError as e:
                     await event.edit(str(e))
                     return None
-    print(replied_user.stringify())
     user_id = replied_user.user.id
     first_name = replied_user.user.first_name
     # some weird people (like me) have more than 4096 characters in their names
     first_name = first_name.replace("\u2060", "")
     # inspired by https://telegram.dog/afsaI181
     user_bio = replied_user.about
-    photo = await borg.download_profile_photo(
-        user_id,
-        current_date_time + str(user_id) + ".jpg",
-        download_big=True
-    )
-    caption = "ID: {} \nName: [{}](tg://user?id={}) \nBio: {}".format(user_id, first_name, user_id, user_bio)
+    try:
+        dc_id, location = get_input_location(replied_user.profile_photo)
+        photo = await borg.download_profile_photo(
+            user_id,
+            current_date_time + str(user_id) + ".jpg",
+            download_big=True
+        )
+    except TypeError as e:
+        dc_id = "__ need a Profile Picture for this to work __"
+        photo = "http://telegra.ph/file/457126e7cd1ade29d2a65.jpg"
+    caption = "ID: {} \nName: [{}](tg://user?id={}) \nBio: {}\nDC ID: {}".format(user_id, first_name, user_id, user_bio, dc_id)
     message_id_to_reply = event.message.reply_to_msg_id
     if not message_id_to_reply:
         message_id_to_reply = event.message.id
@@ -64,5 +69,6 @@ async def _(event):
         force_document=False,
         reply_to=message_id_to_reply
     )
-    os.remove(photo)
+    if not photo.startswith("http"):
+        os.remove(photo)
     await event.delete()
