@@ -9,4 +9,5 @@ beautifulsoup4
 wikipedia
 gtts
 googletrans
-
+gsearch
+google_images_download
