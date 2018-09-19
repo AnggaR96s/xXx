@@ -10,7 +10,10 @@ async def _(event):
     if event.fwd_from:
         return
     input_str = event.pattern_match.group(1)
-    if "|" in input_str:
+    for i in range(int(input_str)):
+        m = await event.respond("m")
+        await m.delete()
+    """if "|" in input_str:
         counter, spam_text = input_str.split("|")
         shiiinabot = "\u2060"
         for i in range(4000):
@@ -23,5 +26,5 @@ async def _(event):
         await event.delete()
     else:
         await event.edit("send me a message in the format `.bigspam count | spam message` and admins won't see it in recent actions" +
-                         " \n Courtesy: @shiiinabot")
+                         " \n Courtesy: @shiiinabot")"""
 
