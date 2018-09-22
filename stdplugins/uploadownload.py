@@ -159,13 +159,11 @@ async def _(event):
         thumb = thumb.strip()
     else:
         file_name = input_str
-        thumb = "1"
+        thumb_path = "a_random_f_file_name" + ".jpg"
+        thumb = get_video_thumb(file_name, output=thumb_path)
     if os.path.exists(file_name):
         start = datetime.now()
         metadata = extractMetadata(createParser(file_name))
-        if thumb == "1":
-            thumb_path = "a_random_f_file_name" + ".jpg"
-            thumb = get_video_thumb(file_name, output=thumb_path)
         duration = 0
         width = 0
         height = 0
