@@ -28,6 +28,11 @@
       "value": "",
       "required": false
     },
+    "PRIVATE_CHANNEL_BOT_API_ID": {
+      "description": "Send .get_id in any channel to fill this value. ReQuired for @Manuel15 inspiration to work!",
+      "value": "",
+      "required": false
+    },
     "APP_ID": {
       "description": "Get this value from my.telegram.org! Please do not steal",
       "value": ""
@@ -50,7 +55,15 @@
       "description": "This is required for the speech to text module. Get your PASSWORD from https://console.bluemix.net/docs/services/speech-to-text/getting-started.html",
       "value": "",
       "required": false
+    },
+    "NSFW_CHECKER_KEY": {
+      "description": "This is required for the not safe for work detection module. Get your own values, by contacting @SpEcHlDe",
+      "value": "",
+      "required": false
     }
   },
-  "addons": []
+  "addons": [],
+  "buildpacks": [{
+    "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest"
+  }]
 }
