@@ -32,5 +32,5 @@ if len(sys.argv) == 2:
 else:
     print("USAGE EXAMPLE:\n"
           "python3 -m stdborg <SESSION_NAME>"
-          "\n 🙄👆👆Please follow the above format to run your userbot. \nBot quitting.", file=sys.stderr)
+          "\n 👆👆Please follow the above format to run your userbot. \nBot quitting.", file=sys.stderr)
 
