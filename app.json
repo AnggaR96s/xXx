@@ -55,11 +55,6 @@
       "description": "This is required for the speech to text module. Get your PASSWORD from https://console.bluemix.net/docs/services/speech-to-text/getting-started.html",
       "value": "",
       "required": false
-    },
-    "NSFW_CHECKER_KEY": {
-      "description": "This is required for the not safe for work detection module. Get your own values, by contacting @SpEcHlDe",
-      "value": "",
-      "required": false
     }
   },
   "addons": [],

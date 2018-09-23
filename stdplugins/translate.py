@@ -1,7 +1,3 @@
-# This Source Code Form is subject to the terms of the Mozilla Public
-# License, v. 2.0. If a copy of the MPL was not distributed with this
-# file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
 from telethon import events
 from datetime import datetime
 from googletrans import Translator
@@ -20,8 +16,10 @@ async def _(event):
     else:
         lan, text = input_str.split("|")
     translator = Translator()
-    translated_text = translator.translate(text, lan).text
+    translated = translator.translate(text, dest=lan)
+    src_lang = translated.src
+    translated_text = translated.text
     end = datetime.now()
     ms = (end - start).seconds
-    output_str = "Translated to {} in {} seconds. \n {}".format(lan, str(ms), translated_text)
+    output_str = "Translated from {} to {} in {} seconds. \n {}".format(src_lang, lan, str(ms), translated_text)
     await event.edit(output_str)
