@@ -1,7 +1,3 @@
-# This Source Code Form is subject to the terms of the Mozilla Public
-# License, v. 2.0. If a copy of the MPL was not distributed with this
-# file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
 from telethon import events
 from telethon.tl.functions.users import GetFullUserRequest
 import os
@@ -12,7 +8,7 @@ from telethon.utils import get_input_location
 current_date_time = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./../DOWNLOADS/")
 
 
-@borg.on(events.NewMessage(pattern=".info ?(.*)", outgoing=True))
+@borg.on(events.NewMessage(pattern=".whois ?(.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
@@ -58,7 +54,7 @@ async def _(event):
     except TypeError as e:
         dc_id = "__ need a Profile Picture for this to work __"
         photo = "http://telegra.ph/file/457126e7cd1ade29d2a65.jpg"
-    caption = "ID: {} \nName: [{}](tg://user?id={}) \nBio: {}\nDC ID: {}".format(user_id, first_name, user_id, user_bio, dc_id)
+    caption = "ID: `{}` \nName: [{}](tg://user?id={}) \nBio: {}\nDC ID: {}".format(user_id, first_name, user_id, user_bio, dc_id)
     message_id_to_reply = event.message.reply_to_msg_id
     if not message_id_to_reply:
         message_id_to_reply = event.message.id
@@ -72,3 +68,4 @@ async def _(event):
     if not photo.startswith("http"):
         os.remove(photo)
     await event.delete()
+

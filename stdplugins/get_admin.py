@@ -1,7 +1,3 @@
-# This Source Code Form is subject to the terms of the Mozilla Public
-# License, v. 2.0. If a copy of the MPL was not distributed with this
-# file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
 from telethon import events
 from telethon.tl.types import ChannelParticipantsAdmins, ChatParticipantCreator
 from telethon.errors import ChatAdminRequiredError, InputUserDeactivatedError
@@ -11,7 +7,7 @@ from telethon.errors import ChatAdminRequiredError, InputUserDeactivatedError
 async def _(event):
     if event.fwd_from:
         return
-    mentions = "**Admins in this Chat**: \n"
+    mentions = "**Admins in this Channel**: \n"
     input_str = event.pattern_match.group(1)
     to_write_chat = await event.get_input_chat()
     chat = None

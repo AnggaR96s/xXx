@@ -21,7 +21,7 @@ async def _(event):
         return
     start = datetime.now()
     await event.edit("Processing ...")
-    input_str = event.pattern_match.group(1)
+    input_str = event.pattern_match.group(1) # + " -inurl:(htm|html|php|pls|txt) intitle:index.of \"last modified\" (mkv|mp4|avi|epub|pdf|mp3)"
     search_results = search(input_str, num_results=GLOBAL_LIMIT)
     output_str = " "
     for text, url in search_results:
@@ -32,6 +32,7 @@ async def _(event):
 
 
 @borg.on(events.NewMessage(pattern=r"\.google image (.*)"))
+@borg.on(events.MessageEdited(pattern=r"\.google image (.*)"))
 async def _(event):
     if event.fwd_from:
         return
@@ -60,4 +61,3 @@ async def _(event):
     end = datetime.now()
     ms = (end - start).seconds
     await event.edit("searched Google for {} in {} seconds.".format(input_str, ms), link_preview=False)
-
