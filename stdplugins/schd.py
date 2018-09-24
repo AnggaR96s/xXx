@@ -19,7 +19,7 @@ async def _(event):
             ttl = int(input_str)
             message = await event.get_reply_message()
         await asyncio.sleep(int(ttl))
-        await event.reply(message)
+        await event.respond(message)
     else:
         await event.edit(message)
 
