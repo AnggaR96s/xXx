@@ -55,6 +55,11 @@
       "description": "This is required for the speech to text module. Get your PASSWORD from https://console.bluemix.net/docs/services/speech-to-text/getting-started.html",
       "value": "",
       "required": false
+    },
+    "HASH_TO_TORRENT_API": {
+      "description": "This is required for the hash to torrent file functionality to work.",
+      "value": "",
+      "required": false
     }
   },
   "addons": [],

@@ -6,6 +6,8 @@ import cfscrape # https://github.com/Anorov/cloudflare-scrape
 from bs4 import BeautifulSoup
 import urllib.parse
 
+TEMP_DOWNLOAD_DIRECTORY = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./DOWNLOADS/")
+HASH_TO_TORRENT_API = os.environ.get("HASH_TO_TORRENT_API", None);
 
 @borg.on(events.NewMessage(pattern=r".torrentz (torrentz2\.eu|idop\.se) (.*)", outgoing=True))
 async def _(event):
@@ -39,7 +41,7 @@ async def _(event):
     await event.edit("Scrapped {} for {} in {} seconds. Obtained Results: \n {}".format(input_type, input_str, ms, output_str))
 
 
-@borg.on(events.NewMessage(pattern=r".torrentz hash (.*)", outgoing=True))
+@borg.on(events.NewMessage(pattern=r".torrentz (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
@@ -47,9 +49,36 @@ async def _(event):
     await event.edit("Processing ...")
     input_str = event.pattern_match.group(1)
     magnetic_link = Scrapper.GetMagneticLink(input_str)
+    magnetic_link_file = "{}{}.link".format(TEMP_DOWNLOAD_DIRECTORY, input_str)
+    magnetic_link_caption = "Magnetic Link: `{}`".format(input_str)
+    file_ponter = open(magnetic_link_file, "w+")
+    file_ponter.write(magnetic_link)
+    file_ponter.close()
+    await borg.send_file(
+        event.chat_id,
+        magnetic_link_file,
+        caption=magnetic_link_caption,
+        force_document=True,
+        allow_cache=False,
+        reply_to=event.message.id
+    )
+    os.remove(magnetic_link_file)
+    if HASH_TO_TORRENT_API is None:
+        logger.info("Torrent file cannot be send without setting the ENV variable")
+    else:
+        url = HASH_TO_TORRENT_API.format(input_str)
+        torrent_file_caption = "Torrent File: `{}`".format(input_str)
+        await borg.send_file(
+            event.chat_id,
+            url,
+            caption=torrent_file_caption,
+            force_document=True,
+            allow_cache=False,
+            reply_to=event.message.id
+        )
     end = datetime.now()
     ms = (end - start).seconds
-    output_str = "Obtained Magnetic Link `{}` for the Info Hash: {} in {} seconds.".format(magnetic_link, input_str, ms)
+    output_str = "Obtained Magnetic Link and Torrent File `{}` for the Info Hash: {} in {} seconds.".format(magnetic_link, input_str, ms)
     await event.edit(output_str)
 
 
