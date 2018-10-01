@@ -1,26 +1,34 @@
-# This Source Code Form is subject to the terms of the Mozilla Public
-# License, v. 2.0. If a copy of the MPL was not distributed with this
-# file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
 from telethon import events
 from telethon.errors import MessageTooLongError
+import os
+
+MAX_MESSAGE_SIZE_LIMIT = 4095
+TEMP_DOWNLOAD_DIRECTORY = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./DOWNLOADS/")
 
 
 @borg.on(events.NewMessage(pattern=r"\.json", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
+    the_real_message = None
     if event.reply_to_msg_id:
         previous_message = await event.get_reply_message()
-        print(previous_message.stringify())
-        try:
-            await event.edit(previous_message.stringify())
-        except MessageTooLongError as e:
-            await event.edit(str(e))
+        the_real_message = previous_message.stringify()
     else:
-        try:
-            await event.edit(event.stringify())
-        except MessageTooLongError as e:
-            await event.edit(str(e))
-
-
+        the_real_message = event.stringify()
+    if len(the_real_message) > MAX_MESSAGE_SIZE_LIMIT:
+        current_file_name = "{}temp_file.text".format(TEMP_DOWNLOAD_DIRECTORY)
+        file_ponter = open(current_file_name, "w+")
+        file_ponter.write(the_real_message)
+        file_ponter.close()
+        await borg.send_file(
+            event.chat_id,
+            current_file_name,
+            force_document=True,
+            allow_cache=False,
+            reply_to=event.message.id
+        )
+        await event.delete()
+        os.remove(current_file_name)
+    else:
+        await event.edit(the_real_message)

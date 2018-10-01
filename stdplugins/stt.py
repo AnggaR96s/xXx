@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 
 
-current_date_time = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./../DOWNLOADS/")
+TEMP_DOWNLOAD_DIRECTORY = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./../DOWNLOADS/")
 IBM_WATSON_CRED_USERNAME = os.environ.get("IBM_WATSON_CRED_USERNAME", None)
 IBM_WATSON_CRED_PASSWORD = os.environ.get("IBM_WATSON_CRED_PASSWORD", None)
 
@@ -20,7 +20,7 @@ async def _(event):
         previous_message = await event.get_reply_message()
         required_file_name = await borg.download_media(
             previous_message,
-            current_date_time
+            TEMP_DOWNLOAD_DIRECTORY
         )
         lan = input_str
         if IBM_WATSON_CRED_USERNAME is None or IBM_WATSON_CRED_PASSWORD is None:

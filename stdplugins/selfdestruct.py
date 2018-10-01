@@ -3,15 +3,15 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 from telethon import events
-import time
+import asyncio
 
 
-@borg.on(events.NewMessage(pattern=r".sd (.*) (.*)", outgoing=True))
+@borg.on(events.NewMessage(pattern=r"\.sd (.*) (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
     counter = event.pattern_match.group(1)
     text = event.pattern_match.group(2)
     await event.edit(text)
-    time.sleep(int(counter))
+    await asyncio.sleep(int(counter))
     await event.delete()

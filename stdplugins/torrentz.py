@@ -1,7 +1,3 @@
-# This Source Code Form is subject to the terms of the Mozilla Public
-# License, v. 2.0. If a copy of the MPL was not distributed with this
-# file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
 from telethon import events
 import os
 import requests
@@ -24,6 +20,7 @@ async def _(event):
         search_results = Scrapper.SearchTorrentz(input_str)
     elif input_type == "idop.se":
         search_results = Scrapper.SearchIdopeSe(input_str)
+    logger.info(search_results)
     output_str = ""
     i = 0
     for result in search_results:

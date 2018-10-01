@@ -8,7 +8,7 @@ from telethon.utils import get_input_location
 current_date_time = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./../DOWNLOADS/")
 
 
-@borg.on(events.NewMessage(pattern=".whois ?(.*)", outgoing=True))
+@borg.on(events.NewMessage(pattern="\.whois ?(.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
@@ -68,4 +68,3 @@ async def _(event):
     if not photo.startswith("http"):
         os.remove(photo)
     await event.delete()
-

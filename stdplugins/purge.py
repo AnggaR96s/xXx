@@ -3,7 +3,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 from telethon import events
-import time
+import asyncio
 
 
 @borg.on(events.NewMessage(pattern=".purge", outgoing=True))
@@ -24,7 +24,7 @@ async def _(event):
         except:
             pass
         msgs.append(message)
-        time.sleep(3)
+        await asyncio.sleep(3)
     if len(msgs) <= 100:
         await borg.delete_messages(event.chat_id, msgs)
         msgs = []

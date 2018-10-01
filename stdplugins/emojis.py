@@ -1,7 +1,3 @@
-# This Source Code Form is subject to the terms of the Mozilla Public
-# License, v. 2.0. If a copy of the MPL was not distributed with this
-# file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
 from telethon import events
 import time
 
@@ -35,4 +31,3 @@ async def _(event):
         for i in animation_ttl:
             time.sleep(animation_interval)
             await event.edit(animation_chars[i % 2])
-

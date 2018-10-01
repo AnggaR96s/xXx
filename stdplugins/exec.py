@@ -5,6 +5,10 @@
 from telethon import events
 import subprocess
 from telethon.errors import MessageEmptyError, MessageTooLongError
+import os
+
+MAX_MESSAGE_SIZE_LIMIT = 4095
+TEMP_DOWNLOAD_DIRECTORY = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./DOWNLOADS/")
 
 
 @borg.on(events.NewMessage(pattern=r"\.exec (.*)", outgoing=True))
@@ -20,11 +24,20 @@ async def _(event):
         await event.edit("**EXEC**: `{}` \nprocess returned {}\n output: {}".format(input_str, exc.returncode, exc.output))
     else:
         x_reponse = t_response.decode("UTF-8")
-        final_output = "**EXEC**: `{}` \n\n **OUTPUT**: \n{} \n".format(input_str, x_reponse)
-        try:
+        final_output = "**EXEC**: `{}` \n\n**OUTPUT**: \n{} \n".format(input_str, x_reponse)
+        if len(final_output) > MAX_MESSAGE_SIZE_LIMIT:
+            current_file_name = "{}temp_file.text".format(TEMP_DOWNLOAD_DIRECTORY)
+            file_ponter = open(current_file_name, "w+")
+            file_ponter.write(final_output)
+            file_ponter.close()
+            await borg.send_file(
+                event.chat_id,
+                current_file_name,
+                force_document=True,
+                allow_cache=False,
+                reply_to=event.message.id
+            )
+            await event.delete()
+            os.remove(current_file_name)
+        else:
             await event.edit(final_output)
-        except MessageEmptyError as exc:
-            await event.edit("✅ Exited correctly.")
-        except MessageTooLongError as exc:
-            await event.edit("message is greater than 4096 characters")
-

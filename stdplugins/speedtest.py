@@ -1,7 +1,3 @@
-# This Source Code Form is subject to the terms of the Mozilla Public
-# License, v. 2.0. If a copy of the MPL was not distributed with this
-# file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
 from telethon import events
 import subprocess, os
 from datetime import datetime
@@ -10,7 +6,7 @@ import requests
 temporary_download_directory = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./../DOWNLOADS/")
 
 
-@borg.on(events.NewMessage(pattern=r".speedtest", outgoing=True))
+@borg.on(events.NewMessage(pattern=r"\.speedtest", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
@@ -37,4 +33,3 @@ async def _(event):
     ms = (end - start).microseconds / 1000
     os.remove(required_file_name)
     await event.edit("**SpeedTest** completed in {} seconds \n\n {}".format(ms, output_str))
-
