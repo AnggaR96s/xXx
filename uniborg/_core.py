@@ -6,6 +6,7 @@ import asyncio
 import traceback
 
 from uniborg import util
+from datetime import datetime
 
 DELETE_TIMEOUT = 2
 
@@ -46,3 +47,22 @@ async def remove(event):
 
     await asyncio.sleep(DELETE_TIMEOUT)
     await borg.delete_messages(msg.to_id, msg)
+
+
+@borg.on(util.admin_cmd(r"^\.send plugin (?P<shortname>\w+)$"))
+async def load_reload(event):
+    if event.fwd_from:
+        return
+    input_str = event.pattern_match.group(1)
+    the_plugin_file = "./stdplugins/{}.py".format(input_str)
+    start = datetime.now()
+    await borg.send_file(
+        event.chat_id,
+        the_plugin_file,
+        force_document=True,
+        allow_cache=False,
+        reply_to=event.message.id
+    )
+    end = datetime.now()
+    ms = (end - start).seconds
+    await event.edit("Uploaded {} in {} seconds".format(input_str, ms))
