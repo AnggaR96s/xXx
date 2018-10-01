@@ -1,7 +1,3 @@
-# This Source Code Form is subject to the terms of the Mozilla Public
-# License, v. 2.0. If a copy of the MPL was not distributed with this
-# file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
 from telethon import events
 import json
 import os
@@ -161,6 +157,7 @@ async def _(event):
         file_name = input_str
         thumb_path = "a_random_f_file_name" + ".jpg"
         thumb = get_video_thumb(file_name, output=thumb_path)
+        print(thumb)
     if os.path.exists(file_name):
         start = datetime.now()
         metadata = extractMetadata(createParser(file_name))
@@ -231,3 +228,40 @@ async def _(event):
             await event.edit(str(e))
     else:
         await event.edit("404: File Not Found")
+
+
+@borg.on(events.NewMessage(pattern=r".uploaddir (.*)", outgoing=True))
+async def _(event):
+    if event.fwd_from:
+        return
+    start = datetime.now()
+    await event.edit("Processing ...")
+    input_str = event.pattern_match.group(1)
+    if os.path.exists(input_str):
+        c = 0
+        d = 0
+        filesinfolder = os.listdir(input_str)
+        for file_name in filesinfolder:
+            current_file_name = os.path.join(input_str, file_name)
+            # this is exclusively for @MusiBoxGroup
+            # DON'T TRY THIS AT YOUR HOME
+            foldersinfile = os.listdir(current_file_name)
+            b = await event.reply("{}".format(file_name))
+            for eman_elif in foldersinfile:
+                eman_elif_tnerruc = os.path.join(current_file_name, eman_elif)
+                if os.path.isfile(eman_elif_tnerruc):
+                    await borg.send_file(
+                        event.chat_id,
+                        eman_elif_tnerruc,
+                        force_document=False,
+                        allow_cache=False,
+                        reply_to=b.id,
+                        progress_callback=progress
+                    )
+                    c = c + 1
+                d = d + 1
+        end = datetime.now()
+        ms = (end - start).seconds
+        await event.edit("Uploaded {} files from {} directories in {} seconds.".format(c, d, ms))
+    else:
+        await event.edit("404: Directory Not Found")
