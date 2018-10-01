@@ -68,17 +68,25 @@ async def _(event):
     else:
         url = HASH_TO_TORRENT_API.format(input_str)
         torrent_file_caption = "Torrent File: `{}`".format(input_str)
+        if not os.path.isdir(TEMP_DOWNLOAD_DIRECTORY):
+            os.makedirs(TEMP_DOWNLOAD_DIRECTORY)
+        required_file_name = TEMP_DOWNLOAD_DIRECTORY + " " + input_str + ".torrent"
+        r = requests.get(url, stream=True)
+        with open(required_file_name, "wb") as fd:
+            for chunk in r.iter_content(chunk_size=128):
+                fd.write(chunk)
         await borg.send_file(
             event.chat_id,
-            url,
+            required_file_name,
             caption=torrent_file_caption,
             force_document=True,
             allow_cache=False,
             reply_to=event.message.id
         )
+        os.remove(required_file_name)
     end = datetime.now()
     ms = (end - start).seconds
-    output_str = "Obtained Magnetic Link and Torrent File `{}` for the Info Hash: {} in {} seconds.".format(magnetic_link, input_str, ms)
+    output_str = "Obtained Magnetic Link and Torrent File for the Info Hash: `{}` in {} seconds.".format(input_str, ms)
     await event.edit(output_str)
 
 
