@@ -18,7 +18,50 @@ def progress(current, total):
     logger.info("Downloaded {} of {}\nCompleted {}".format(current, total, (current / total) * 100))
 
 
-@borg.on(events.NewMessage(pattern=r".upload (.*)", outgoing=True))
+def get_lst_of_files(input_directory, output_lst):
+    filesinfolder = os.listdir(input_directory)
+    for file_name in filesinfolder:
+        current_file_name = os.path.join(input_directory, file_name)
+        if os.path.isdir(current_file_name):
+            return get_lst_of_files(current_file_name, output_lst)
+        else:
+            output_lst.append(current_file_name)
+    return output_lst
+
+
+@borg.on(events.NewMessage(pattern=r"\.uploadir (.*)", outgoing=True))
+async def _(event):
+    if event.fwd_from:
+        return
+    input_str = event.pattern_match.group(1)
+    if os.path.exists(input_str):
+        start = datetime.now()
+        await event.edit("Processing ...")
+        lst_of_files = get_lst_of_files(input_str)
+        u = 0
+        await event.edit("Found {} files. Uploading will start soon. Please wait!".format(len(lst_of_files)))
+        for single_file in lst_of_files:
+            if os.path.exists(single_file):
+                # https://stackoverflow.com/a/678242/4723940
+                caption_rts = os.path.basename(single_file)
+                await borg.send_file(
+                    event.chat_id,
+                    single_file,
+                    caption=caption_rts,
+                    force_document=False,
+                    allow_cache=False,
+                    reply_to=event.message.id,
+                    progress_callback=progress
+                )
+                u = u + 1
+        end = datetime.now()
+        ms = (end - start).seconds
+        await event.edit("Uploaded {} files in {} seconds.".format(u, ms))
+    else:
+        await event.edit("404: Directory Not Found")
+
+
+@borg.on(events.NewMessage(pattern=r"\.upload (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
@@ -78,7 +121,7 @@ def extract_w_h(file):
         return width, height
 
 
-@borg.on(events.NewMessage(pattern=r".uploadas(stream|vn|all) (.*)", outgoing=True))
+@borg.on(events.NewMessage(pattern=r"\.uploadas(stream|vn|all) (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
