@@ -170,14 +170,10 @@ async def _(event):
             # https://stackoverflow.com/a/6444612/4723940
             width, height = im.size"""
         try:
-            the_bigg_ru_file = await borg.upload_file(
-                file_name
-            )
-            logger.info(the_bigg_ru_file)
             if supports_streaming:
                 await borg.send_file(
                     event.chat_id,
-                    the_bigg_ru_file,
+                    file_name,
                     thumb=thumb,
                     caption=input_str,
                     force_document=False,
@@ -197,7 +193,7 @@ async def _(event):
             elif round_message:
                 await borg.send_file(
                     event.chat_id,
-                    the_bigg_ru_file,
+                    file_name,
                     thumb=thumb,
                     allow_cache=False,
                     reply_to=event.message.id,
@@ -214,52 +210,8 @@ async def _(event):
                     progress_callback=progress
                 )
             elif spam_big_messages:
-                await borg.send_file(
-                    event.chat_id,
-                    the_bigg_ru_file,
-                    thumb=thumb,
-                    caption=input_str,
-                    force_document=False,
-                    allow_cache=False,
-                    reply_to=event.message.id,
-                    attributes=[
-                        DocumentAttributeVideo(
-                            duration=duration,
-                            w=width,
-                            h=height,
-                            round_message=False,
-                            supports_streaming=True
-                        )
-                    ],
-                    progress_callback=progress
-                )
-                await borg.send_file(
-                    event.chat_id,
-                    the_bigg_ru_file,
-                    thumb=thumb,
-                    allow_cache=False,
-                    reply_to=event.message.id,
-                    video_note=True,
-                    attributes=[
-                        DocumentAttributeVideo(
-                            duration=0,
-                            w=1,
-                            h=1,
-                            round_message=True,
-                            supports_streaming=True
-                        )
-                    ],
-                    progress_callback=progress
-                )
-                await borg.send_file(
-                    event.chat_id,
-                    the_bigg_ru_file,
-                    thumb=thumb,
-                    force_document=True,
-                    allow_cache=False,
-                    reply_to=event.message.id,
-                    progress_callback=progress
-                )
+                await event.edit("TBD: Not (yet) Implemented")
+                return
             end = datetime.now()
             ms = (end - start).seconds
             os.remove(thumb)
