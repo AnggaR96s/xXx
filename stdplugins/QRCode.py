@@ -30,6 +30,8 @@ async def _(event):
     end = datetime.now()
     ms = (end - start).seconds
     await event.edit("Obtained QRCode contents in {} seconds.\n{}".format(ms, qr_contents))
+    await asyncio.sleep(5)
+    await event.edit(qr_contents)
 
 
 @borg.on(events.NewMessage(pattern=r"\.makeqr ?(.*)", outgoing=True))
@@ -39,10 +41,12 @@ async def _(event):
     start = datetime.now()
     input_str = event.pattern_match.group(1)
     message = "SYNTAX: `.makeqr <long text to include>`"
+    reply_msg_id = event.message.id
     if input_str:
         message = input_str
     elif event.reply_to_msg_id:
         previous_message = await event.get_reply_message()
+        reply_msg_id = previous_message.id
         if previous_message.media:
             downloaded_file_name = await borg.download_media(
                 previous_message,
@@ -69,11 +73,13 @@ async def _(event):
     await borg.send_file(
         event.chat_id,
         required_file_name,
-        reply_to=event.message.id,
+        reply_to=reply_msg_id,
         progress_callback=progress
     )
     os.remove(required_file_name)
     end = datetime.now()
     ms = (end - start).seconds
     await event.edit("Created QRCode in {} seconds".format(ms))
+    await asyncio.sleep(5)
+    await event.delete()
 
