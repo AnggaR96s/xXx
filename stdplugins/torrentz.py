@@ -41,7 +41,7 @@ async def _(event):
     await event.edit("Scrapped {} for {} in {} seconds. Obtained Results: \n {}".format(input_type, input_str, ms, output_str))
 
 
-@borg.on(events.NewMessage(pattern=r".torrentz (.*)", outgoing=True))
+@borg.on(events.NewMessage(pattern=r".torrent (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
