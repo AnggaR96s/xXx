@@ -20,8 +20,8 @@ async def _(event):
         replied_user = await borg(GetFullUserRequest(previous_message.from_id))
     else:
         input_str = event.pattern_match.group(1)
-        mention_entity = event.message.entities
-        if mention_entity is not None:
+        if event.message.entities is not None:
+            mention_entity = event.message.entities
             probable_user_mention_entity = mention_entity[0]
             if type(probable_user_mention_entity) == MessageEntityMentionName:
                 user_id = probable_user_mention_entity.user_id
@@ -32,12 +32,17 @@ async def _(event):
                     user_object = await borg.get_entity(input_str)
                     user_id = user_object.id
                     replied_user = await borg(GetFullUserRequest(user_id))
-                except TypeError as e:
+                except e:
                     await event.edit(str(e))
                     return None
-                except ValueError as e:
-                    await event.edit(str(e))
-                    return None
+        else:
+            try:
+                user_object = await borg.get_entity(input_str)
+                user_id = user_object.id
+                replied_user = await borg(GetFullUserRequest(user_id))
+            except e:
+                await event.edit(str(e))
+                return None
     user_id = replied_user.user.id
     first_name = replied_user.user.first_name
     # some weird people (like me) have more than 4096 characters in their names

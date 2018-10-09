@@ -3,7 +3,7 @@ from telethon.tl.types import MessageMediaDocument, MessageMediaPhoto
 from telethon.utils import pack_bot_file_id
 
 
-@borg.on(events.NewMessage(pattern=r".get_id", outgoing=True))
+@borg.on(events.NewMessage(pattern=r"\.get_id", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
@@ -19,5 +19,3 @@ async def _(event):
     else:
         chat = await event.get_input_chat()
         await event.edit("The current chat's ID is `{}`!".format(str(event.chat_id)))
-
-

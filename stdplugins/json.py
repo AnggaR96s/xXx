@@ -17,6 +17,8 @@ async def _(event):
     else:
         the_real_message = event.stringify()
     if len(the_real_message) > MAX_MESSAGE_SIZE_LIMIT:
+        if not os.path.isdir(TEMP_DOWNLOAD_DIRECTORY):
+            os.makedirs(TEMP_DOWNLOAD_DIRECTORY)
         current_file_name = "{}temp_file.text".format(TEMP_DOWNLOAD_DIRECTORY)
         file_ponter = open(current_file_name, "w+")
         file_ponter.write(the_real_message)

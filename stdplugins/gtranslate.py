@@ -4,7 +4,7 @@ from googletrans import Translator
 import json
 
 
-@borg.on(events.NewMessage(pattern=r".tr (.*)", outgoing=True))
+@borg.on(events.NewMessage(pattern=r"\.tr (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
@@ -14,8 +14,11 @@ async def _(event):
         previous_message = await event.get_reply_message()
         text = previous_message.message
         lan = input_str
-    else:
+    elif "|" in input_str:
         lan, text = input_str.split("|")
+    else:
+        await event.edit("Invalid Syntax. Module stopping.")
+        return
     translator = Translator()
     try:
         translated = translator.translate(text, dest=lan)
@@ -27,4 +30,3 @@ async def _(event):
         await event.edit(output_str)
     except json.decoder.JSONDecodeError as exc:
         await event.edit(str(exc))
-

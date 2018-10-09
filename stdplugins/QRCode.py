@@ -17,6 +17,8 @@ async def _(event):
     if event.fwd_from:
         return
     start = datetime.now()
+    if not os.path.isdir(download_directory):
+        os.makedirs(download_directory)
     downloaded_file_name = await borg.download_media(
         await event.get_reply_message(),
         download_directory,
@@ -82,4 +84,3 @@ async def _(event):
     await event.edit("Created QRCode in {} seconds".format(ms))
     await asyncio.sleep(5)
     await event.delete()
-

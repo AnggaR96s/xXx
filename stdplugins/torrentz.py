@@ -72,18 +72,21 @@ async def _(event):
             os.makedirs(TEMP_DOWNLOAD_DIRECTORY)
         required_file_name = TEMP_DOWNLOAD_DIRECTORY + " " + input_str + ".torrent"
         r = requests.get(url, stream=True)
-        with open(required_file_name, "wb") as fd:
-            for chunk in r.iter_content(chunk_size=128):
-                fd.write(chunk)
-        await borg.send_file(
-            event.chat_id,
-            required_file_name,
-            caption=torrent_file_caption,
-            force_document=True,
-            allow_cache=False,
-            reply_to=event.message.id
-        )
-        os.remove(required_file_name)
+        if r.status_code == 200:
+            with open(required_file_name, "wb") as fd:
+                for chunk in r.iter_content(chunk_size=128):
+                    fd.write(chunk)
+            await borg.send_file(
+                event.chat_id,
+                required_file_name,
+                caption=torrent_file_caption,
+                force_document=True,
+                allow_cache=False,
+                reply_to=event.message.id
+            )
+            os.remove(required_file_name)
+        else:
+            logger.info("Torrent file cannot be send without setting the ENV variable")
     end = datetime.now()
     ms = (end - start).seconds
     output_str = "Obtained Magnetic Link and Torrent File for the Info Hash: `{}` in {} seconds.".format(input_str, ms)

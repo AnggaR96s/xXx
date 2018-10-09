@@ -7,11 +7,15 @@
     "plugin",
     "modular"
   ],
-  "repository": "https://github.com/uniborg/uniborg",
+  "repository": "https://github.com/SpEcHiDe/uniborg",
   "env": {
-    "ENV": {
-      "description": "Setting this to ANYTHING will enable env variables. But, you need to understand the code to know what to set here!",
-      "value": "ANYTHING"
+    "APP_ID": {
+      "description": "Get this value from my.telegram.org! Please do not steal",
+      "value": ""
+    },
+    "API_HASH": {
+      "description": "Get this value from my.telegram.org! Please do not steal",
+      "value": ""
     },
     "OPEN_WEATHER_MAP_APPID": {
       "description": "Get your own APPID from https://api.openweathermap.org/data/2.5/weather",
@@ -33,17 +37,9 @@
       "value": "",
       "required": false
     },
-    "APP_ID": {
-      "description": "Get this value from my.telegram.org! Please do not steal",
-      "value": ""
-    },
-    "API_HASH": {
-      "description": "Get this value from my.telegram.org! Please do not steal",
-      "value": ""
-    },
     "TMP_DOWNLOAD_DIRECTORY": {
-      "description": "This is required for the uploaddownload, speedtest, and telegra.ph file generator plugins.",
-      "value": "../DOWNLOADS/",
+      "description": "This is required for the plugins involving the file system.",
+      "value": "./DOWNLOADS/",
       "required": false
     },
     "IBM_WATSON_CRED_USERNAME": {
@@ -58,7 +54,7 @@
     },
     "HASH_TO_TORRENT_API": {
       "description": "This is required for the hash to torrent file functionality to work.",
-      "value": "",
+      "value": "https://example.com/torrent/{}",
       "required": false
     }
   },

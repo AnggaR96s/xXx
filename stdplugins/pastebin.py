@@ -17,6 +17,8 @@ async def _(event):
     if event.fwd_from:
         return
     start = datetime.now()
+    if not os.path.isdir(download_directory):
+        os.makedirs(download_directory)
     input_str = event.pattern_match.group(1)
     message = "SYNTAX: `.paste <long text to include>`"
     if input_str:
@@ -47,4 +49,3 @@ async def _(event):
     end = datetime.now()
     ms = (end - start).seconds
     await event.edit("Pasted to {} in {} seconds".format(url, ms))
-

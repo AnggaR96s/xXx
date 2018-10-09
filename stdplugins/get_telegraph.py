@@ -7,7 +7,7 @@ import mimetypes
 current_date_time = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./../DOWNLOADS/")
 
 
-@borg.on(events.NewMessage(pattern=r".telegraph media", outgoing=True))
+@borg.on(events.NewMessage(pattern=r"\.telegraph media", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return

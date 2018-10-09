@@ -34,6 +34,8 @@ async def _(event):
         evaluation = "SYNTAXERROR: " + str(e)
     final_output = "**EVAL**: `{}` \n\n **OUTPUT**: \n`{}` \n".format(cmd, evaluation)
     if len(final_output) > MAX_MESSAGE_SIZE_LIMIT:
+        if not os.path.isdir(TEMP_DOWNLOAD_DIRECTORY):
+            os.makedirs(TEMP_DOWNLOAD_DIRECTORY)
         current_file_name = "{}temp_file.text".format(TEMP_DOWNLOAD_DIRECTORY)
         file_ponter = open(current_file_name, "w+")
         file_ponter.write(final_output)

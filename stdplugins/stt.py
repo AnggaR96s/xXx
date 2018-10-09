@@ -13,9 +13,11 @@ IBM_WATSON_CRED_PASSWORD = os.environ.get("IBM_WATSON_CRED_PASSWORD", None)
 async def _(event):
     if event.fwd_from:
         return
-    input_str = event.pattern_match.group(1)
-    await event.edit("Downloading to my local, for analysis 🙇")
     start = datetime.now()
+    input_str = event.pattern_match.group(1)
+    if not os.path.isdir(TEMP_DOWNLOAD_DIRECTORY):
+        os.makedirs(TEMP_DOWNLOAD_DIRECTORY)
+    await event.edit("Downloading to my local, for analysis 🙇")
     if event.reply_to_msg_id:
         previous_message = await event.get_reply_message()
         required_file_name = await borg.download_media(
@@ -56,4 +58,4 @@ async def _(event):
             # now, remove the temporary file
             os.remove(required_file_name)
     else:
-        await event.edit("I do not know what to do with this message.")
+        await event.edit("Reply to a voice message, to get the relevant transcript.")

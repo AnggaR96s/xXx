@@ -1,7 +1,3 @@
-# This Source Code Form is subject to the terms of the Mozilla Public
-# License, v. 2.0. If a copy of the MPL was not distributed with this
-# file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
 from telethon import events
 
 from telethon.tl.functions.channels import EditBannedRequest
@@ -11,7 +7,7 @@ from telethon.errors import UserAdminInvalidError
 from telethon.tl.types import UserStatusEmpty, UserStatusLastMonth, UserStatusLastWeek, UserStatusOffline, UserStatusOnline, UserStatusRecently
 
 
-@borg.on(events.NewMessage(pattern=".kick ?(.*)", outgoing=True))
+@borg.on(events.NewMessage(pattern="\.kick ?(.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return

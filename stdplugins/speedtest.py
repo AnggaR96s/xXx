@@ -11,6 +11,8 @@ async def _(event):
     if event.fwd_from:
         return
     start = datetime.now()
+    if not os.path.isdir(temporary_download_directory):
+        os.makedirs(temporary_download_directory)
     await event.edit("Downloading speedtest-cli binary to my local ... Thus might take some time")
     url = "https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py"
     required_file_name = temporary_download_directory + "speedtest.cli"

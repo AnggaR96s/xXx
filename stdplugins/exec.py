@@ -21,6 +21,8 @@ async def _(event):
         x_reponse = t_response.decode("UTF-8")
         final_output = "**EXEC**: `{}` \n\n**OUTPUT**: \n{} \n".format(input_str, x_reponse)
     if len(final_output) > MAX_MESSAGE_SIZE_LIMIT:
+        if not os.path.isdir(TEMP_DOWNLOAD_DIRECTORY):
+            os.makedirs(TEMP_DOWNLOAD_DIRECTORY)
         current_file_name = "{}exec.text".format(TEMP_DOWNLOAD_DIRECTORY)
         file_ponter = open(current_file_name, "w+")
         file_ponter.write(final_output)

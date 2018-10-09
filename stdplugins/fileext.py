@@ -3,7 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
-@borg.on(events.NewMessage(pattern=r".filext (.*)", outgoing=True))
+@borg.on(events.NewMessage(pattern=r"\.filext (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return

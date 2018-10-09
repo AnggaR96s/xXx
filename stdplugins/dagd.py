@@ -4,7 +4,7 @@ import requests
 import json
 
 
-@borg.on(events.NewMessage(pattern=r".isup (.*)", outgoing=True))
+@borg.on(events.NewMessage(pattern=r"\.isup (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
@@ -17,7 +17,7 @@ async def _(event):
         await event.edit("i can't seem to find {} on the internet".format(input_str))
 
 
-@borg.on(events.NewMessage(pattern=r".dns (.*)", outgoing=True))
+@borg.on(events.NewMessage(pattern=r"\.dns (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
@@ -30,7 +30,7 @@ async def _(event):
         await event.edit("i can't seem to find {} on the internet".format(input_str))
 
 
-@borg.on(events.NewMessage(pattern=r".url (.*)", outgoing=True))
+@borg.on(events.NewMessage(pattern=r"\.url (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return

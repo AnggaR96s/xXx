@@ -1,8 +1,8 @@
 from telethon import events
-import time
+import asyncio
 
 
-@borg.on(events.NewMessage(pattern=r".emoji (.*)", outgoing=True))
+@borg.on(events.NewMessage(pattern=r"\.emoji (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
@@ -20,7 +20,7 @@ async def _(event):
             ":/"
         ]
         for i in animation_ttl:
-            time.sleep(animation_interval)
+            await asyncio.sleep(animation_interval)
             await event.edit(animation_chars[i % 2])
     elif input_str == "-_-":
         await event.edit(input_str)
@@ -29,5 +29,5 @@ async def _(event):
             "-_-"
         ]
         for i in animation_ttl:
-            time.sleep(animation_interval)
+            await asyncio.sleep(animation_interval)
             await event.edit(animation_chars[i % 2])

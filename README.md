@@ -6,7 +6,7 @@ Pluggable [``asyncio``](https://docs.python.org/3/library/asyncio.html)
 
 ## installing
 
-#### The Easy Way 
+#### The Easy Way
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
@@ -16,7 +16,9 @@ Simply clone the repository and run the main file:
 ```sh
 git clone https://github.com/uniborg/uniborg.git
 cd uniborg
-python stdborg.py
+pip install -r requirements.txt
+pip install -r requirements-stdborg.txt
+python3 -m stdborg stdborg
 ```
 
 ## design

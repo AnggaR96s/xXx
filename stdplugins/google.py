@@ -3,6 +3,7 @@ from datetime import datetime
 from gsearch.googlesearch import search
 from google_images_download import google_images_download
 import os
+import asyncio
 
 
 GLOBAL_LIMIT = 9
@@ -29,6 +30,8 @@ async def _(event):
     end = datetime.now()
     ms = (end - start).seconds
     await event.edit("searched Google for {} in {} seconds. \n{}".format(input_str, ms, output_str), link_preview=False)
+    await asyncio.sleep(5)
+    await event.edit("Google: {}\n{}".format(input_str, output_str), link_preview=False)
 
 
 @borg.on(events.NewMessage(pattern=r"\.google image (.*)"))
@@ -40,6 +43,8 @@ async def _(event):
     await event.edit("Processing ...")
     input_str = event.pattern_match.group(1)
     response = google_images_download.googleimagesdownload()
+    if not os.path.isdir(TMP_DOWNLOAD_DIRECTORY):
+        os.makedirs(TMP_DOWNLOAD_DIRECTORY)
     arguments = {
         "keywords": input_str,
         "limit": GLOBAL_LIMIT,
@@ -61,3 +66,5 @@ async def _(event):
     end = datetime.now()
     ms = (end - start).seconds
     await event.edit("searched Google for {} in {} seconds.".format(input_str, ms), link_preview=False)
+    await asyncio.sleep(5)
+    await event.delete()

@@ -3,9 +3,9 @@ import os
 import requests
 import json
 
-APP_ID = os.environ.get("OPEN_WEATHER_MAP_APPID")
+APP_ID = os.environ.get("OPEN_WEATHER_MAP_APPID", None)
 
-@borg.on(events.NewMessage(pattern=r".weather (.*)", outgoing=True))
+@borg.on(events.NewMessage(pattern=r"\.weather (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return

@@ -26,6 +26,8 @@ async def _(event):
     elif event.reply_to_msg_id:
         previous_message = await event.get_reply_message()
         reply_msg_id = previous_message.id
+    if not os.path.isdir(download_directory):
+        os.makedirs(download_directory)
     required_file_name = download_directory + " " + str(datetime.now()) + ".webp"
     img = Image.new('RGB', (250, 50), color = (0, 0, 0))
     fnt = ImageFont.truetype(font_file_to_use, 30)
@@ -44,4 +46,3 @@ async def _(event):
     await event.edit("Created sticker in {} seconds".format(ms))
     await asyncio.sleep(5)
     await event.delete()
-

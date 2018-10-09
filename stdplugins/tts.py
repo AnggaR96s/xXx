@@ -4,12 +4,13 @@ import os
 import subprocess
 from datetime import datetime
 from gtts import gTTS
+import asyncio
 
 
 TEMP_DOWNLOAD_DIRECTORY = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./../DOWNLOADS/")
 
 
-@borg.on(events.NewMessage(pattern=r".tts (.*)", outgoing=True))
+@borg.on(events.NewMessage(pattern=r"\.tts (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
@@ -19,8 +20,11 @@ async def _(event):
         previous_message = await event.get_reply_message()
         text = previous_message.message
         lan = input_str
-    else:
+    elif "|" in input_str:
         lan, text = input_str.split("|")
+    else:
+        await event.edit("Invalid Syntax. Module stopping.")
+        return
     required_file_name = TEMP_DOWNLOAD_DIRECTORY + "voice.ogg"
     try:
         tts = gTTS(text, lan)
@@ -62,5 +66,7 @@ async def _(event):
         )
         os.remove(required_file_name)
         await event.edit("Processed {} ({}) in {} seconds!".format(text[0:97], lan, ms))
+        await asyncio.sleep(5)
+        await event.delete()
     except AssertionError as e:
         await event.edit(str(e))

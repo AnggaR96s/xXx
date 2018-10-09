@@ -3,7 +3,7 @@ import json
 import os
 import subprocess
 import requests
-import time
+import asyncio
 from datetime import datetime
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
@@ -20,7 +20,7 @@ def progress(current, total):
     logger.info("Downloaded {} of {}\nCompleted {}".format(current, total, (current / total) * 100))
 
 
-@borg.on(events.NewMessage(pattern=r".download (.*)", outgoing=True))
+@borg.on(events.NewMessage(pattern=r"\.download ?(.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
@@ -38,7 +38,7 @@ async def _(event):
         end = datetime.now()
         ms = (end - start).seconds
         await event.edit("Downloaded to `{}` in {} seconds.".format(downloaded_file_name, ms))
-    elif input_str:
+    elif "|" in input_str:
         url, file_name = input_str.split("|")
         url = url.strip()
         # https://stackoverflow.com/a/761825/4723940
@@ -65,7 +65,7 @@ async def _(event):
                         await event.edit(download_progress_string)
                     except MessageNotModifiedError as e:
                         logger.warn("__FLOODWAIT__: {} sleeping for 100seconds, before proceeding.".format(str(e)))
-                    time.sleep(1)"""
+                    await asyncio.sleep(1)"""
                     logger.info(download_progress_string)
         end = datetime.now()
         ms = (end - start).seconds

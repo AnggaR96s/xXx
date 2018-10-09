@@ -3,7 +3,7 @@ from telethon.tl.types import ChannelParticipantsAdmins, ChatParticipantCreator
 from telethon.errors import ChatAdminRequiredError, InputUserDeactivatedError
 
 
-@borg.on(events.NewMessage(pattern=".get_admin ?(.*)", outgoing=True))
+@borg.on(events.NewMessage(pattern="\.get_admin ?(.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
