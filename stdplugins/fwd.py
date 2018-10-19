@@ -12,19 +12,19 @@ async def _(event):
             e = await borg.get_entity(int(PRIVATE_CHANNEL_BOT_API_ID))
         except e:
             await event.edit(str(e))
-            return None
-        re_message = await event.get_reply_message()
-        # https://t.me/telethonofftopic/78166
-        fwd_message = await borg.forward_messages(
-            e,
-            re_message,
-            silent=True
-        )
-        await borg.forward_messages(
-            event.chat_id,
-            fwd_message
-        )
-        await fwd_message.delete()
-        await event.delete()
+        else:
+            re_message = await event.get_reply_message()
+            # https://t.me/telethonofftopic/78166
+            fwd_message = await borg.forward_messages(
+                e,
+                re_message,
+                silent=True
+            )
+            await borg.forward_messages(
+                event.chat_id,
+                fwd_message
+            )
+            await fwd_message.delete()
+            await event.delete()
     else:
         await event.edit("Please set the required environment variables for this plugin to work")
