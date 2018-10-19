@@ -1,121 +1,59 @@
 from telethon import events
 import os
 from datetime import datetime
-import requests
-import mimetypes
+from telegraph import Telegraph, upload_file
 
-current_date_time = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./../DOWNLOADS/")
+TMP_DOWNLOAD_DIRECTORY = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./../DOWNLOADS/")
+short_name = os.environ.get("TELEGRAPH_SHORT_NAME", "UniBorg")
+PRIVATE_GROUP_BOT_API_ID = borg.uid
 
 
-@borg.on(events.NewMessage(pattern=r"\.telegraph media", outgoing=True))
+@borg.on(events.NewMessage(pattern=r"\.telegraph (media|text)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
-    if not os.path.isdir(current_date_time):
-        os.makedirs(current_date_time)
+    if not os.path.isdir(TMP_DOWNLOAD_DIRECTORY):
+        os.makedirs(TMP_DOWNLOAD_DIRECTORY)
+    telegraph = Telegraph()
+    r = telegraph.create_account(short_name=short_name)
+    auth_url = r["auth_url"]
+    await borg.send_message(
+        PRIVATE_GROUP_BOT_API_ID,
+        "Created New Telegraph account {} for the current session. \n**Do not give this url to anyone, even if they say they are from Telegram!**".format(auth_url)
+    )
     if event.reply_to_msg_id:
         start = datetime.now()
-        downloaded_file_name = await borg.download_media(
-            await event.get_reply_message(),
-            current_date_time
-        )
-        end = datetime.now()
-        ms = (end - start).seconds
-        await event.edit("Downloaded to {} in {} seconds.".format(downloaded_file_name, ms))
-        try:
-            start = datetime.now()
-            media_urls = TelegraphMedia.upload_file(downloaded_file_name)
-        except TelegraphMedia.TelegraphException as e:
-            await event.edit("ERROR: " + str(e))
-            os.remove(downloaded_file_name)
-        else:
+        r_message = await event.get_reply_message()
+        input_str = event.pattern_match.group(1)
+        if input_str == "media":
+            downloaded_file_name = await borg.download_media(
+                r_message,
+                TMP_DOWNLOAD_DIRECTORY
+            )
             end = datetime.now()
-            ms_two = (end - start).seconds
-            os.remove(downloaded_file_name)
-            await event.edit("Uploaded to {} in {} seconds.".format(media_urls[0], (ms + ms_two)))
+            ms = (end - start).seconds
+            await event.edit("Downloaded to {} in {} seconds.".format(downloaded_file_name, ms))
+            try:
+                start = datetime.now()
+                media_urls = upload_file(downloaded_file_name)
+            except e:
+                await event.edit("ERROR: " + str(e))
+                os.remove(downloaded_file_name)
+            else:
+                end = datetime.now()
+                ms_two = (end - start).seconds
+                os.remove(downloaded_file_name)
+                await event.edit("Uploaded to https://telegra.ph/{} in {} seconds.".format(media_urls[0], (ms + ms_two)))
+        elif input_str == "text":
+            user_object = await borg.get_entity(event.message.from_id)
+            title_of_page = user_object.first_name + " " + user_object.last_name
+            page_content = r_message.message
+            response = telegraph.create_page(
+                title_of_page,
+                html_content=page_content
+            )
+            end = datetime.now()
+            ms = (end - start).seconds
+            await event.edit("Pasted to https://telegra.ph/{} in {} seconds.".format(response["path"], ms))
     else:
         await event.edit("Reply to a message to get a permanent telegra.ph link. (Inspired by @ControllerBot)")
-
-
-class TelegraphMedia:
-    """ The below lines copied from https://github.com/python273/telegraph/blob/master/telegraph/upload.py
-    """
-    def upload_file(f):
-        """ Upload file to Telegra.ph's servers. Returns a list of links.
-            Allowed only .jpg, .jpeg, .png, .gif and .mp4 files.
-
-        :param f: filename or file-like object.
-        :type f: file, str or list
-        """
-        with TelegraphMedia.FilesOpener(f) as files:
-            response = requests.post(
-                'https://telegra.ph/upload',
-                files=files
-            ).json()
-
-        if isinstance(response, list):
-            error = response[0].get('error')
-        else:
-            error = response.get('error')
-
-        if error:
-            raise TelegraphMedia.TelegraphException(error)
-
-        return ["https://telegra.ph" + i['src'] for i in response]
-
-
-    class FilesOpener(object):
-        def __init__(self, paths, key_format='file{}'):
-            if not isinstance(paths, list):
-                paths = [paths]
-
-            self.paths = paths
-            self.key_format = key_format
-            self.opened_files = []
-
-        def __enter__(self):
-            return self.open_files()
-
-        def __exit__(self, type, value, traceback):
-            self.close_files()
-
-        def open_files(self):
-            self.close_files()
-
-            files = []
-
-            for x, file_or_name in enumerate(self.paths):
-                name = ''
-                if isinstance(file_or_name, tuple) and len(file_or_name) >= 2:
-                    name = file_or_name[1]
-                    file_or_name = file_or_name[0]
-
-                if hasattr(file_or_name, 'read'):
-                    f = file_or_name
-
-                    if hasattr(f, 'name'):
-                        filename = f.name
-                    else:
-                        filename = name
-                else:
-                    filename = file_or_name
-                    f = open(filename, 'rb')
-                    self.opened_files.append(f)
-
-                mimetype = mimetypes.MimeTypes().guess_type(filename)[0]
-
-                files.append(
-                    (self.key_format.format(x), ('file{}'.format(x), f, mimetype))
-                )
-
-            return files
-
-        def close_files(self):
-            for f in self.opened_files:
-                f.close()
-
-            self.opened_files = []
-
-
-    class TelegraphException(Exception):
-        pass

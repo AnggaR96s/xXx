@@ -11,4 +11,4 @@ gtts
 gsearch
 google_images_download
 py_translator
-
+telegraph
