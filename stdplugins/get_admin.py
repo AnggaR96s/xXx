@@ -21,16 +21,13 @@ async def _(event):
             await event.edit(str(e))
             return None
     try:
+        # mentions += " \tC\tP\tE\tD\tB\tU\tL\tP\tA\tM"
         async for x in borg.iter_participants(chat, filter=ChannelParticipantsAdmins):
+            is_admin = ""
             if not x.deleted:
-                mentions += f"\n[{x.first_name}](tg://user?id={x.id}) `{x.id}`"
+                mentions += "\n {} [{}](tg://user?id={}) `{}`".format(is_admin, x.first_name, x.id, x.id)
             else:
-                mentions += f"\n InputUserDeactivatedError `{x.id}`"
+                mentions += "\n {} `{}`".format(is_admin, x.id)
     except ChatAdminRequiredError as e:
         mentions += " " + str(e) + "\n"
-    await borg.send_message(
-        to_write_chat,
-        mentions,
-        reply_to=event.message.reply_to_msg_id
-    )
-    await event.delete()
+    await event.edit(mentions)

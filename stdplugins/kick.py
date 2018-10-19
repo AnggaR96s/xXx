@@ -12,9 +12,6 @@ async def _(event):
     if event.fwd_from:
         return
     input_str = event.pattern_match.group(1)
-    await event.edit("Getting Participant Lists. This might take some time ...")
-    p = await borg.get_participants(event.chat_id, aggressive=True)
-    await event.edit("Searching through {} users ...".format(len(p)))
     c = 0
     d = 0
     e = []
@@ -24,7 +21,8 @@ async def _(event):
     o = 0
     q = 0
     r = 0
-    for i in p:
+    await event.edit("Searching Participant Lists.")
+    async for x in borg.iter_participants(event.chat_id, aggressive=True):
         #
         # Note that it's "reversed". You must set to ``True`` the permissions
         # you want to REMOVE, and leave as ``None`` those you want to KEEP.
