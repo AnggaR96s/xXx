@@ -56,6 +56,11 @@
       "description": "This is required for the hash to torrent file functionality to work.",
       "value": "https://example.com/torrent/{}",
       "required": false
+    },
+    "TELEGRAPH_SHORT_NAME": {
+      "description": "This is required for the @telegraph functionality.",
+      "value": "UniBorg",
+      "required": false
     }
   },
   "addons": [],
