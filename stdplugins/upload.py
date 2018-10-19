@@ -53,6 +53,7 @@ async def _(event):
                     reply_to=event.message.id,
                     progress_callback=progress
                 )
+                os.remove(single_file)
                 u = u + 1
         end = datetime.now()
         ms = (end - start).seconds

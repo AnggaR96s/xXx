@@ -1,7 +1,7 @@
 from telethon import events
 from datetime import datetime
-from googletrans import Translator
 import json
+from py_translator import Translator
 
 
 @borg.on(events.NewMessage(pattern=r"\.tr (.*)", outgoing=True))
@@ -28,5 +28,5 @@ async def _(event):
         ms = (end - start).seconds
         output_str = "Translated from {} to {} in {} seconds. \n {}".format(src_lang, lan, str(ms), translated_text)
         await event.edit(output_str)
-    except json.decoder.JSONDecodeError as exc:
+    except exc:
         await event.edit(str(exc))
