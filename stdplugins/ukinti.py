@@ -6,6 +6,8 @@ from datetime import datetime, timedelta
 from telethon.errors import UserAdminInvalidError
 from telethon.tl.types import UserStatusEmpty, UserStatusLastMonth, UserStatusLastWeek, UserStatusOffline, UserStatusOnline, UserStatusRecently
 
+import asyncio
+
 
 @borg.on(events.NewMessage(pattern="\.kick ?(.*)", outgoing=True))
 async def _(event):
@@ -117,3 +119,12 @@ UserStatusOnline: {}
 UserStatusRecently: {}
     """
     await event.edit(required_string.format(c, len(p), d, y, m, w, o, q, r))
+    await asyncio.sleep(5)
+    await event.edit("""Total: {} users
+Deleted Accounts: {}
+UserStatusEmpty: {}
+UserStatusLastMonth: {}
+UserStatusLastWeek: {}
+UserStatusOffline: {}
+UserStatusOnline: {}
+UserStatusRecently: {}""".format(len(p), d, y, m, w, o, q, r))
