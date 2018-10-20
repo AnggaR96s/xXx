@@ -12,9 +12,9 @@ async def _(event):
         await event.edit("Need to get an API key from https://screenshotlayer.com/product \nModule stopping!")
         return
     await event.edit("Processing ...")
-    sample_url = "https://api.screenshotlayer.com/api/capture?access_key={}&url={}"
+    sample_url = "https://api.screenshotlayer.com/api/capture?access_key={}&url={}&fullpage={}&format={}&viewport={}"
     input_str = event.pattern_match.group(1)
-    response_api = requests.get(sample_url.format(ACCESS_KEY, input_str), stream=True)
+    response_api = requests.get(sample_url.format(ACCESS_KEY, input_str, "1", "PNG", "2560x1440"), stream=True)
     # https://stackoverflow.com/a/23718458/4723940
     contentType = response_api.headers['content-type']
     if "image" in contentType:
