@@ -29,7 +29,6 @@ async def _(event):
     if reply_msg_id:
         r_mesg = await event.get_reply_message()
         to_ban_id = r_mesg.sender_id
-        # await r_mesg.delete()
     elif input_str:
         to_ban_id = input_str
     try:

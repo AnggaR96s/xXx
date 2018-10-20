@@ -25,13 +25,9 @@ async def _(event):
         # https://t.me/telethonofftopic/43873
         else:
             evaluation = eval(cmd)
-    except ZeroDivisionError as e:
-        evaluation = "ZDERROR: " + str(e)
+    except (ZeroDivisionError, ValueError, SyntaxError, AttributeError) as e:
+        evaluation = str(e)
     # https://t.me/telethonofftopic/43873
-    except ValueError as e:
-        evaluation = "VALUEERROR: " + str(e)
-    except SyntaxError as e:
-        evaluation = "SYNTAXERROR: " + str(e)
     final_output = "**EVAL**: `{}` \n\n **OUTPUT**: \n`{}` \n".format(cmd, evaluation)
     if len(final_output) > MAX_MESSAGE_SIZE_LIMIT:
         if not os.path.isdir(TEMP_DOWNLOAD_DIRECTORY):
