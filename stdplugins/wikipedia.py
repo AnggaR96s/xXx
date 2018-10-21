@@ -6,7 +6,7 @@ from telethon import events
 import wikipedia
 
 
-@borg.on(events.NewMessage(pattern=r"\.wiki (.*)", outgoing=True))
+@borg.on(events.NewMessage(pattern=r"\.wikipedia (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
