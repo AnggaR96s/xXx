@@ -45,15 +45,47 @@ async def _(event):
             if os.path.exists(single_file):
                 # https://stackoverflow.com/a/678242/4723940
                 caption_rts = os.path.basename(single_file)
-                await borg.send_file(
-                    event.chat_id,
-                    single_file,
-                    caption=caption_rts,
-                    force_document=False,
-                    allow_cache=False,
-                    reply_to=event.message.id,
-                    progress_callback=progress
-                )
+                if not caption_rts.lower().endswith(".mp4"):
+                    await borg.send_file(
+                        event.chat_id,
+                        single_file,
+                        caption=caption_rts,
+                        force_document=False,
+                        allow_cache=False,
+                        reply_to=event.message.id,
+                        progress_callback=progress
+                    )
+                else:
+                    thumb_image = os.path.join(input_str, "thumb.jpg")
+                    metadata = extractMetadata(createParser(single_file))
+                    duration = 0
+                    width = 0
+                    height = 0
+                    if metadata.has("duration"):
+                        duration = metadata.get('duration').seconds
+                    if metadata.has("width"):
+                        width = metadata.get("width")
+                    if metadata.has("height"):
+                        height = metadata.get("height")
+                    await borg.send_file(
+                        event.chat_id,
+                        single_file,
+                        caption=caption_rts,
+                        thumb=thumb_image,
+                        force_document=False,
+                        allow_cache=False,
+                        reply_to=event.message.id,
+                        attributes=[
+                            DocumentAttributeVideo(
+                                duration=duration,
+                                w=width,
+                                h=height,
+                                round_message=False,
+                                supports_streaming=True
+                            )
+                        ],
+                        progress_callback=progress
+                    )
                 os.remove(single_file)
                 u = u + 1
         end = datetime.now()
