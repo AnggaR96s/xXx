@@ -38,6 +38,7 @@ async def _(event):
         start = datetime.now()
         await event.edit("Processing ...")
         lst_of_files = get_lst_of_files(input_str, [])
+        logger.info(lst_of_files)
         u = 0
         await event.edit("Found {} files. Uploading will start soon. Please wait!".format(len(lst_of_files)))
         for single_file in lst_of_files:
