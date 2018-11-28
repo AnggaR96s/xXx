@@ -2,9 +2,9 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from telethon import events
+from telethon import events, sync, errors
+from telethon.tl import functions as f, types as t
 import inspect
-from telethon.errors import MessageEmptyError
 import os
 
 MAX_MESSAGE_SIZE_LIMIT = 4095
@@ -25,7 +25,7 @@ async def _(event):
         # https://t.me/telethonofftopic/43873
         else:
             evaluation = eval(cmd)
-    except (ZeroDivisionError, ValueError, SyntaxError, AttributeError) as e:
+    except (ZeroDivisionError, ValueError, SyntaxError, AttributeError, NameError, TypeError) as e:
         evaluation = str(e)
     # https://t.me/telethonofftopic/43873
     final_output = "**EVAL**: `{}` \n\n **OUTPUT**: \n`{}` \n".format(cmd, evaluation)

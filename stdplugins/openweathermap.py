@@ -13,6 +13,6 @@ async def _(event):
     input_str = event.pattern_match.group(1)
     response_api = requests.get(sample_url.format(input_str, APP_ID)).json()
     if response_api["cod"] == 200:
-        await event.edit(input_str + "\n `" + json.dumps(response_api["main"]) + "`\n")
+        await event.edit("The temperature is around {}°C, in {}.".format(response_api["main"]["temp"], input_str))
     else:
         await event.edit(response_api["message"])

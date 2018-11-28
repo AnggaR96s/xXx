@@ -18,7 +18,7 @@ async def _(event):
     # https://stackoverflow.com/a/23718458/4723940
     contentType = response_api.headers['content-type']
     if "image" in contentType:
-        temp_file_name = "screenshotlayer.png"
+        temp_file_name = "screencapture.png"
         with open(temp_file_name, "wb") as fd:
             for chunk in response_api.iter_content(chunk_size=128):
                 fd.write(chunk)
