@@ -2,9 +2,6 @@ from telethon import events
 from telethon.errors import MessageTooLongError
 import os
 
-MAX_MESSAGE_SIZE_LIMIT = 4095
-TEMP_DOWNLOAD_DIRECTORY = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./DOWNLOADS/")
-
 
 @borg.on(events.NewMessage(pattern=r"\.json", outgoing=True))
 async def _(event):
@@ -16,10 +13,10 @@ async def _(event):
         the_real_message = previous_message.stringify()
     else:
         the_real_message = event.stringify()
-    if len(the_real_message) > MAX_MESSAGE_SIZE_LIMIT:
-        if not os.path.isdir(TEMP_DOWNLOAD_DIRECTORY):
-            os.makedirs(TEMP_DOWNLOAD_DIRECTORY)
-        current_file_name = "{}temp_file.text".format(TEMP_DOWNLOAD_DIRECTORY)
+    if len(the_real_message) > Config.MAX_MESSAGE_SIZE_LIMIT:
+        if not os.path.isdir(Config.TMP_DOWNLOAD_DIRECTORY):
+            os.makedirs(Config.TMP_DOWNLOAD_DIRECTORY)
+        current_file_name = "{}file.json".format(Config.TMP_DOWNLOAD_DIRECTORY)
         file_ponter = open(current_file_name, "w+")
         file_ponter.write(the_real_message)
         file_ponter.close()

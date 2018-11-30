@@ -5,15 +5,12 @@ from telethon.tl.types import MessageEntityMentionName
 from telethon.utils import get_input_location
 
 
-current_date_time = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./../DOWNLOADS/")
-
-
 @borg.on(events.NewMessage(pattern="\.whois ?(.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
-    if not os.path.isdir(current_date_time):
-        os.makedirs(current_date_time)
+    if not os.path.isdir(Config.TMP_DOWNLOAD_DIRECTORY):
+        os.makedirs(Config.TMP_DOWNLOAD_DIRECTORY)
     replied_user = None
     if event.reply_to_msg_id:
         previous_message = await event.get_reply_message()
@@ -53,7 +50,7 @@ async def _(event):
         dc_id, location = get_input_location(replied_user.profile_photo)
         photo = await borg.download_profile_photo(
             user_id,
-            current_date_time + str(user_id) + ".jpg",
+            Config.TMP_DOWNLOAD_DIRECTORY + str(user_id) + ".jpg",
             download_big=True
         )
     except TypeError as e:

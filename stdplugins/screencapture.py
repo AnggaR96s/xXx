@@ -2,19 +2,18 @@ from telethon import events
 import os
 import requests
 
-ACCESS_KEY = os.environ.get("SCREEN_SHOT_LAYER_ACCESS_KEY", None)
 
 @borg.on(events.NewMessage(pattern=r"\.screencapture (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
-    if ACCESS_KEY is None:
+    if Config.SCREEN_SHOT_LAYER_ACCESS_KEY is None:
         await event.edit("Need to get an API key from https://screenshotlayer.com/product \nModule stopping!")
         return
     await event.edit("Processing ...")
     sample_url = "https://api.screenshotlayer.com/api/capture?access_key={}&url={}&fullpage={}&format={}&viewport={}"
     input_str = event.pattern_match.group(1)
-    response_api = requests.get(sample_url.format(ACCESS_KEY, input_str, "1", "PNG", "2560x1440"), stream=True)
+    response_api = requests.get(sample_url.format(Config.SCREEN_SHOT_LAYER_ACCESS_KEY, input_str, "1", "PNG", "2560x1440"), stream=True)
     # https://stackoverflow.com/a/23718458/4723940
     contentType = response_api.headers['content-type']
     if "image" in contentType:

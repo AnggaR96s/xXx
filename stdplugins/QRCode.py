@@ -5,9 +5,6 @@ import os
 import requests
 
 
-download_directory = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./../DOWNLOADS/")
-
-
 def progress(current, total):
     logger.info("Downloaded {} of {}\nCompleted {}".format(current, total, (current / total) * 100))
 
@@ -17,11 +14,11 @@ async def _(event):
     if event.fwd_from:
         return
     start = datetime.now()
-    if not os.path.isdir(download_directory):
-        os.makedirs(download_directory)
+    if not os.path.isdir(Config.TMP_DOWNLOAD_DIRECTORY):
+        os.makedirs(Config.TMP_DOWNLOAD_DIRECTORY)
     downloaded_file_name = await borg.download_media(
         await event.get_reply_message(),
-        download_directory,
+        Config.TMP_DOWNLOAD_DIRECTORY,
         progress_callback=progress
     )
     url = "https://api.qrserver.com/v1/read-qr-code/?outputformat=json"
@@ -52,7 +49,7 @@ async def _(event):
         if previous_message.media:
             downloaded_file_name = await borg.download_media(
                 previous_message,
-                download_directory,
+                Config.TMP_DOWNLOAD_DIRECTORY,
                 progress_callback=progress
             )
             m_list = None
@@ -68,7 +65,7 @@ async def _(event):
         message = "SYNTAX: `.makeqr <long text to include>`"
     url = "https://api.qrserver.com/v1/create-qr-code/?data={}&size=200x200&charset-source=UTF-8&charset-target=UTF-8&ecc=L&color=0-0-0&bgcolor=255-255-255&margin=1&qzone=0&format=jpg"
     r = requests.get(url.format(message), stream=True)
-    required_file_name = download_directory + " " + str(datetime.now()) + ".webp"
+    required_file_name = Config.TMP_DOWNLOAD_DIRECTORY + " " + str(datetime.now()) + ".webp"
     with open(required_file_name, "wb") as fd:
         for chunk in r.iter_content(chunk_size=128):
             fd.write(chunk)

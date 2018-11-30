@@ -7,9 +7,6 @@ from telethon.tl import functions as f, types as t
 import inspect
 import os
 
-MAX_MESSAGE_SIZE_LIMIT = 4095
-TEMP_DOWNLOAD_DIRECTORY = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./DOWNLOADS/")
-
 
 @borg.on(events.NewMessage(pattern=r"\.eval (.*)", outgoing=True))
 async def _(event):
@@ -29,10 +26,10 @@ async def _(event):
         evaluation = str(e)
     # https://t.me/telethonofftopic/43873
     final_output = "**EVAL**: `{}` \n\n **OUTPUT**: \n`{}` \n".format(cmd, evaluation)
-    if len(final_output) > MAX_MESSAGE_SIZE_LIMIT:
-        if not os.path.isdir(TEMP_DOWNLOAD_DIRECTORY):
-            os.makedirs(TEMP_DOWNLOAD_DIRECTORY)
-        current_file_name = "{}temp_file.text".format(TEMP_DOWNLOAD_DIRECTORY)
+    if len(final_output) > Config.MAX_MESSAGE_SIZE_LIMIT:
+        if not os.path.isdir(Config.TMP_DOWNLOAD_DIRECTORY):
+            os.makedirs(Config.TMP_DOWNLOAD_DIRECTORY)
+        current_file_name = "{}eval.text".format(Config.TMP_DOWNLOAD_DIRECTORY)
         file_ponter = open(current_file_name, "w+")
         file_ponter.write(final_output)
         file_ponter.close()

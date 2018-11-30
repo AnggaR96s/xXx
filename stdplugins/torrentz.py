@@ -6,8 +6,6 @@ import cfscrape # https://github.com/Anorov/cloudflare-scrape
 from bs4 import BeautifulSoup
 import urllib.parse
 
-TEMP_DOWNLOAD_DIRECTORY = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./DOWNLOADS/")
-HASH_TO_TORRENT_API = os.environ.get("HASH_TO_TORRENT_API", None);
 
 @borg.on(events.NewMessage(pattern=r".torrentz (torrentz2\.eu|idop\.se) (.*)", outgoing=True))
 async def _(event):
@@ -49,7 +47,7 @@ async def _(event):
     await event.edit("Processing ...")
     input_str = event.pattern_match.group(1)
     magnetic_link = Scrapper.GetMagneticLink(input_str)
-    magnetic_link_file = "{}{}.link".format(TEMP_DOWNLOAD_DIRECTORY, input_str)
+    magnetic_link_file = "{}{}.link".format(Config.TMP_DOWNLOAD_DIRECTORY, input_str)
     magnetic_link_caption = "Magnetic Link: `{}`".format(input_str)
     file_ponter = open(magnetic_link_file, "w+")
     file_ponter.write(magnetic_link)
@@ -63,14 +61,14 @@ async def _(event):
         reply_to=event.message.id
     )
     os.remove(magnetic_link_file)
-    if HASH_TO_TORRENT_API is None:
+    if Config.HASH_TO_TORRENT_API is None:
         logger.info("Torrent file cannot be send without setting the ENV variable")
     else:
-        url = HASH_TO_TORRENT_API.format(input_str)
+        url = Config.HASH_TO_TORRENT_API.format(input_str)
         torrent_file_caption = "Torrent File: `{}`".format(input_str)
-        if not os.path.isdir(TEMP_DOWNLOAD_DIRECTORY):
-            os.makedirs(TEMP_DOWNLOAD_DIRECTORY)
-        required_file_name = TEMP_DOWNLOAD_DIRECTORY + " " + input_str + ".torrent"
+        if not os.path.isdir(Config.TMP_DOWNLOAD_DIRECTORY):
+            os.makedirs(Config.TMP_DOWNLOAD_DIRECTORY)
+        required_file_name = Config.TMP_DOWNLOAD_DIRECTORY + " " + input_str + ".torrent"
         r = requests.get(url, stream=True)
         if r.status_code == 200:
             with open(required_file_name, "wb") as fd:

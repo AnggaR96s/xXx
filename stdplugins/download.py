@@ -13,8 +13,6 @@ from telethon.errors import MessageNotModifiedError
 
 from PIL import Image
 
-TEMP_DOWNLOAD_DIRECTORY = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./../DOWNLOADS/")
-
 
 def progress(current, total):
     logger.info("Downloaded {} of {}\nCompleted {}".format(current, total, (current / total) * 100))
@@ -26,13 +24,13 @@ async def _(event):
         return
     await event.edit("Processing ...")
     input_str = event.pattern_match.group(1)
-    if not os.path.isdir(TEMP_DOWNLOAD_DIRECTORY):
-        os.makedirs(TEMP_DOWNLOAD_DIRECTORY)
+    if not os.path.isdir(Config.TMP_DOWNLOAD_DIRECTORY):
+        os.makedirs(Config.TMP_DOWNLOAD_DIRECTORY)
     if event.reply_to_msg_id:
         start = datetime.now()
         downloaded_file_name = await borg.download_media(
             await event.get_reply_message(),
-            TEMP_DOWNLOAD_DIRECTORY,
+            Config.TMP_DOWNLOAD_DIRECTORY,
             progress_callback=progress
         )
         end = datetime.now()
@@ -43,7 +41,7 @@ async def _(event):
         url = url.strip()
         # https://stackoverflow.com/a/761825/4723940
         file_name = file_name.strip()
-        required_file_name = TEMP_DOWNLOAD_DIRECTORY + "" + file_name
+        required_file_name = Config.TMP_DOWNLOAD_DIRECTORY + "" + file_name
         start = datetime.now()
         r = requests.get(url, stream=True)
         with open(required_file_name, "wb") as fd:

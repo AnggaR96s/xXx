@@ -5,9 +5,6 @@ import os
 import requests
 
 
-download_directory = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./../DOWNLOADS/")
-
-
 def progress(current, total):
     logger.info("Downloaded {} of {}\nCompleted {}".format(current, total, (current / total) * 100))
 
@@ -17,8 +14,8 @@ async def _(event):
     if event.fwd_from:
         return
     start = datetime.now()
-    if not os.path.isdir(download_directory):
-        os.makedirs(download_directory)
+    if not os.path.isdir(Config.TMP_DOWNLOAD_DIRECTORY):
+        os.makedirs(Config.TMP_DOWNLOAD_DIRECTORY)
     input_str = event.pattern_match.group(1)
     message = "SYNTAX: `.paste <long text to include>`"
     if input_str:
@@ -28,7 +25,7 @@ async def _(event):
         if previous_message.media:
             downloaded_file_name = await borg.download_media(
                 previous_message,
-                download_directory,
+                Config.TMP_DOWNLOAD_DIRECTORY,
                 progress_callback=progress
             )
             m_list = None

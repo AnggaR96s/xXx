@@ -3,9 +3,6 @@ import subprocess
 from telethon.errors import MessageEmptyError, MessageTooLongError
 import os
 
-MAX_MESSAGE_SIZE_LIMIT = 4095
-TEMP_DOWNLOAD_DIRECTORY = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./DOWNLOADS/")
-
 
 @borg.on(events.NewMessage(pattern=r"\.exec (.*)", outgoing=True))
 async def _(event):
@@ -20,10 +17,10 @@ async def _(event):
     else:
         x_reponse = t_response.decode("UTF-8")
         final_output = "**EXEC**: `{}` \n\n**OUTPUT**: \n{} \n".format(input_str, x_reponse)
-    if len(final_output) > MAX_MESSAGE_SIZE_LIMIT:
-        if not os.path.isdir(TEMP_DOWNLOAD_DIRECTORY):
-            os.makedirs(TEMP_DOWNLOAD_DIRECTORY)
-        current_file_name = "{}exec.text".format(TEMP_DOWNLOAD_DIRECTORY)
+    if len(final_output) > Config.MAX_MESSAGE_SIZE_LIMIT:
+        if not os.path.isdir(Config.TMP_DOWNLOAD_DIRECTORY):
+            os.makedirs(Config.TMP_DOWNLOAD_DIRECTORY)
+        current_file_name = "{}exec.text".format(Config.TMP_DOWNLOAD_DIRECTORY)
         file_ponter = open(current_file_name, "w+")
         file_ponter.write(final_output)
         file_ponter.close()

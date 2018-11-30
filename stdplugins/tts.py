@@ -7,9 +7,6 @@ from gtts import gTTS
 import asyncio
 
 
-TEMP_DOWNLOAD_DIRECTORY = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./../DOWNLOADS/")
-
-
 @borg.on(events.NewMessage(pattern=r"\.tts (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
@@ -25,7 +22,9 @@ async def _(event):
     else:
         await event.edit("Invalid Syntax. Module stopping.")
         return
-    required_file_name = TEMP_DOWNLOAD_DIRECTORY + "voice.ogg"
+    if not os.path.isdir(Config.TMP_DOWNLOAD_DIRECTORY):
+        os.makedirs(Config.TMP_DOWNLOAD_DIRECTORY)
+    required_file_name = Config.TMP_DOWNLOAD_DIRECTORY + "voice.ogg"
     try:
         tts = gTTS(text, lan)
         tts.save(required_file_name)

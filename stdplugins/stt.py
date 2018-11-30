@@ -4,28 +4,23 @@ import os
 from datetime import datetime
 
 
-TEMP_DOWNLOAD_DIRECTORY = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./../DOWNLOADS/")
-IBM_WATSON_CRED_USERNAME = os.environ.get("IBM_WATSON_CRED_USERNAME", None)
-IBM_WATSON_CRED_PASSWORD = os.environ.get("IBM_WATSON_CRED_PASSWORD", None)
-
-
 @borg.on(events.NewMessage(pattern=r"\.stt (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
     start = datetime.now()
     input_str = event.pattern_match.group(1)
-    if not os.path.isdir(TEMP_DOWNLOAD_DIRECTORY):
-        os.makedirs(TEMP_DOWNLOAD_DIRECTORY)
+    if not os.path.isdir(Config.TMP_DOWNLOAD_DIRECTORY):
+        os.makedirs(Config.TMP_DOWNLOAD_DIRECTORY)
     await event.edit("Downloading to my local, for analysis 🙇")
     if event.reply_to_msg_id:
         previous_message = await event.get_reply_message()
         required_file_name = await borg.download_media(
             previous_message,
-            TEMP_DOWNLOAD_DIRECTORY
+            Config.TMP_DOWNLOAD_DIRECTORY
         )
         lan = input_str
-        if IBM_WATSON_CRED_USERNAME is None or IBM_WATSON_CRED_PASSWORD is None:
+        if Config.IBM_WATSON_CRED_USERNAME is None or Config.IBM_WATSON_CRED_PASSWORD is None:
             await event.edit("You need to set the required ENV variables for this module. \nModule stopping")
         else:
             await event.edit("Starting analysis, using IBM WatSon Speech To Text")

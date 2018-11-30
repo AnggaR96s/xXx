@@ -3,14 +3,8 @@ import os
 from datetime import datetime
 from telegraph import Telegraph, upload_file, exceptions
 
-
-TMP_DOWNLOAD_DIRECTORY = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./../DOWNLOADS/")
-short_name = os.environ.get("TELEGRAPH_SHORT_NAME", "UniBorg")
-PRIVATE_GROUP_BOT_API_ID = borg.uid
-
-
 telegraph = Telegraph()
-r = telegraph.create_account(short_name=short_name)
+r = telegraph.create_account(short_name=Config.TELEGRAPH_SHORT_NAME)
 auth_url = r["auth_url"]
 
 
@@ -18,10 +12,10 @@ auth_url = r["auth_url"]
 async def _(event):
     if event.fwd_from:
         return
-    if not os.path.isdir(TMP_DOWNLOAD_DIRECTORY):
-        os.makedirs(TMP_DOWNLOAD_DIRECTORY)
+    if not os.path.isdir(Config.TMP_DOWNLOAD_DIRECTORY):
+        os.makedirs(Config.TMP_DOWNLOAD_DIRECTORY)
     await borg.send_message(
-        PRIVATE_GROUP_BOT_API_ID,
+        Config.PRIVATE_GROUP_BOT_API_ID,
         "Created New Telegraph account {} for the current session. \n**Do not give this url to anyone, even if they say they are from Telegram!**".format(auth_url)
     )
     if event.reply_to_msg_id:
@@ -31,7 +25,7 @@ async def _(event):
         if input_str == "media":
             downloaded_file_name = await borg.download_media(
                 r_message,
-                TMP_DOWNLOAD_DIRECTORY
+                Config.TMP_DOWNLOAD_DIRECTORY
             )
             end = datetime.now()
             ms = (end - start).seconds

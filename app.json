@@ -9,6 +9,10 @@
   ],
   "repository": "https://github.com/SpEcHiDe/uniborg",
   "env": {
+    "ENV": {
+      "description": "Setting this to ANYTHING will enable environment variables.",
+      "value": "ANYTHING"
+    },
     "APP_ID": {
       "description": "Get this value from my.telegram.org! Please do not steal",
       "value": ""
@@ -28,7 +32,7 @@
       "required": false
     },
     "PRIVATE_GROUP_BOT_API_ID": {
-      "description": "Send .get_id in any group to fill this value. AFK mode (and other sensitive plugins) will not work without this!",
+      "description": "Send .get_id in any group to fill this value.",
       "value": "",
       "required": false
     },

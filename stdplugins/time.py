@@ -5,7 +5,6 @@ import os
 from PIL import Image, ImageDraw, ImageFont
 
 
-download_directory = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./../DOWNLOADS/")
 font_file_to_use = "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf"
 
 
@@ -26,9 +25,9 @@ async def _(event):
     elif event.reply_to_msg_id:
         previous_message = await event.get_reply_message()
         reply_msg_id = previous_message.id
-    if not os.path.isdir(download_directory):
-        os.makedirs(download_directory)
-    required_file_name = download_directory + " " + str(datetime.now()) + ".webp"
+    if not os.path.isdir(Config.TMP_DOWNLOAD_DIRECTORY):
+        os.makedirs(Config.TMP_DOWNLOAD_DIRECTORY)
+    required_file_name = Config.TMP_DOWNLOAD_DIRECTORY + " " + str(datetime.now()) + ".webp"
     img = Image.new('RGB', (250, 50), color = (0, 0, 0))
     fnt = ImageFont.truetype(font_file_to_use, 30)
     d = ImageDraw.Draw(img)

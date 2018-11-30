@@ -14,6 +14,13 @@ import telethon.events
 from .storage import Storage
 from . import hacks
 
+# the secret configuration specific things
+ENV = bool(os.environ.get("ENV", False))
+if ENV:
+    from sample_config import Config
+else:
+    from config import Config
+
 
 class Uniborg(TelegramClient):
     def __init__(
@@ -69,6 +76,8 @@ class Uniborg(TelegramClient):
         mod.borg = self
         mod.logger = logging.getLogger(shortname)
         mod.storage = self.storage(f"{self._name}/{shortname}")
+        # declare Config to be accessible by all modules
+        mod.Config = Config
 
         spec.loader.exec_module(mod)
         self._plugins[shortname] = mod

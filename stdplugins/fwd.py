@@ -1,7 +1,6 @@
 from telethon import events
 import os
 
-PRIVATE_CHANNEL_BOT_API_ID = os.environ.get("PRIVATE_CHANNEL_BOT_API_ID", None)
 
 @borg.on(events.NewMessage(pattern=r"\.fwd", outgoing=True))
 async def _(event):
@@ -9,7 +8,7 @@ async def _(event):
         return
     if PRIVATE_CHANNEL_BOT_API_ID is not None:
         try:
-            e = await borg.get_entity(int(PRIVATE_CHANNEL_BOT_API_ID))
+            e = await borg.get_entity(int(Config.PRIVATE_CHANNEL_BOT_API_ID))
         except e:
             await event.edit(str(e))
         else:

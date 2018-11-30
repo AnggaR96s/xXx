@@ -6,11 +6,6 @@ import os
 import asyncio
 
 
-GLOBAL_LIMIT = 9
-# TG API limit. An album can have atmost 10 media!
-TMP_DOWNLOAD_DIRECTORY = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./../DOWNLOADS/")
-
-
 def progress(current, total):
     logger.info("Downloaded {} of {}\nCompleted {}".format(current, total, (current / total) * 100))
 
@@ -23,7 +18,7 @@ async def _(event):
     start = datetime.now()
     await event.edit("Processing ...")
     input_str = event.pattern_match.group(1) # + " -inurl:(htm|html|php|pls|txt) intitle:index.of \"last modified\" (mkv|mp4|avi|epub|pdf|mp3)"
-    search_results = search(input_str, num_results=GLOBAL_LIMIT)
+    search_results = search(input_str, num_results=Config.TG_GLOBAL_ALBUM_LIMIT)
     output_str = " "
     for text, url in search_results:
         output_str += " 👉🏻  [{}]({}) \n\n".format(text, url)
@@ -43,15 +38,15 @@ async def _(event):
     await event.edit("Processing ...")
     input_str = event.pattern_match.group(1)
     response = google_images_download.googleimagesdownload()
-    if not os.path.isdir(TMP_DOWNLOAD_DIRECTORY):
-        os.makedirs(TMP_DOWNLOAD_DIRECTORY)
+    if not os.path.isdir(Config.TMP_DOWNLOAD_DIRECTORY):
+        os.makedirs(Config.TMP_DOWNLOAD_DIRECTORY)
     arguments = {
         "keywords": input_str,
-        "limit": GLOBAL_LIMIT,
+        "limit": Config.TG_GLOBAL_ALBUM_LIMIT,
         "format": "jpg",
         "delay": 1,
         "safe_search": True,
-        "output_directory": TMP_DOWNLOAD_DIRECTORY
+        "output_directory": Config.TMP_DOWNLOAD_DIRECTORY
     }
     paths = response.download(arguments)
     lst = paths[input_str]
