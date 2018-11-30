@@ -15,7 +15,7 @@ from PIL import Image
 
 
 def progress(current, total):
-    logger.info("Downloaded {} of {}\nCompleted {}".format(current, total, (current / total) * 100))
+    logger.info("Uploaded: {} of {}\nCompleted {}".format(current, total, (current / total) * 100))
 
 
 def get_lst_of_files(input_directory, output_lst):
@@ -37,7 +37,7 @@ async def _(event):
     if os.path.exists(input_str):
         start = datetime.now()
         await event.edit("Processing ...")
-        lst_of_files = get_lst_of_files(input_str, [])
+        lst_of_files = sorted(get_lst_of_files(input_str, []))
         logger.info(lst_of_files)
         u = 0
         await event.edit("Found {} files. Uploading will start soon. Please wait!".format(len(lst_of_files)))
@@ -45,47 +45,19 @@ async def _(event):
             if os.path.exists(single_file):
                 # https://stackoverflow.com/a/678242/4723940
                 caption_rts = os.path.basename(single_file)
-                if not caption_rts.lower().endswith(".mp4"):
+                try:
                     await borg.send_file(
                         event.chat_id,
                         single_file,
                         caption=caption_rts,
-                        force_document=False,
+                        force_document=True,
                         allow_cache=False,
                         reply_to=event.message.id,
                         progress_callback=progress
                     )
-                else:
-                    thumb_image = os.path.join(input_str, "thumb.jpg")
-                    metadata = extractMetadata(createParser(single_file))
-                    duration = 0
-                    width = 0
-                    height = 0
-                    if metadata.has("duration"):
-                        duration = metadata.get('duration').seconds
-                    if metadata.has("width"):
-                        width = metadata.get("width")
-                    if metadata.has("height"):
-                        height = metadata.get("height")
-                    await borg.send_file(
-                        event.chat_id,
-                        single_file,
-                        caption=caption_rts,
-                        thumb=thumb_image,
-                        force_document=False,
-                        allow_cache=False,
-                        reply_to=event.message.id,
-                        attributes=[
-                            DocumentAttributeVideo(
-                                duration=duration,
-                                w=width,
-                                h=height,
-                                round_message=False,
-                                supports_streaming=True
-                            )
-                        ],
-                        progress_callback=progress
-                    )
+                except:
+                    # some media were having some issues
+                    continue
                 os.remove(single_file)
                 u = u + 1
         end = datetime.now()

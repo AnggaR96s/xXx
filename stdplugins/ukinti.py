@@ -3,10 +3,42 @@ from telethon import events
 from telethon.tl.functions.channels import EditBannedRequest
 from telethon.tl.types import ChannelBannedRights
 from datetime import datetime, timedelta
-from telethon.errors import UserAdminInvalidError
+from telethon.errors import UserAdminInvalidError, FloodWaitError, UserNotParticipantError, ChatAdminRequiredError
 from telethon.tl.types import UserStatusEmpty, UserStatusLastMonth, UserStatusLastWeek, UserStatusOffline, UserStatusOnline, UserStatusRecently
+from telethon.tl.types import ChannelParticipantsKicked
+from telethon.tl import functions as f, types as t
 
+from time import sleep
 import asyncio
+
+
+@borg.on(events.NewMessage(pattern="\.unbanall ?(.*)", outgoing=True))
+async def _(event):
+    if event.fwd_from:
+        return
+    input_str = event.pattern_match.group(1)
+    if input_str:
+        logger.info("TODO: Not yet Implemented")
+    else:
+        await event.edit("Searching Participant Lists.")
+        p = 0
+        async for i in borg.iter_participants(event.chat_id, filter=ChannelParticipantsKicked, aggressive=True):
+            rights = ChannelBannedRights(
+                until_date=0,
+                view_messages=False
+            )
+            try:
+                await borg(EditBannedRequest(event.chat_id, i, rights))
+            except UserNotParticipantError as ex:
+                pass
+            except FloodWaitError as ex:
+                logger.warn("sleeping for {} seconds".format(ex.seconds))
+                sleep(ex.seconds)
+            except Exception as ex:
+                await event.edit(str(ex))
+            else:
+                p += 1
+        await event.edit("{}: {} unbanned".format(event.chat_id, p))
 
 
 @borg.on(events.NewMessage(pattern="\.kick ?(.*)", outgoing=True))
@@ -14,6 +46,7 @@ async def _(event):
     if event.fwd_from:
         return
     input_str = event.pattern_match.group(1)
+    p = 0
     c = 0
     d = 0
     e = []
@@ -24,7 +57,8 @@ async def _(event):
     q = 0
     r = 0
     await event.edit("Searching Participant Lists.")
-    async for x in borg.iter_participants(event.chat_id, aggressive=True):
+    async for i in borg.iter_participants(event.chat_id, aggressive=True):
+        p = p + 1
         #
         # Note that it's "reversed". You must set to ``True`` the permissions
         # you want to REMOVE, and leave as ``None`` those you want to KEEP.
@@ -118,7 +152,7 @@ UserStatusOffline: {}
 UserStatusOnline: {}
 UserStatusRecently: {}
     """
-    await event.edit(required_string.format(c, len(p), d, y, m, w, o, q, r))
+    await event.edit(required_string.format(c, p, d, y, m, w, o, q, r))
     await asyncio.sleep(5)
     await event.edit("""Total: {} users
 Deleted Accounts: {}
@@ -127,4 +161,4 @@ UserStatusLastMonth: {}
 UserStatusLastWeek: {}
 UserStatusOffline: {}
 UserStatusOnline: {}
-UserStatusRecently: {}""".format(len(p), d, y, m, w, o, q, r))
+UserStatusRecently: {}""".format(p, d, y, m, w, o, q, r))
