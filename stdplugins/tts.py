@@ -44,11 +44,8 @@ async def _(event):
         ]
         try:
             t_response = subprocess.check_output(command_to_execute, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as exc:
-            await event.edit("process returned {}\n output: {}".format(input_str, exc.returncode, exc.output))
-            # continue sending required_file_name
-        except FileNotFoundErroras as exc:
-            await event.edit("process returned {}\n output: {}".format(input_str, exc.returncode, exc.output))
+        except (subprocess.CalledProcessError, NameError, FileNotFoundError) as exc:
+            await event.edit(str(exc))
             # continue sending required_file_name
         else:
             os.remove(required_file_name)
