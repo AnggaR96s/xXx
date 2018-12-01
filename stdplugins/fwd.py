@@ -6,7 +6,7 @@ import os
 async def _(event):
     if event.fwd_from:
         return
-    if PRIVATE_CHANNEL_BOT_API_ID is not None:
+    if Config.PRIVATE_CHANNEL_BOT_API_ID is not None:
         try:
             e = await borg.get_entity(int(Config.PRIVATE_CHANNEL_BOT_API_ID))
         except e:
