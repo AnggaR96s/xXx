@@ -28,5 +28,5 @@ async def _(event):
         ms = (end - start).seconds
         output_str = "Translated from {} to {} in {} seconds. \n {}".format(src_lang, lan, str(ms), translated_text)
         await event.edit(output_str)
-    except exc:
+    except (IndexError) as exc:
         await event.edit(str(exc))

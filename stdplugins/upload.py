@@ -50,7 +50,7 @@ async def _(event):
                         event.chat_id,
                         single_file,
                         caption=caption_rts,
-                        force_document=True,
+                        force_document=False,
                         allow_cache=False,
                         reply_to=event.message.id,
                         progress_callback=progress
@@ -60,6 +60,7 @@ async def _(event):
                     continue
                 os.remove(single_file)
                 u = u + 1
+                await event.edit("Uploaded {} / {} files.".format(u, len(lst_of_files)))
         end = datetime.now()
         ms = (end - start).seconds
         await event.edit("Uploaded {} files in {} seconds.".format(u, ms))
