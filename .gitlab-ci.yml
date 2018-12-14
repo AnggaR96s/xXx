@@ -2,7 +2,7 @@ py37_nose:
   image: python:3.7
   script:
     - apt-get update -q -y
-    - apt install ffmpeg
+    - apt-get install ffmpeg -q -y
     - pip install -r requirements.txt
     - pip install -r requirements-stdborg.txt
     - python -m stdborg test
