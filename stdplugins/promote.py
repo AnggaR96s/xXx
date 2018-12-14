@@ -4,7 +4,7 @@ from datetime import datetime
 
 from telethon.tl.functions.channels import EditAdminRequest
 from telethon.tl.types import ChannelAdminRights
-from telethon.errors import RightForbiddenError, UserIdInvalidError
+from telethon.errors import RightForbiddenError, UserIdInvalidError, ChatAdminRequiredError
 
 
 @borg.on(events.NewMessage(pattern=r"\.promote ?(.*)", outgoing=True))
@@ -34,7 +34,7 @@ async def _(event):
         to_promote_id = input_str
     try:
         await borg(EditAdminRequest(event.chat_id, to_promote_id, rights))
-    except (RightForbiddenError, UserIdInvalidError) as exc:
+    except (RightForbiddenError, UserIdInvalidError, ChatAdminRequiredError) as exc:
         await event.edit(str(exc))
     else:
         await event.edit("Successfully Promoted")
