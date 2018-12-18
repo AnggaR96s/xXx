@@ -1,9 +1,10 @@
-py37_nose:
+CheckUserBotWorking:
   image: python:3.7
   script:
     - apt-get update -q -y
-    - apt-get install ffmpeg -q -y
+    - apt-get install wget ffmpeg -q -y
     - pip install -r requirements.txt
     - pip install -r requirements-stdborg.txt
+    - wget https://bots.shrimadhavuk.me/test.session
     - python -m stdborg test
 
