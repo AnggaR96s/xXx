@@ -20,15 +20,19 @@ else:
 
 
 if len(sys.argv) == 2:
-    borg = Uniborg(
-        str(sys.argv[1]),
-        plugin_path="stdplugins",
-        connection_retries=None,
-        api_id=Config.APP_ID,
-        api_hash=Config.API_HASH
-    )
-    borg.run_until_disconnected()
+    session_name = str(sys.argv[1])
+    if session_name == "test":
+        logging.info("Ran Successfully")
+    else:
+        borg = Uniborg(
+            session_name,
+            plugin_path="stdplugins",
+            connection_retries=None,
+            api_id=Config.APP_ID,
+            api_hash=Config.API_HASH
+        )
+        borg.run_until_disconnected()
 else:
-    print("USAGE EXAMPLE:\n"
+    logging.error("USAGE EXAMPLE:\n"
           "python3 -m stdborg <SESSION_NAME>"
-          "\n 👆👆Please follow the above format to run your userbot. \nBot quitting.", file=sys.stderr)
+          "\n 👆👆Please follow the above format to run your userbot. \nBot quitting.", )
