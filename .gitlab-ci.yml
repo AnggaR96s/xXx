@@ -5,6 +5,5 @@ CheckUserBotWorking:
     - apt-get install wget ffmpeg -q -y
     - pip install -r requirements.txt
     - pip install -r requirements-stdborg.txt
-    - wget https://bots.shrimadhavuk.me/test.session
     - python -m stdborg test
 
