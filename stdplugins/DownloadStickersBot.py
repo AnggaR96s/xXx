@@ -61,7 +61,7 @@ async def _(event):
         async def download(sticker, emojis, path, file):
             await borg.download_media(sticker, file=os.path.join(path, file))
             with open(pack_file, "a") as f:
-                f.write(f"{emojis[sticker.id]} {file}\n")
+                f.write(f"{{'image_file': '{file}','emojis':{emojis[sticker.id]}}},")
         pending_tasks = [
             asyncio.ensure_future(
                 download(document, emojis, Config.TMP_DOWNLOAD_DIRECTORY + sticker_set.set.short_name, f"{i:03d}.webp")
