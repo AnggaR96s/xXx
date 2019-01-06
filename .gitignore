@@ -5,3 +5,5 @@ __pycache__
 *.session-journal
 data/
 config.py
+sessions/
+stdplugins/admin_tools.py
