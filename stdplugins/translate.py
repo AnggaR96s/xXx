@@ -30,3 +30,6 @@ async def _(event):
         await event.edit(output_str)
     except (IndexError, ValueError) as exc:
         await event.edit(str(exc))
+    else:
+        await event.edit(translated_text)
+

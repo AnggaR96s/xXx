@@ -59,19 +59,20 @@ def progress(current, total):
         current, total, (current / total) * 100))
 
 
-@borg.on(events.NewMessage(pattern=r"\.ocr", outgoing=True))
+@borg.on(events.NewMessage(pattern=r"\.ocr (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
     await event.edit("Processing 🙄🙇‍♂️🙇‍♂️🙇‍♀️")
     if not os.path.isdir(Config.TMP_DOWNLOAD_DIRECTORY):
         os.makedirs(Config.TMP_DOWNLOAD_DIRECTORY)
+    lang_code = event.pattern_match.group(1)
     downloaded_file_name = await borg.download_media(
         await event.get_reply_message(),
         Config.TMP_DOWNLOAD_DIRECTORY,
         progress_callback=progress
     )
-    test_file = ocr_space_file(filename=downloaded_file_name, language="eng")
+    test_file = ocr_space_file(filename=downloaded_file_name, language=lang_code)
     try:
         ParsedText = test_file["ParsedResults"][0]["ParsedText"]
         ProcessingTimeInMilliseconds = str(int(test_file["ProcessingTimeInMilliseconds"]) // 1000)
