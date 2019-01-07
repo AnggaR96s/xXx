@@ -65,6 +65,11 @@
       "description": "This is required for the @telegraph functionality.",
       "value": "UniBorg",
       "required": false
+    },
+    "OCR_SPACE_API_KEY": {
+      "description": "Get an API Key from http://OCR.Space",
+      "value": "",
+      "required": false
     }
   },
   "addons": [],

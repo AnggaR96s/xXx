@@ -28,3 +28,5 @@ class Config(object):
     # TG API limit. A message can have maximum 4096 characters!
     TG_GLOBAL_ALBUM_LIMIT = 9
     # TG API limit. An album can have atmost 10 media!
+    # Get a Free API Key from OCR.Space
+    OCR_SPACE_API_KEY = os.environ.get("OCR_SPACE_API_KEY", None)
