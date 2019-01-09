@@ -7,3 +7,5 @@ data/
 config.py
 sessions/
 stdplugins/admin_tools.py
+*.jpg
+
