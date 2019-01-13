@@ -10,6 +10,8 @@ Pluggable [``asyncio``](https://docs.python.org/3/library/asyncio.html)
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
+If you face issues with the above ``EASY`` way, please use the Legacy way, given BELOW. 👇 
+
 #### The Legacy Way
 
 Simply clone the repository and run the main file:
