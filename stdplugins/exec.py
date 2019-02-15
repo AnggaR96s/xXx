@@ -1,6 +1,6 @@
 from telethon import events
 import subprocess
-from telethon.errors import MessageEmptyError, MessageTooLongError
+from telethon.errors import MessageEmptyError, MessageTooLongError, MessageNotModifiedError
 import os
 import asyncio
 import time
@@ -10,6 +10,7 @@ import time
 async def _(event):
     if event.fwd_from:
         return
+    DELAY_BETWEEN_EDITS = 0.3
     PROCESS_RUN_TIME = 100
     cmd = event.pattern_match.group(1)
     start_time = time.time() + PROCESS_RUN_TIME
@@ -29,6 +30,7 @@ async def _(event):
             if stderr.decode():
                 OUTPUT += f"`{stderr.decode()}`"
                 await event.edit(OUTPUT)
+                await asyncio.sleep(DELAY_BETWEEN_EDITS)
                 break
         else:
             OUTPUT += f"`{stdout.decode()}`"
@@ -51,4 +53,10 @@ async def _(event):
             os.remove(current_file_name)
             break
         else:
-            await event.edit(OUTPUT)
+            try:
+                await event.edit(OUTPUT)
+                await asyncio.sleep(DELAY_BETWEEN_EDITS)
+            except (MessageEmptyError, MessageTooLongError, MessageNotModifiedError) as e:
+                logger.warn(str(e))
+                break
+
