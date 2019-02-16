@@ -14,6 +14,8 @@ from telethon.errors import MessageNotModifiedError
 
 from PIL import Image
 
+thumb_image_path = Config.TMP_DOWNLOAD_DIRECTORY + "/thumb_image.jpg"
+
 
 def progress(current, total):
     logger.info("Uploaded: {} of {}\nCompleted {}".format(current, total, (current / total) * 100))
@@ -42,6 +44,9 @@ async def _(event):
         logger.info(lst_of_files)
         u = 0
         await event.edit("Found {} files. Uploading will start soon. Please wait!".format(len(lst_of_files)))
+        thumb = None
+        if os.path.exists(thumb_image_path):
+            thumb = thumb_image_path
         for single_file in lst_of_files:
             if os.path.exists(single_file):
                 # https://stackoverflow.com/a/678242/4723940
@@ -51,9 +56,10 @@ async def _(event):
                         event.chat_id,
                         single_file,
                         caption=caption_rts,
-                        force_document=False,
+                        force_document=True,
                         allow_cache=False,
                         reply_to=event.message.id,
+                        thumb=thumb,
                         progress_callback=progress
                     )
                 except:
@@ -78,6 +84,9 @@ async def _(event):
         return
     await event.edit("Processing ...")
     input_str = event.pattern_match.group(1)
+    thumb = None
+    if os.path.exists(thumb_image_path):
+        thumb = thumb_image_path
     if os.path.exists(input_str):
         start = datetime.now()
         await borg.send_file(
@@ -86,6 +95,7 @@ async def _(event):
             force_document=True,
             allow_cache=False,
             reply_to=event.message.id,
+            thumb=thumb,
             progress_callback=progress
         )
         end = datetime.now()
@@ -108,30 +118,6 @@ def get_video_thumb(file, output=None, width=90):
         return output
 
 
-def extract_w_h(file):
-    command_to_run = [
-        "ffprobe",
-        "-v",
-        "quiet",
-        "-print_format",
-        "json",
-        "-show_format",
-        "-show_streams",
-        file
-    ]
-    # https://stackoverflow.com/a/11236144/4723940
-    try:
-        t_response = subprocess.check_output(command_to_run, stderr=subprocess.STDOUT)
-    except subprocess.CalledProcessError as exc:
-        logger.warn(exc)
-    else:
-        x_reponse = t_response.decode("UTF-8")
-        response_json = json.loads(x_reponse)
-        width = int(response_json["streams"][0]["width"])
-        height = int(response_json["streams"][0]["height"])
-        return width, height
-
-
 @borg.on(events.NewMessage(pattern=r"\.uploadas(stream|vn|all) (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
@@ -149,15 +135,9 @@ async def _(event):
         spam_big_messages = True
     input_str = event.pattern_match.group(2)
     thumb = None
-    file_name = None
-    if "|" in input_str:
-        file_name, thumb = input_str.split("|")
-        file_name = file_name.strip()
-        thumb = thumb.strip()
-    else:
-        file_name = input_str
-        thumb_path = "a_random_f_file_name" + ".jpg"
-        thumb = get_video_thumb(file_name, output=thumb_path)
+    if os.path.exists(thumb_image_path):
+        thumb = thumb_image_path
+    file_name = input_str
     if os.path.exists(file_name):
         start = datetime.now()
         metadata = extractMetadata(createParser(file_name))
@@ -166,20 +146,15 @@ async def _(event):
         height = 0
         if metadata.has("duration"):
             duration = metadata.get('duration').seconds
-        if metadata.has("width"):
-            width = metadata.get("width")
-        if metadata.has("height"):
-            height = metadata.get("height")
-        # hachoir only works with MP4 files
+        if os.path.exists(thumb_image_path):
+            metadata = extractMetadata(createParser(thumb_image_path))
+            if metadata.has("width"):
+                width = metadata.get("width")
+            if metadata.has("height"):
+                height = metadata.get("height")
+        # Telegram only works with MP4 files
         # this is good, since with MKV files sent as streamable Telegram responds,
         # Bad Request: VIDEO_CONTENT_TYPE_INVALID
-        # if width is None or height is None:
-        #     width, height = extract_w_h(file_name)
-        """if os.path.exists(thumb):
-            # width and height need to be the image width and height
-            im = Image.open(thumb)
-            # https://stackoverflow.com/a/6444612/4723940
-            width, height = im.size"""
         try:
             if supports_streaming:
                 await borg.send_file(
@@ -231,3 +206,35 @@ async def _(event):
             await event.edit(str(e))
     else:
         await event.edit("404: File Not Found")
+
+
+@borg.on(events.NewMessage(pattern=r"\.savethumbnail", outgoing=True))
+async def _(event):
+    if event.fwd_from:
+        return
+    await event.edit("Processing ...")
+    if not os.path.isdir(Config.TMP_DOWNLOAD_DIRECTORY):
+        os.makedirs(Config.TMP_DOWNLOAD_DIRECTORY)
+    if event.reply_to_msg_id:
+        start = datetime.now()
+        downloaded_file_name = await borg.download_media(
+            await event.get_reply_message(),
+            Config.TMP_DOWNLOAD_DIRECTORY,
+            progress_callback=progress
+        )
+        end = datetime.now()
+        ms = (end - start).seconds
+        # resize image
+        # ref: https://t.me/PyrogramChat/44663
+        # https://stackoverflow.com/a/21669827/4723940
+        Image.open(downloaded_file_name).convert("RGB").save(downloaded_file_name)
+        img = Image.open(downloaded_file_name)
+        # https://stackoverflow.com/a/37631799/4723940
+        # img.thumbnail((90, 90))
+        img.resize((90, height))
+        img.save(thumb_image_path, "JPEG")
+        # https://pillow.readthedocs.io/en/3.1.x/reference/Image.html#create-thumbnails
+        os.remove(downloaded_file_name)
+        await event.edit("Custom video / file thumbnail saved. This image will be used in the next upload.")
+    else:
+        await event.edit("Reply to a photo to save custom thumbnail")
