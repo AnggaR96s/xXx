@@ -208,6 +208,15 @@ async def _(event):
         await event.edit("404: File Not Found")
 
 
+@borg.on(events.NewMessage(pattern=r"\.clearthumbnail", outgoing=True))
+async def _(event):
+    if event.fwd_from:
+        return
+    if os.path.exists(thumb_image_path):
+        os.remove(thumb_image_path)
+    await event.edit("✅ Custom thumbnail cleared succesfully.")
+
+
 @borg.on(events.NewMessage(pattern=r"\.savethumbnail", outgoing=True))
 async def _(event):
     if event.fwd_from:
@@ -224,6 +233,10 @@ async def _(event):
         )
         end = datetime.now()
         ms = (end - start).seconds
+        metadata = extractMetadata(createParser(downloaded_file_name))
+        height = 0
+        if metadata.has("height"):
+            height = metadata.get("height")
         # resize image
         # ref: https://t.me/PyrogramChat/44663
         # https://stackoverflow.com/a/21669827/4723940
