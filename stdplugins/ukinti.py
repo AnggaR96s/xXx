@@ -1,7 +1,7 @@
 from telethon import events
 
 from telethon.tl.functions.channels import EditBannedRequest
-from telethon.tl.types import ChannelBannedRights
+from telethon.tl.types import ChatBannedRights
 from datetime import datetime, timedelta
 from telethon.errors import UserAdminInvalidError, FloodWaitError, UserNotParticipantError, ChatAdminRequiredError
 from telethon.tl.types import UserStatusEmpty, UserStatusLastMonth, UserStatusLastWeek, UserStatusOffline, UserStatusOnline, UserStatusRecently
@@ -23,7 +23,7 @@ async def _(event):
         await event.edit("Searching Participant Lists.")
         p = 0
         async for i in borg.iter_participants(event.chat_id, filter=ChannelParticipantsKicked, aggressive=True):
-            rights = ChannelBannedRights(
+            rights = ChatBannedRights(
                 until_date=0,
                 view_messages=False
             )
@@ -62,7 +62,7 @@ async def _(event):
         #
         # Note that it's "reversed". You must set to ``True`` the permissions
         # you want to REMOVE, and leave as ``None`` those you want to KEEP.
-        rights = ChannelBannedRights(
+        rights = ChatBannedRights(
             until_date=None,
             view_messages=True
         )

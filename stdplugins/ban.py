@@ -3,7 +3,7 @@ import asyncio
 from datetime import datetime
 
 from telethon.tl.functions.channels import EditBannedRequest
-from telethon.tl.types import ChannelBannedRights
+from telethon.tl.types import ChatBannedRights
 from telethon.errors import ChatAdminRequiredError, UserIdInvalidError
 
 
@@ -13,7 +13,7 @@ async def _(event):
         return
     start = datetime.now()
     to_ban_id = None
-    rights = ChannelBannedRights(
+    rights = ChatBannedRights(
         until_date=None,
         view_messages=True,
         send_messages=True,

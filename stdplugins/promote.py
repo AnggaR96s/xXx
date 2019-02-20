@@ -3,7 +3,7 @@ import asyncio
 from datetime import datetime
 
 from telethon.tl.functions.channels import EditAdminRequest
-from telethon.tl.types import ChannelAdminRights
+from telethon.tl.types import ChatAdminRights
 from telethon.errors import RightForbiddenError, UserIdInvalidError, ChatAdminRequiredError
 
 
@@ -13,7 +13,7 @@ async def _(event):
         return
     start = datetime.now()
     to_promote_id = None
-    rights = ChannelAdminRights(
+    rights = ChatAdminRights(
         change_info=True,
         post_messages=True,
         edit_messages=True,
