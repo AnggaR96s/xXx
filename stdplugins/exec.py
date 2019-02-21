@@ -54,6 +54,7 @@ async def _(event):
             break
         else:
             try:
+                await asyncio.sleep(DELAY_BETWEEN_EDITS)
                 await event.edit(OUTPUT)
                 await asyncio.sleep(DELAY_BETWEEN_EDITS)
             except (MessageEmptyError, MessageTooLongError, MessageNotModifiedError) as e:
