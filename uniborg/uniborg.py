@@ -14,18 +14,11 @@ import telethon.events
 from .storage import Storage
 from . import hacks
 
-# the secret configuration specific things
-ENV = bool(os.environ.get("ENV", False))
-if ENV:
-    from sample_config import Config
-else:
-    from config import Config
-
 
 class Uniborg(TelegramClient):
     def __init__(
             self, session, *, plugin_path="plugins", storage=None,
-            bot_token=None, **kwargs):
+            bot_token=None, api_config=None, **kwargs):
         # TODO: handle non-string session
         #
         # storage should be a callable accepting plugin name -> Storage object.
@@ -35,6 +28,7 @@ class Uniborg(TelegramClient):
         self._logger = logging.getLogger(session)
         self._plugins = {}
         self._plugin_path = plugin_path
+        self.config = api_config
 
         kwargs = {
             "api_id": 6, "api_hash": "eb06d4abfb49dc3eeb1aeb98ae0f581e",
@@ -60,7 +54,7 @@ class Uniborg(TelegramClient):
 
         self.me = await self.get_me()
         self.uid = telethon.utils.get_peer_id(self.me)
-        self.verson = "20.10.2018 09:30:45"
+        self.verson = "20.02.2019 19:30:45"
 
     def load_plugin(self, shortname):
         self.load_plugin_from_file(f"{self._plugin_path}/{shortname}.py")
@@ -77,7 +71,7 @@ class Uniborg(TelegramClient):
         mod.logger = logging.getLogger(shortname)
         mod.storage = self.storage(f"{self._name}/{shortname}")
         # declare Config to be accessible by all modules
-        mod.Config = Config
+        mod.Config = self.config
 
         spec.loader.exec_module(mod)
         self._plugins[shortname] = mod
