@@ -18,6 +18,8 @@ Simply clone the repository and run the main file:
 ```sh
 git clone https://github.com/uniborg/uniborg.git
 cd uniborg
+virtualenv -p /usr/bin/python3 venv
+. ./venv/bin/activate
 pip install -r requirements.txt
 pip install -r requirements-stdborg.txt
 python3 -m stdborg stdborg
