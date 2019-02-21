@@ -3,8 +3,8 @@ import datetime
 import asyncio
 
 
-borg.storage.USER_AFK = {}
-borg.storage.afk_time = None
+storage.USER_AFK = {}
+storage.afk_time = None
 
 
 intervals = (
@@ -19,10 +19,10 @@ intervals = (
 @borg.on(events.NewMessage(outgoing=True))
 async def _(event):
     current_message = event.message.message
-    if ".afk" not in current_message and "yes" in borg.storage.USER_AFK:
+    if ".afk" not in current_message and "yes" in storage.USER_AFK:
         await borg.send_message(Config.PRIVATE_GROUP_BOT_API_ID, "Set AFK mode to False")
-        borg.storage.USER_AFK = {}
-        borg.storage.afk_time = None
+        storage.USER_AFK = {}
+        storage.afk_time = None
 
 
 @borg.on(events.NewMessage(pattern=r"\.afk ?(.*)", outgoing=True))
@@ -30,9 +30,9 @@ async def _(event):
     if event.fwd_from:
         return
     reason = event.pattern_match.group(1)
-    if not borg.storage.USER_AFK:
-        borg.storage.afk_time = datetime.datetime.now()
-        borg.storage.USER_AFK.update({"yes": reason})
+    if not storage.USER_AFK:
+        storage.afk_time = datetime.datetime.now()
+        storage.USER_AFK.update({"yes": reason})
         if reason:
             await event.edit(f"Set AFK mode to True, and Reason is {reason}")
         else:
@@ -52,11 +52,11 @@ async def _(event):
         return
     chat = await event.get_chat()
     if event.mentioned or event.is_private and not (await event.get_sender()).bot:
-        if borg.storage.USER_AFK:
-            reason = borg.storage.USER_AFK["yes"]
+        if storage.USER_AFK:
+            reason = storage.USER_AFK["yes"]
             now = datetime.datetime.now()
 
-            dt = now - borg.storage.afk_time
+            dt = now - storage.afk_time
             time = float(dt.seconds)
             days = time // (24 * 3600)
             time = time % (24 * 3600)
