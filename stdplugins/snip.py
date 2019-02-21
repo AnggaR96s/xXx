@@ -22,15 +22,13 @@ async def on_snip(event):
     else:
         snip = snips[name]
         if snip['type'] == TYPE_PHOTO:
-            media = types.InputPhoto(snip['id'], snip['hash'])
+            media = types.InputPhoto(snip['id'], snip['hash'], snip['fr'])
         elif snip['type'] == TYPE_DOCUMENT:
-            media = types.InputDocument(snip['id'], snip['hash'])
+            media = types.InputDocument(snip['id'], snip['hash'], snip['fr'])
         else:
             media = None
 
-        await borg.send_message(await event.get_input_chat(), snip['text'],
-                                file=media,
-                                reply_to=event.message.reply_to_msg_id)
+        await event.reply(snip['text'], file=media)
 
     await event.delete()
 
@@ -53,6 +51,7 @@ async def on_snip_save(event):
             if media:
                 snip['id'] = media.id
                 snip['hash'] = media.access_hash
+                snip['fr'] = media.file_reference
 
         snips[name] = snip
         storage.snips = snips
