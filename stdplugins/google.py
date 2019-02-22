@@ -10,8 +10,8 @@ def progress(current, total):
     logger.info("Downloaded {} of {}\nCompleted {}".format(current, total, (current / total) * 100))
 
 
-@borg.on(events.NewMessage(pattern=r"\.google search (.*)"))
-@borg.on(events.MessageEdited(pattern=r"\.google search (.*)"))
+@borg.on(events.NewMessage(pattern=r"\.google search (.*)", outgoing=True))
+@borg.on(events.MessageEdited(pattern=r"\.google search (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
@@ -29,8 +29,8 @@ async def _(event):
     await event.edit("Google: {}\n{}".format(input_str, output_str), link_preview=False)
 
 
-@borg.on(events.NewMessage(pattern=r"\.google image (.*)"))
-@borg.on(events.MessageEdited(pattern=r"\.google image (.*)"))
+@borg.on(events.NewMessage(pattern=r"\.google image (.*)", outgoing=True))
+@borg.on(events.MessageEdited(pattern=r"\.google image (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
