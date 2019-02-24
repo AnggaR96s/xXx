@@ -21,7 +21,7 @@ async def _(event):
         # https://t.me/telethonofftopic/43873
         else:
             evaluation = eval(cmd)
-    except (ZeroDivisionError, ValueError, SyntaxError, AttributeError, NameError, TypeError, Exception) as e:
+    except (Exception) as e:
         evaluation = str(e)
     # https://t.me/telethonofftopic/43873
     final_output = "**EVAL**: `{}` \n\n **OUTPUT**: \n`{}` \n".format(cmd, evaluation)
