@@ -1,7 +1,4 @@
 from telethon import events
-from telethon.tl.functions.messages import GetInlineBotResultsRequest
-from telethon.tl.functions.messages import SendInlineBotResultRequest
-from telethon.errors import BotTimeout
 
 
 @borg.on(events.NewMessage(pattern=r"\.ib (.[^ ]*) (.*)", outgoing=True))
@@ -12,21 +9,26 @@ async def _(event):
     bot_username = event.pattern_match.group(1)
     search_query = event.pattern_match.group(2)
     try:
-        bot_results = await borg(GetInlineBotResultsRequest(
-            bot_username, event.chat_id, search_query, ''
-        ))
-        if len(bot_results.results) > 0:
-            await borg(SendInlineBotResultRequest(
-                event.chat_id,
-                bot_results.query_id,
-                bot_results.results[0].id,
-                reply_to_msg_id=event.message.reply_to_msg_id
-            ))
-            await event.delete()
-        else:
-            await event.edit("{} did not respond correctly, for **{}**!".format(bot_username, search_query))
-    except BotTimeout as e:
+        output_message = ""
+        bot_results = await borg.inline_query(bot_username, search_query)
+        i = 0
+        for result in bot_results:
+            output_message += "{} {} `{}`\n\n".format(result.title, result.description, ".icb " + bot_username + " " + str(i + 1) + " " + search_query)
+            i = i + 1
+        await event.edit(output_message)
+    except Exception as e:
         await event.edit("{} did not respond correctly, for **{}**!\n `{}`".format(bot_username, search_query, str(e)))
 
 
-
+@borg.on(events.NewMessage(pattern=r"\.icb (.[^ ]*) (.[^ ]*) (.*)", outgoing=True))
+async def _(event):
+    if event.fwd_from:
+        return
+    bot_username = event.pattern_match.group(1)
+    i_plus_oneth_result = event.pattern_match.group(2)
+    search_query = event.pattern_match.group(3)
+    try:
+        bot_results = await borg.inline_query(bot_username, search_query)
+        message = await bot_results[int(i_plus_oneth_result) - 1].click(event.chat_id)
+    except Exception as e:
+        await event.edit(str(e))
