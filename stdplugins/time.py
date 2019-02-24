@@ -45,3 +45,12 @@ async def _(event):
     await event.edit("Created sticker in {} seconds".format(ms))
     await asyncio.sleep(5)
     await event.delete()
+
+
+@borg.on(events.NewMessage(pattern=r"\.time (.*)", outgoing=True))
+async def _(event):
+    if event.fwd_from:
+        return
+    input_str = event.pattern_match.group(1)
+    logger.info(input_str)
+
