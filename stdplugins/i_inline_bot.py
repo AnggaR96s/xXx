@@ -24,11 +24,12 @@ async def _(event):
 async def _(event):
     if event.fwd_from:
         return
+    await event.delete()
     bot_username = event.pattern_match.group(1)
     i_plus_oneth_result = event.pattern_match.group(2)
     search_query = event.pattern_match.group(3)
     try:
         bot_results = await borg.inline_query(bot_username, search_query)
-        message = await bot_results[int(i_plus_oneth_result) - 1].click(event.chat_id)
+        message = await bot_results[int(i_plus_oneth_result) - 1].click(event.chat_id, reply_to=event.reply_to_msg_id, hide_via=True)
     except Exception as e:
         await event.edit(str(e))
