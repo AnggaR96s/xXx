@@ -14,7 +14,10 @@ async def _(event):
     replied_user = None
     if event.reply_to_msg_id:
         previous_message = await event.get_reply_message()
-        replied_user = await borg(GetFullUserRequest(previous_message.from_id))
+        if previous_message.forward:
+            replied_user = await borg(GetFullUserRequest(previous_message.forward.from_id or previous_message.forward.channel_id))
+        else:
+            replied_user = await borg(GetFullUserRequest(previous_message.from_id))
     else:
         input_str = event.pattern_match.group(1)
         if event.message.entities is not None:
@@ -46,6 +49,7 @@ async def _(event):
     first_name = first_name.replace("\u2060", "")
     # inspired by https://telegram.dog/afsaI181
     user_bio = replied_user.about
+    common_chats = replied_user.common_chats_count
     try:
         dc_id, location = get_input_location(replied_user.profile_photo)
         photo = await borg.download_profile_photo(
@@ -56,7 +60,7 @@ async def _(event):
     except TypeError as e:
         dc_id = "__ need a Profile Picture for this to work __"
         photo = "http://telegra.ph/file/457126e7cd1ade29d2a65.jpg"
-    caption = "ID: `{}` \nName: [{}](tg://user?id={}) \nBio: {}\nDC ID: {}".format(user_id, first_name, user_id, user_bio, dc_id)
+    caption = "ID: `{}` \nName: [{}](tg://user?id={}) \nBio: {}\nDC ID: {}\nGroups In Common: {}".format(user_id, first_name, user_id, user_bio, dc_id, common_chats)
     message_id_to_reply = event.message.reply_to_msg_id
     if not message_id_to_reply:
         message_id_to_reply = event.message.id
