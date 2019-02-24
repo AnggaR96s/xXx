@@ -20,10 +20,8 @@ async def _(event):
         delete_messages=True,
         ban_users=True,
         invite_users=True,
-        invite_link=True,
         pin_messages=True,
         add_admins=True,
-        manage_call=True
     )
     input_str = event.pattern_match.group(1)
     reply_msg_id = event.message.id
@@ -34,7 +32,7 @@ async def _(event):
         to_promote_id = input_str
     try:
         await borg(EditAdminRequest(event.chat_id, to_promote_id, rights))
-    except (RightForbiddenError, UserIdInvalidError, ChatAdminRequiredError) as exc:
+    except (Exception) as exc:
         await event.edit(str(exc))
     else:
         await event.edit("Successfully Promoted")
