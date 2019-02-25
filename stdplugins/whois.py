@@ -40,7 +40,7 @@ async def _(event):
                 user_object = await borg.get_entity(input_str)
                 user_id = user_object.id
                 replied_user = await borg(GetFullUserRequest(user_id))
-            except e:
+            except Exception as e:
                 await event.edit(str(e))
                 return None
     user_id = replied_user.user.id
