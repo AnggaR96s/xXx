@@ -1,4 +1,5 @@
 import os
+from telethon.tl.types import ChatBannedRights
 
 class Config(object):
     # Get this value from my.telegram.org! Please do not steal
@@ -36,3 +37,15 @@ class Config(object):
         "@MemeVideoChat",
         "@ShrimadhaVahdamirhS",
     ]
+    # maximum number of messages for antiflood
+    MAX_ANTI_FLOOD_MESSAGES = 10
+    # warn mode for anti flood
+    ANTI_FLOOD_WARN_MODE = ChatBannedRights(
+        until_date=None,
+        view_messages=None,
+        send_messages=True
+    )
+    # chat ids or usernames, it is recommended to use chat ids,
+    # providing usernames means an additional overhead for the user
+    CHATS_TO_MONITOR_FOR_ANTI_FLOOD = []
+
