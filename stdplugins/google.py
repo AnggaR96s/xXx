@@ -53,6 +53,7 @@ async def _(event):
     await borg.send_file(
         event.chat_id,
         lst,
+        caption=input_str,
         reply_to=event.message.id,
         progress_callback=progress
     )
