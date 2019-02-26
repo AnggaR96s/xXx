@@ -51,19 +51,50 @@ async def _(event):
             if os.path.exists(single_file):
                 # https://stackoverflow.com/a/678242/4723940
                 caption_rts = os.path.basename(single_file)
+                force_document = True
+                supports_streaming = False
+                document_attributes = []
+                if single_file.endswith((".mkv", ".mp4")):
+                    metadata = extractMetadata(createParser(single_file))
+                    duration = 0
+                    width = 0
+                    height = 0
+                    if metadata.has("duration"):
+                        duration = metadata.get('duration').seconds
+                    if os.path.exists(thumb_image_path):
+                        metadata = extractMetadata(createParser(thumb_image_path))
+                        if metadata.has("width"):
+                            width = metadata.get("width")
+                        if metadata.has("height"):
+                            height = metadata.get("height")
+                    document_attributes = [
+                        DocumentAttributeVideo(
+                            duration=duration,
+                            w=width,
+                            h=height,
+                            round_message=False,
+                            supports_streaming=True
+                        )
+                    ]
                 try:
                     await borg.send_file(
                         event.chat_id,
                         single_file,
                         caption=caption_rts,
-                        force_document=False,
-                        supports_streaming=True,
+                        force_document=force_document,
+                        supports_streaming=supports_streaming,
                         allow_cache=False,
                         reply_to=event.message.id,
                         thumb=thumb,
+                        attributes=document_attributes,
                         progress_callback=progress
                     )
-                except:
+                except Exception as e:
+                    await borg.send_message(
+                        event.chat_id,
+                        "{} caused `{}`".format(caption_rts, str(e)),
+                        reply_to=event.message.id
+                    )
                     # some media were having some issues
                     continue
                 os.remove(single_file)
