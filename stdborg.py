@@ -35,7 +35,7 @@ else:
         TG_GLOBAL_ALBUM_LIMIT = int(input("Number of images you want to #spam in the Google Image search: "))
         OCR_SPACE_API_KEY = input("Get your free API Key from OCR.Space ")
         UB_BLACK_LIST_CHAT = list(map(str, input("Some groups do not like userbots, (Like Official Telegram Groups). Please provide list of usernames where you want to disable userbot's incoming=True feature. (seperated by SPACE) ").split()))
-        CHATS_TO_MONITOR_FOR_ANTI_FLOOD = list(map(str, input("Please provide list of usernames where you want to enable userbot's antiflood feature. (seperated by SPACE) ").split()))\
+        CHATS_TO_MONITOR_FOR_ANTI_FLOOD = list(map(str, input("Please provide list of usernames where you want to enable userbot's antiflood feature. (seperated by SPACE) ").split()))
         MAX_ANTI_FLOOD_MESSAGES = input("Number of consecutive messages to be considered as FLOOD ")
         with open("config.py", "w") as f:
             f.write(f"""from telethon.tl.types import ChatBannedRights

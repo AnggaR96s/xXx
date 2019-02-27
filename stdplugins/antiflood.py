@@ -19,11 +19,13 @@ async def _(event):
                 try:
                     await borg(EditBannedRequest(event.chat_id, event.message.from_id, Config.ANTI_FLOOD_WARN_MODE))
                 except (Exception) as exc:
-                    await borg.send_message(
+                    m1 = await borg.send_message(
                         entity=event.chat_id,
                         message="**Automatic AntiFlooder**\n @admin [User](tg://user?id={}) is flooding this chat. \n`{}`".format(event.message.from_id, str(exc)),
                         reply_to=event.message.id
                     )
+                    await asyncio.sleep(10)
+                    await event.edit("https://t.me/keralagram/724970")
                 else:
                     await borg.send_message(
                         entity=event.chat_id,
