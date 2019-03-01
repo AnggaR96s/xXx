@@ -9,8 +9,6 @@ from telethon.utils import get_input_location
 async def _(event):
     if event.fwd_from:
         return
-    if not os.path.isdir(Config.TMP_DOWNLOAD_DIRECTORY):
-        os.makedirs(Config.TMP_DOWNLOAD_DIRECTORY)
     replied_user = None
     if event.reply_to_msg_id:
         previous_message = await event.get_reply_message()
@@ -26,15 +24,6 @@ async def _(event):
             if type(probable_user_mention_entity) == MessageEntityMentionName:
                 user_id = probable_user_mention_entity.user_id
                 replied_user = await borg(GetFullUserRequest(user_id))
-            else:
-                # the disgusting CRAP way, of doing the thing
-                try:
-                    user_object = await borg.get_entity(input_str)
-                    user_id = user_object.id
-                    replied_user = await borg(GetFullUserRequest(user_id))
-                except e:
-                    await event.edit(str(e))
-                    return None
         else:
             try:
                 user_object = await borg.get_entity(input_str)
@@ -54,33 +43,24 @@ async def _(event):
     common_chats = replied_user.common_chats_count
     try:
         dc_id, location = get_input_location(replied_user.profile_photo)
-        photo = await borg.download_profile_photo(
-            user_id,
-            Config.TMP_DOWNLOAD_DIRECTORY + str(user_id) + ".jpg",
-            download_big=True
-        )
     except Exception as e:
-        logger.warn(str(e))
-        dc_id = "__ need a Profile Picture for this to work __"
-        photo = "http://telegra.ph/file/457126e7cd1ade29d2a65.jpg"
-    caption = "ID: `{}` \nName: [{}](tg://user?id={}) \nBio: {}\nDC ID: {}\nGroups In Common: {}".format(user_id, first_name, user_id, user_bio, dc_id, common_chats)
+        dc_id = str(e)
+        location = str(e)
+    caption = """ID: <code>{}</code>
+Name: <a href='tg://user?id={}'>{}</a>
+Bio: {}
+DC ID: {}
+Groups in Common: {}
+""".format(user_id, user_id, first_name, user_bio, dc_id, common_chats)
     message_id_to_reply = event.message.reply_to_msg_id
     if not message_id_to_reply:
         message_id_to_reply = event.message.id
-    try:
-        await borg.send_file(
-            event.chat_id,
-            photo,
-            caption=caption,
-            force_document=False,
-            reply_to=message_id_to_reply
-        )
-        if not photo.startswith("http"):
-            os.remove(photo)
-    except Exception as e:
-        await borg.send_message(
-            event.chat_id,
-            caption + "\n" + str(e),
-            reply_to=message_id_to_reply
-        )
-    await event.delete()
+    await borg.send_message(
+        event.chat_id,
+        caption,
+        reply_to=message_id_to_reply,
+        parse_mode="HTML",
+        file=replied_user.profile_photo,
+        force_document=False,
+        silent=True
+    )
