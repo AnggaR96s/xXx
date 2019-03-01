@@ -16,6 +16,7 @@ async def _(event):
             current_count = int(borg.storage.CHAT_FLOOD[event.chat_id][1])
             current_count += 1
             if current_count > Config.MAX_ANTI_FLOOD_MESSAGES:
+                borg.storage.CHAT_FLOOD[event.chat_id] = (event.message.from_id, 0)
                 try:
                     await borg(EditBannedRequest(event.chat_id, event.message.from_id, Config.ANTI_FLOOD_WARN_MODE))
                 except (Exception) as exc:
