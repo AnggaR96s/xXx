@@ -45,8 +45,10 @@ async def _(event):
                 return None
     user_id = replied_user.user.id
     first_name = replied_user.user.first_name
-    # some weird people (like me) have more than 4096 characters in their names
-    first_name = first_name.replace("\u2060", "")
+    # some Deleted Accounts do not have first_name
+    if first_name is not None:
+        # some weird people (like me) have more than 4096 characters in their names
+        first_name = first_name.replace("\u2060", "")
     # inspired by https://telegram.dog/afsaI181
     user_bio = replied_user.about
     common_chats = replied_user.common_chats_count
@@ -57,20 +59,28 @@ async def _(event):
             Config.TMP_DOWNLOAD_DIRECTORY + str(user_id) + ".jpg",
             download_big=True
         )
-    except TypeError as e:
+    except Exception as e:
+        logger.warn(str(e))
         dc_id = "__ need a Profile Picture for this to work __"
         photo = "http://telegra.ph/file/457126e7cd1ade29d2a65.jpg"
     caption = "ID: `{}` \nName: [{}](tg://user?id={}) \nBio: {}\nDC ID: {}\nGroups In Common: {}".format(user_id, first_name, user_id, user_bio, dc_id, common_chats)
     message_id_to_reply = event.message.reply_to_msg_id
     if not message_id_to_reply:
         message_id_to_reply = event.message.id
-    await borg.send_file(
-        event.chat_id,
-        photo,
-        caption=caption,
-        force_document=False,
-        reply_to=message_id_to_reply
-    )
-    if not photo.startswith("http"):
-        os.remove(photo)
+    try:
+        await borg.send_file(
+            event.chat_id,
+            photo,
+            caption=caption,
+            force_document=False,
+            reply_to=message_id_to_reply
+        )
+        if not photo.startswith("http"):
+            os.remove(photo)
+    except Exception as e:
+        await borg.send_message(
+            event.chat_id,
+            caption + "\n" + str(e),
+            reply_to=message_id_to_reply
+        )
     await event.delete()
