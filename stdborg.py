@@ -66,25 +66,24 @@ class Config(object):
     )
     # chat ids or usernames, it is recommended to use chat ids,
     # providing usernames means an additional overhead for the user
-    CHATS_TO_MONITOR_FOR_ANTI_FLOOD = {CHATS_TO_MONITOR_FOR_ANTI_FLOOD}""")
+    CHATS_TO_MONITOR_FOR_ANTI_FLOOD = {CHATS_TO_MONITOR_FOR_ANTI_FLOOD}
+    # This command was inspired by @SitiSchu 's @thedevs_bot
+    G_BAN_LOGGER_GROUP = None""")
         logging.info("Please run the command, again.")
         sys.exit(1)
 
 
 if len(sys.argv) == 2:
     session_name = str(sys.argv[1])
-    if session_name == "test":
-        logging.info("Ran Successfully")
-    else:
-        borg = Uniborg(
-            session_name,
-            plugin_path="stdplugins",
-            connection_retries=None,
-            api_config=Config,
-            api_id=Config.APP_ID,
-            api_hash=Config.API_HASH
-        )
-        borg.run_until_disconnected()
+    borg = Uniborg(
+        session_name,
+        plugin_path="stdplugins",
+        connection_retries=None,
+        api_config=Config,
+        api_id=Config.APP_ID,
+        api_hash=Config.API_HASH
+    )
+    borg.run_until_disconnected()
 else:
     logging.error("USAGE EXAMPLE:\n"
           "python3 -m stdborg <SESSION_NAME>"

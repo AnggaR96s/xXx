@@ -48,4 +48,5 @@ class Config(object):
     # chat ids or usernames, it is recommended to use chat ids,
     # providing usernames means an additional overhead for the user
     CHATS_TO_MONITOR_FOR_ANTI_FLOOD = []
+    G_BAN_LOGGER_GROUP = int(os.environ.get("G_BAN_LOGGER_GROUP", None))
 
