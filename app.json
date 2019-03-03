@@ -70,6 +70,16 @@
       "description": "Get an API Key from http://OCR.Space",
       "value": "",
       "required": false
+    },
+    "G_BAN_LOGGER_GROUP": {
+      "description": "Send .get_id in any group with all your administration bots (added)",
+      "value": "",
+      "required": false
+    },
+    "TG_GLOBAL_ALBUM_LIMIT": {
+      "description": "How many media should appear when you do a .google image search? (setting a low value is preferred)",
+      "value": "9",
+      "required": false
     }
   },
   "addons": [],

@@ -27,7 +27,7 @@ class Config(object):
     # DO NOT EDIT BELOW THIS LINE IF YOU DO NOT KNOW WHAT YOU ARE DOING
     MAX_MESSAGE_SIZE_LIMIT = 4095
     # TG API limit. A message can have maximum 4096 characters!
-    TG_GLOBAL_ALBUM_LIMIT = 9
+    TG_GLOBAL_ALBUM_LIMIT = int(os.environ.get("TG_GLOBAL_ALBUM_LIMIT", 9))
     # TG API limit. An album can have atmost 10 media!
     # Get a Free API Key from OCR.Space
     OCR_SPACE_API_KEY = os.environ.get("OCR_SPACE_API_KEY", None)
@@ -49,4 +49,3 @@ class Config(object):
     # providing usernames means an additional overhead for the user
     CHATS_TO_MONITOR_FOR_ANTI_FLOOD = []
     G_BAN_LOGGER_GROUP = int(os.environ.get("G_BAN_LOGGER_GROUP", None))
-
