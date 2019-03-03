@@ -54,7 +54,6 @@ class Uniborg(TelegramClient):
 
         self.me = await self.get_me()
         self.uid = telethon.utils.get_peer_id(self.me)
-        self.verson = "20.02.2019 19:30:45"
 
     def load_plugin(self, shortname):
         self.load_plugin_from_file(f"{self._plugin_path}/{shortname}.py")
