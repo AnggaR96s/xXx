@@ -12,7 +12,7 @@ async def _(event):
         message_id = event.message.reply_to_msg_id
         try:
             await borg(f.channels.UpdatePinnedMessageRequest(event.chat_id, message_id, False))
-        except (NameError, TypeError, errors.ChannelInvalidError, errors.ChatAdminRequiredError, errors.ChatIdInvalidError, errors.ChatNotModifiedError) as e:
+        except Exception as e:
             await event.edit(str(e))
     else:
         await event.edit("Reply to a message to pin the message in this Channel.")
