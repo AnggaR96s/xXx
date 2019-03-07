@@ -15,7 +15,7 @@ async def _(event):
         await event.edit(shiiinabot)
         from_user = None
         input_str = event.pattern_match.group(1)
-        if input_str == "me":
+        if input_str:
             from_user = await borg.get_entity(input_str)
             logger.info(from_user)
         async for message in borg.iter_messages(event.chat_id, min_id=event.reply_to_msg_id, from_user=from_user):
