@@ -12,13 +12,12 @@ async def _(event):
         await event.edit("Need to get an API key from https://screenshotlayer.com/product \nModule stopping!")
         return
     await event.edit("Processing ...")
-    sample_url = "https://api.screenshotlayer.com/api/capture?access_key={}&url={}&fullpage={}&width={}&viewport={}&format={}&force={}"
+    sample_url = "https://api.screenshotlayer.com/api/capture?access_key={}&url={}&fullpage={}&viewport={}&format={}&force={}"
     input_str = event.pattern_match.group(1)
     response_api = requests.get(sample_url.format(
         Config.SCREEN_SHOT_LAYER_ACCESS_KEY,
         input_str,
         "1",
-        "1:1",
         "2560x1440",
         "PNG",
         "1"

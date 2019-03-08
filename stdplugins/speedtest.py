@@ -1,7 +1,6 @@
 from telethon import events
 from datetime import datetime
 import io
-import requests
 import speedtest
 
 
@@ -25,16 +24,15 @@ async def _(event):
     if event.reply_to_msg_id:
         reply_msg_id = event.reply_to_msg_id
     try:
-        response = requests.get(s.results.share())
-        with io.BytesIO(response.content) as speedtest_image:
-            speedtest_image.name = "speedtest.png"
-            await borg.send_file(
-                event.chat_id,
-                speedtest_image,
-                caption="**SpeedTest** completed in {} seconds".format(ms),
-                reply_to=reply_msg_id
-            )
-            await event.delete()
+        response = s.results.share()
+        speedtest_image = response
+        await borg.send_file(
+            event.chat_id,
+            speedtest_image,
+            caption="**SpeedTest** completed in {} seconds".format(ms),
+            reply_to=reply_msg_id
+        )
+        await event.delete()
     except Exception as exc:
         await event.edit("""**SpeedTest** completed in {} seconds
 Download: {}
