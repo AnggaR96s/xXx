@@ -14,8 +14,8 @@ The modular design of the project enhances your Telegram experience
 through [plugins](https://github.com/uniborg/uniborg/tree/master/stdplugins)
 which you can enable or disable on demand.
 
-Each plugin gets the `borg`, `logger` and `storage` magical
-[variables](https://gitlab.com/SpEcHiDe/UniBorg/blob/4805f2f6de7d734c341bb978318f44323ad525f1/uniborg/uniborg.py#L66-L68)
+Each plugin gets the `borg`, `logger`, `Config` and `storage` magical
+[variables](https://gitlab.com/spechide/UniBorg/blob/488eff632e65103ba7017d4f52777d22ddd52ea2/uniborg/uniborg.py#L76-L80)
 to ease their use. Thus creating a plugin as easy as adding
 a new file under the plugin directory to do the job:
 
@@ -31,7 +31,4 @@ async def handler(event):
 
 ## learning
 
-Check out the already-mentioned
-[plugins](https://gitlab.com/SpEcHiDe/UniBorg/tree/master/stdplugins)
-directory to learn how to write your own, and consider reading
-[Telethon's documentation](http://telethon.readthedocs.io/).
+Check out the already-mentioned [plugins](https://gitlab.com/SpEcHiDe/UniBorg/tree/master/stdplugins) directory, or some third-party [plugins](https://telegram.dog/UniBorg) to learn how to write your own, and consider reading [Telethon's documentation](http://telethon.readthedocs.io/).
