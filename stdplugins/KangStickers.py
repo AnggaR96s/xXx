@@ -154,7 +154,7 @@ async def silently_send_message(conv, text):
 
 async def stickerset_exists(conv, setname):
     try:
-        await client(GetStickerSetRequest(InputStickerSetShortName(setname)))
+        await borg(GetStickerSetRequest(InputStickerSetShortName(setname)))
         response = await silently_send_message(conv, "/addsticker")
         if response.text == "Invalid pack selected.":
             await silently_send_message(conv, "/cancel")
