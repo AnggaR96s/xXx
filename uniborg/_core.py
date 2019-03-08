@@ -8,6 +8,8 @@ import traceback
 from uniborg import util
 from datetime import datetime
 
+from telethon import events
+
 DELETE_TIMEOUT = 2
 
 
@@ -47,3 +49,9 @@ async def remove(event):
 
     await asyncio.sleep(DELETE_TIMEOUT)
     await borg.delete_messages(msg.to_id, msg)
+
+
+@borg.on(events.NewMessage(chats=Config.UB_BLACK_LIST_CHAT))
+async def on_official_groups(event):
+    logger.info(event.stringify())
+    raise events.StopPropagation
