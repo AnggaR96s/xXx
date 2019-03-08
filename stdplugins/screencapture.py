@@ -1,4 +1,5 @@
 from telethon import events
+import io
 import os
 import requests
 
@@ -11,27 +12,32 @@ async def _(event):
         await event.edit("Need to get an API key from https://screenshotlayer.com/product \nModule stopping!")
         return
     await event.edit("Processing ...")
-    sample_url = "https://api.screenshotlayer.com/api/capture?access_key={}&url={}&fullpage={}&format={}&viewport={}"
+    sample_url = "https://api.screenshotlayer.com/api/capture?access_key={}&url={}&fullpage={}&width={}&viewport={}&format={}&force={}"
     input_str = event.pattern_match.group(1)
-    response_api = requests.get(sample_url.format(Config.SCREEN_SHOT_LAYER_ACCESS_KEY, input_str, "1", "PNG", "2560x1440"), stream=True)
+    response_api = requests.get(sample_url.format(
+        Config.SCREEN_SHOT_LAYER_ACCESS_KEY,
+        input_str,
+        "1",
+        "1:1",
+        "2560x1440",
+        "PNG",
+        "1"
+    ))
     # https://stackoverflow.com/a/23718458/4723940
     contentType = response_api.headers['content-type']
     if "image" in contentType:
-        temp_file_name = "screencapture.png"
-        with open(temp_file_name, "wb") as fd:
-            for chunk in response_api.iter_content(chunk_size=128):
-                fd.write(chunk)
-        try:
-            await borg.send_file(
-                event.chat_id,
-                temp_file_name,
-                caption=input_str,
-                force_document=True,
-                reply_to=event.message.reply_to_msg_id
-            )
-            await event.delete()
-        except:
-            await event.edit(response_api.text)
-        os.remove(temp_file_name)
+        with io.BytesIO(response_api.content) as screenshot_image:
+            screenshot_image.name = "screencapture.png"
+            try:
+                await borg.send_file(
+                    event.chat_id,
+                    screenshot_image,
+                    caption=input_str,
+                    force_document=True,
+                    reply_to=event.message.reply_to_msg_id
+                )
+                await event.delete()
+            except Exception as e:
+                await event.edit(str(e))
     else:
         await event.edit(response_api.text)
