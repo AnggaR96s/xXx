@@ -48,6 +48,18 @@ class Uniborg(TelegramClient):
         for p in Path().glob(f"{self._plugin_path}/*.py"):
             self.load_plugin_from_file(p)
 
+        LOAD = self.config.LOAD
+        NO_LOAD = self.config.NO_LOAD
+        if LOAD or NO_LOAD:
+            to_load = LOAD
+            if to_load:
+                self._logger.info("Modules to LOAD: ")
+                self._logger.info(to_load)
+            if NO_LOAD:
+                for plugin_name in NO_LOAD:
+                    self.remove_plugin(plugin_name)
+
+
     async def _async_init(self, **kwargs):
         await self.start(**kwargs)
 

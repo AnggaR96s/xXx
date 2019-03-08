@@ -49,3 +49,6 @@ class Config(object):
     # providing usernames means an additional overhead for the user
     CHATS_TO_MONITOR_FOR_ANTI_FLOOD = []
     G_BAN_LOGGER_GROUP = int(os.environ.get("G_BAN_LOGGER_GROUP", None))
+    # specify LOAD and NO_LOAD
+    LOAD = []
+    NO_LOAD = []
