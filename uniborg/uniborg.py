@@ -49,7 +49,6 @@ class Uniborg(TelegramClient):
             self.load_plugin_from_file(p)
 
     async def _async_init(self, **kwargs):
-        print(self)
         await self.start(**kwargs)
 
         self.me = await self.get_me()
