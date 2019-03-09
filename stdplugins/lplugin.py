@@ -1,7 +1,7 @@
 from telethon import events
 from uniborg import util
 import asyncio
-import datetime
+from datetime import datetime
 import os
 
 
