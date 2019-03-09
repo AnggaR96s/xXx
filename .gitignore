@@ -6,6 +6,4 @@ __pycache__
 data/
 config.py
 sessions/
-stdplugins/admin_tools.py
-*.jpg
 
