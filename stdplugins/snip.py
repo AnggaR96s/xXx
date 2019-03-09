@@ -27,9 +27,15 @@ async def on_snip(event):
             media = types.InputDocument(snip['id'], snip['hash'], snip['fr'])
         else:
             media = None
-
-        await event.reply(snip['text'], file=media)
-
+        message_id = event.message.id
+        if event.reply_to_msg_id:
+            message_id = event.reply_to_msg_id
+        await borg.send_message(
+            event.chat_id,
+            snip['text'],
+            reply_to=message_id,
+            file=media
+        )
     await event.delete()
 
 
@@ -61,8 +67,7 @@ async def on_snip_save(event):
 
 @borg.on(events.NewMessage(pattern=r'\.snipl', outgoing=True))
 async def on_snip_list(event):
-    await event.respond('available snips: ' + ', '.join(snips.keys()))
-    await event.delete()
+    await event.edit('available snips: ' + ', '.join(snips.keys()))
 
 
 @borg.on(events.NewMessage(pattern=r'\.snipd (\S+)', outgoing=True))
