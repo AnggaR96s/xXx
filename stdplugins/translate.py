@@ -1,7 +1,5 @@
 from telethon import events
-from datetime import datetime
-import json
-from py_translator import Translator
+from mtranslate import translate
 
 
 @borg.on(events.NewMessage(pattern=r"\.tr (.*)", outgoing=True))
@@ -9,7 +7,6 @@ async def _(event):
     if event.fwd_from:
         return
     input_str = event.pattern_match.group(1)
-    start = datetime.now()
     if event.reply_to_msg_id:
         previous_message = await event.get_reply_message()
         text = previous_message.message
@@ -19,17 +16,17 @@ async def _(event):
     else:
         await event.edit("Invalid Syntax. Module stopping.")
         return
-    translator = Translator()
     try:
-        translated = translator.translate(text, dest=lan)
-        src_lang = translated.src
-        translated_text = translated.text
-        end = datetime.now()
-        ms = (end - start).seconds
-        output_str = "Translated from {} to {} in {} seconds. \n {}".format(src_lang, lan, str(ms), translated_text)
-        await event.edit(output_str)
-    except (IndexError, ValueError) as exc:
-        await event.edit(str(exc))
-    else:
-        await event.edit(translated_text)
+        translated_text = translate(text, lan)
+        output_str = """**SOURCE**
+{}
 
+**TRANSLATED** to {}
+{}""".format(
+            text,
+            lan,
+            translated_text
+        )
+        await event.edit(output_str)
+    except Exception as exc:
+        await event.edit(str(exc))

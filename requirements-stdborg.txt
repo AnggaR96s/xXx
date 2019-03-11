@@ -6,7 +6,7 @@ gsearch
 gtts
 hachoir
 Pillow
-py_translator
+mtranslate
 regex
 requests
 speedtest-cli
