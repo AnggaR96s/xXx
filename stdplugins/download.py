@@ -1,7 +1,6 @@
 from telethon import events
 import json
 import os
-import subprocess
 import requests
 import asyncio
 from datetime import datetime
@@ -10,8 +9,6 @@ from hachoir.parser import createParser
 
 from telethon.tl.types import DocumentAttributeVideo
 from telethon.errors import MessageNotModifiedError
-
-from PIL import Image
 
 
 def progress(current, total):
