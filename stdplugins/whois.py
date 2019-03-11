@@ -50,8 +50,21 @@ async def _(event):
 Name: <a href='tg://user?id={}'>{}</a>
 Bio: {}
 DC ID: {}
+Restricted: {}
+Verified: {}
+Bot: {}
 Groups in Common: {}
-""".format(user_id, user_id, first_name, user_bio, dc_id, common_chats)
+""".format(
+        user_id,
+        user_id,
+        first_name,
+        user_bio,
+        dc_id,
+        replied_user.user.restricted,
+        replied_user.user.verified,
+        replied_user.user.bot,
+        common_chats
+    )
     message_id_to_reply = event.message.reply_to_msg_id
     if not message_id_to_reply:
         message_id_to_reply = event.message.id
@@ -64,3 +77,4 @@ Groups in Common: {}
         force_document=False,
         silent=True
     )
+    await event.delete()
