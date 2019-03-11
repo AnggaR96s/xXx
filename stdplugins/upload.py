@@ -54,7 +54,7 @@ async def _(event):
                 force_document = True
                 supports_streaming = False
                 document_attributes = []
-                if single_file.endswith((".mkv", ".mp4")):
+                if single_file.endswith((".mkv", ".mp4", ".mp3", ".flac")):
                     metadata = extractMetadata(createParser(single_file))
                     duration = 0
                     width = 0
