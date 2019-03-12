@@ -6,14 +6,25 @@ import sys
 async def _(event):
     if event.fwd_from:
         return
-    await event.edit("""@UniBorg
+    help_string = """@UniBorg
 Python {}
 Telethon {}
 
 UserBot Forked from https://github.com/expectocode/uniborg""".format(
         sys.version,
         __version__
-    ))
+    )
+    tgbotusername = Config.TG_BOT_USER_NAME_BF_HER
+    if tgbotusername is not None:
+        results = await borg.inline_query(tgbotusername, help_string)
+        message = await results[0].click(
+            event.chat_id,
+            reply_to=event.reply_to_msg_id,
+            hide_via=True
+        )
+        await event.delete()
+    else:
+        await event.edit(help_string)
 
 
 @borg.on(events.NewMessage(pattern=r"\.dc", outgoing=True))

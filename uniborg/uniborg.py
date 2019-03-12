@@ -34,10 +34,18 @@ class Uniborg(TelegramClient):
             "api_id": 6,
             "api_hash": "eb06d4abfb49dc3eeb1aeb98ae0f581e",
             "device_model": "GNU/Linux nonUI",
-            "app_version": "@UniBorg 6.8.3",
+            "app_version": "@UniBorg 8.7.3",
             "lang_code": "ml",
             **kwargs
         }
+
+        # ForTheGreatrerGood of beautification
+        self.tgbot = TelegramClient(
+            "TG_BOT_TOKEN",
+            api_id=api_config.APP_ID,
+            api_hash=api_config.API_HASH
+        ).start(bot_token=api_config.TG_BOT_TOKEN_BF_HER) if api_config.TG_BOT_TOKEN_BF_HER is not None else None
+
         super().__init__(session, **kwargs)
 
         # This is a hack, please avert your eyes
@@ -77,7 +85,6 @@ class Uniborg(TelegramClient):
             raise telethon.events.StopPropagation
 
 
-
     def load_plugin(self, shortname):
         self.load_plugin_from_file(f"{self._plugin_path}/{shortname}.py")
 
@@ -92,8 +99,10 @@ class Uniborg(TelegramClient):
         mod.borg = self
         mod.logger = logging.getLogger(shortname)
         mod.storage = self.storage(f"{self._name}/{shortname}")
-        # declare Config to be accessible by all modules
+        # declare Config and tgbot to be accessible by all modules
         mod.Config = self.config
+        mod.tgbot = self.tgbot
+
 
         spec.loader.exec_module(mod)
         self._plugins[shortname] = mod
