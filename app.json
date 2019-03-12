@@ -80,6 +80,11 @@
       "description": "How many media should appear when you do a .google image search? (setting a low value is preferred)",
       "value": "9",
       "required": false
+    },
+    "TG_BOT_TOKEN_BF_HER": {
+      "description": "Obtain a Telegram bot token by contacting @BotFather",
+      "value": "",
+      "required": false
     }
   },
   "addons": [],

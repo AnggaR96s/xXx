@@ -52,3 +52,5 @@ class Config(object):
     # specify LOAD and NO_LOAD
     LOAD = []
     NO_LOAD = []
+    # Telegram BOT Token from @BotFather
+    TG_BOT_TOKEN_BF_HER = os.environ.get("TG_BOT_TOKEN_BF_HER", None)
