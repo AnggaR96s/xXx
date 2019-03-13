@@ -43,6 +43,8 @@ async def _(event):
         to_download_directory = Config.TMP_DOWNLOAD_DIRECTORY
         if "|" in input_str:
             url, file_name = input_str.split("|")
+        url = url.strip()
+        file_name = file_name.strip()
         downloaded_file_name = os.path.join(to_download_directory, file_name)
         async with aiohttp.ClientSession() as session:
             await download_coroutine(
@@ -54,7 +56,10 @@ async def _(event):
             )
         end = datetime.now()
         ms = (end - start).seconds
-        await event.edit("Downloaded to `{}` in {} seconds.".format(downloaded_file_name, ms))
+        if os.path.exists(downloaded_file_name):
+            await event.edit("Downloaded to `{}` in {} seconds.".format(downloaded_file_name, ms))
+        else:
+            await event.edit("Incorrect URL\n {}".format(input_str))
     else:
         await event.edit("Reply to a message to download to my local server.")
 
@@ -62,9 +67,12 @@ async def _(event):
 async def download_coroutine(session, url, file_name, event, start):
     CHUNK_SIZE = 2341
     downloaded = 0
+    display_message = ""
     async with session.get(url) as response:
-        print(response.headers)
-        total_length = response.headers["Content-Length"]
+        total_length = int(response.headers["Content-Length"])
+        content_type = response.headers["Content-Type"]
+        if "text" in content_type and total_length < 500:
+            return await response.release()
         await event.edit("""Initiating Download
 URL: {}
 File Name: {}
@@ -85,10 +93,17 @@ File Size: {}""".format(url, file_name, humanbytes(total_length)))
                     time_to_completion = round(
                         (total_length - downloaded) / speed) * 1000
                     estimated_total_time = elapsed_time + time_to_completion
-                    await event.edit("""Initiating Download
+                    try:
+                        current_message = """Initiating Download
 URL: {}
 File Name: {}
 File Size: {}
 Downloaded: {}
-ETA: {}""".format(url, file_name, humanbytes(total_length), humanbytes(downloaded), TimeFormatter(estimated_total_time)))
+ETA: {}""".format(url, file_name, humanbytes(total_length), humanbytes(downloaded), TimeFormatter(estimated_total_time))
+                        if current_message != display_message:
+                            await event.edit(current_message)
+                            display_message = current_message
+                    except Exception as e:
+                        logger.info(str(e))
+                        pass
         return await response.release()
