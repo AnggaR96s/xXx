@@ -76,8 +76,8 @@ async def _(event):
     try:
         ParsedText = test_file["ParsedResults"][0]["ParsedText"]
         ProcessingTimeInMilliseconds = str(int(test_file["ProcessingTimeInMilliseconds"]) // 1000)
-    except:
-        await event.edit("Errors. Report This to @SpEcHlDe")
+    except Exception as e:
+        await event.edit("Errors.\n {}\nReport This to @SpEcHlDe".format(str(e)))
     else:
         await event.edit("Read Document in {} seconds. \n{}".format(ProcessingTimeInMilliseconds, ParsedText))
     os.remove(downloaded_file_name)
