@@ -13,3 +13,4 @@ speedtest-cli
 telegraph
 urbandict
 wikipedia
+aiohttp
