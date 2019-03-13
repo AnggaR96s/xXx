@@ -39,47 +39,60 @@ async def _(event):
         await event.edit(str(e))
 
 
-if tgbot is not None:
+if Config.TG_BOT_USER_NAME_BF_HER is not None:
     @tgbot.on(events.InlineQuery)
     async def inline_handler(event):
-        logger.info(event.stringify())
         builder = event.builder
         result = None
-        query = event.text
-        rev_text = query[::-1]
-        if query.startswith("ping"):
-            ping_place_rs = query.split(" ")[1]
-            result = builder.article(
-                "© @UniBorg",
-                text="Pong\n{}".format(ping_place_rs),
-                buttons=[
-                    [custom.Button.url("Join the Channel", "https://telegram.dog/UniBorg"), custom.Button.url("Join the Group", "https://telegram.dog/ShrimadhaVahdamirhS")],
-                    [custom.Button.url("Source Code", "https://GitLab.com/SpEcHiDe/UniBorg")]
-                ],
-                link_preview=False
-            )
-        elif "@UniBorg" in query:
-            buttons = []
-            same_row_buttons = []
-            i = 1
-            for plugin in borg._plugins:
-                same_row_buttons.append(
-                    custom.Button.inline("{} {}".format("✅", plugin))
+        if event.query.user_id == borg.uid:
+            query = event.text
+            rev_text = query[::-1]
+            if query.startswith("ping"):
+                ping_place_rs = query.split(" ")[1]
+                result = builder.article(
+                    "© @UniBorg",
+                    text="Pong\n{}".format(ping_place_rs),
+                    buttons=[
+                        [custom.Button.url("Join the Channel", "https://telegram.dog/UniBorg"), custom.Button.url("Join the Group", "https://telegram.dog/ShrimadhaVahdamirhS")],
+                        [custom.Button.url("Source Code", "https://GitLab.com/SpEcHiDe/UniBorg")]
+                    ],
+                    link_preview=False
                 )
-                if (i % 2) == 0:
-                    buttons.append(same_row_buttons)
-                    same_row_buttons = []
-                i = i + 1
-            result = builder.article(
-                "© @UniBorg",
-                text="{}\nCurrently Loaded Plugins".format(query),
-                buttons=buttons,
-                link_preview=False
-            )
+            elif "@UniBorg" in query:
+                buttons = []
+                same_row_buttons = []
+                i = 1
+                for plugin in borg._plugins:
+                    same_row_buttons.append(
+                        custom.Button.inline("{} {}".format("✅", plugin))
+                    )
+                    if (i % 2) == 0:
+                        buttons.append(same_row_buttons)
+                        same_row_buttons = []
+                    i = i + 1
+                result = builder.article(
+                    "© @UniBorg",
+                    text="{}\nCurrently Loaded Plugins".format(query),
+                    buttons=buttons,
+                    link_preview=False
+                )
+            else:
+                result = builder.article(
+                    "© @UniBorg",
+                    text=query,
+                    buttons=[
+                        [custom.Button.url("Join the Channel", "https://telegram.dog/UniBorg"), custom.Button.url("Join the Group", "https://telegram.dog/ShrimadhaVahdamirhS")],
+                        [custom.Button.url("Source Code", "https://GitLab.com/SpEcHiDe/UniBorg")]
+                    ],
+                    link_preview=False
+                )
         else:
             result = builder.article(
                 "© @UniBorg",
-                text=query,
+                text="""Try @UniBorg
+You can log-in as Bot or User and do many cool things with your Telegram account.
+
+All instaructions to run @UniBorg in your PC has been explained in https://t.me/UniBorg/4""",
                 buttons=[
                     [custom.Button.url("Join the Channel", "https://telegram.dog/UniBorg"), custom.Button.url("Join the Group", "https://telegram.dog/ShrimadhaVahdamirhS")],
                     [custom.Button.url("Source Code", "https://GitLab.com/SpEcHiDe/UniBorg")]
