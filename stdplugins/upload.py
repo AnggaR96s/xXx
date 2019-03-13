@@ -12,13 +12,9 @@ from hachoir.parser import createParser
 from telethon.tl.types import DocumentAttributeVideo
 from telethon.errors import MessageNotModifiedError
 
-from PIL import Image
+from uniborg.util import progress
 
 thumb_image_path = Config.TMP_DOWNLOAD_DIRECTORY + "/thumb_image.jpg"
-
-
-def progress(current, total):
-    logger.info("Uploaded: {} of {}\nCompleted {}".format(current, total, (current / total) * 100))
 
 
 def get_lst_of_files(input_directory, output_lst):
@@ -87,7 +83,9 @@ async def _(event):
                         reply_to=event.message.id,
                         thumb=thumb,
                         attributes=document_attributes,
-                        progress_callback=progress
+                        progress_callback=lambda d, t: asyncio.get_event_loop().create_task(
+                            progress(d, t, event, time.time(), "trying to upload")
+                        )
                     )
                 except Exception as e:
                     await borg.send_message(
@@ -128,7 +126,9 @@ async def _(event):
             allow_cache=False,
             reply_to=event.message.id,
             thumb=thumb,
-            progress_callback=progress
+            progress_callback=lambda d, t: asyncio.get_event_loop().create_task(
+                progress(d, t, event, time.time(), "trying to upload")
+            )
         )
         end = datetime.now()
         ms = (end - start).seconds
@@ -206,7 +206,9 @@ async def _(event):
                             supports_streaming=True
                         )
                     ],
-                    progress_callback=progress
+                    progress_callback=lambda d, t: asyncio.get_event_loop().create_task(
+                        progress(d, t, event, time.time(), "trying to upload")
+                    )
                 )
             elif round_message:
                 await borg.send_file(
@@ -225,7 +227,9 @@ async def _(event):
                             supports_streaming=True
                         )
                     ],
-                    progress_callback=progress
+                    progress_callback=lambda d, t: asyncio.get_event_loop().create_task(
+                        progress(d, t, event, time.time(), "trying to upload")
+                    )
                 )
             elif spam_big_messages:
                 await event.edit("TBD: Not (yet) Implemented")
@@ -238,48 +242,3 @@ async def _(event):
             await event.edit(str(e))
     else:
         await event.edit("404: File Not Found")
-
-
-@borg.on(events.NewMessage(pattern=r"\.clearthumbnail", outgoing=True))
-async def _(event):
-    if event.fwd_from:
-        return
-    if os.path.exists(thumb_image_path):
-        os.remove(thumb_image_path)
-    await event.edit("✅ Custom thumbnail cleared succesfully.")
-
-
-@borg.on(events.NewMessage(pattern=r"\.savethumbnail", outgoing=True))
-async def _(event):
-    if event.fwd_from:
-        return
-    await event.edit("Processing ...")
-    if not os.path.isdir(Config.TMP_DOWNLOAD_DIRECTORY):
-        os.makedirs(Config.TMP_DOWNLOAD_DIRECTORY)
-    if event.reply_to_msg_id:
-        start = datetime.now()
-        downloaded_file_name = await borg.download_media(
-            await event.get_reply_message(),
-            Config.TMP_DOWNLOAD_DIRECTORY,
-            progress_callback=progress
-        )
-        end = datetime.now()
-        ms = (end - start).seconds
-        metadata = extractMetadata(createParser(downloaded_file_name))
-        height = 0
-        if metadata.has("height"):
-            height = metadata.get("height")
-        # resize image
-        # ref: https://t.me/PyrogramChat/44663
-        # https://stackoverflow.com/a/21669827/4723940
-        Image.open(downloaded_file_name).convert("RGB").save(downloaded_file_name)
-        img = Image.open(downloaded_file_name)
-        # https://stackoverflow.com/a/37631799/4723940
-        # img.thumbnail((90, 90))
-        img.resize((90, height))
-        img.save(thumb_image_path, "JPEG")
-        # https://pillow.readthedocs.io/en/3.1.x/reference/Image.html#create-thumbnails
-        os.remove(downloaded_file_name)
-        await event.edit("Custom video / file thumbnail saved. This image will be used in the next upload.")
-    else:
-        await event.edit("Reply to a photo to save custom thumbnail")
