@@ -45,6 +45,7 @@ if Config.TG_BOT_USER_NAME_BF_HER is not None:
         builder = event.builder
         result = None
         if event.query.user_id == borg.uid:
+            logger.info(event.stringify())
             query = event.text
             rev_text = query[::-1]
             if query.startswith("ping"):
