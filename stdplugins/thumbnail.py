@@ -1,4 +1,7 @@
 from telethon import events
+import os
+from hachoir.metadata import extractMetadata
+from hachoir.parser import createParser
 from PIL import Image
 
 
@@ -13,13 +16,10 @@ async def _(event):
     if not os.path.isdir(Config.TMP_DOWNLOAD_DIRECTORY):
         os.makedirs(Config.TMP_DOWNLOAD_DIRECTORY)
     if event.reply_to_msg_id:
-        start = datetime.now()
         downloaded_file_name = await borg.download_media(
             await event.get_reply_message(),
             Config.TMP_DOWNLOAD_DIRECTORY
         )
-        end = datetime.now()
-        ms = (end - start).seconds
         metadata = extractMetadata(createParser(downloaded_file_name))
         height = 0
         if metadata.has("height"):
