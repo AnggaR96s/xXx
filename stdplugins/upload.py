@@ -73,6 +73,7 @@ async def _(event):
                         )
                     ]
                 try:
+                    c_time = time.time()
                     await borg.send_file(
                         event.chat_id,
                         single_file,
@@ -84,7 +85,7 @@ async def _(event):
                         thumb=thumb,
                         attributes=document_attributes,
                         progress_callback=lambda d, t: asyncio.get_event_loop().create_task(
-                            progress(d, t, event, time.time(), "trying to upload")
+                            progress(d, t, event, c_time, "trying to upload")
                         )
                     )
                 except Exception as e:
@@ -119,6 +120,7 @@ async def _(event):
         thumb = thumb_image_path
     if os.path.exists(input_str):
         start = datetime.now()
+        c_time = time.time()
         await borg.send_file(
             event.chat_id,
             input_str,
@@ -127,7 +129,7 @@ async def _(event):
             reply_to=event.message.id,
             thumb=thumb,
             progress_callback=lambda d, t: asyncio.get_event_loop().create_task(
-                progress(d, t, event, time.time(), "trying to upload")
+                progress(d, t, event, c_time, "trying to upload")
             )
         )
         end = datetime.now()
@@ -187,6 +189,7 @@ async def _(event):
         # Telegram only works with MP4 files
         # this is good, since with MKV files sent as streamable Telegram responds,
         # Bad Request: VIDEO_CONTENT_TYPE_INVALID
+        c_time = time.time()
         try:
             if supports_streaming:
                 await borg.send_file(
@@ -207,7 +210,7 @@ async def _(event):
                         )
                     ],
                     progress_callback=lambda d, t: asyncio.get_event_loop().create_task(
-                        progress(d, t, event, time.time(), "trying to upload")
+                        progress(d, t, event, c_time, "trying to upload")
                     )
                 )
             elif round_message:
@@ -228,7 +231,7 @@ async def _(event):
                         )
                     ],
                     progress_callback=lambda d, t: asyncio.get_event_loop().create_task(
-                        progress(d, t, event, time.time(), "trying to upload")
+                        progress(d, t, event, c_time, "trying to upload")
                     )
                 )
             elif spam_big_messages:

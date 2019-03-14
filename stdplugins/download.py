@@ -26,11 +26,12 @@ async def _(event):
     if event.reply_to_msg_id:
         start = datetime.now()
         reply_message = await event.get_reply_message()
+        c_time = time.time()
         downloaded_file_name = await borg.download_media(
             reply_message,
             Config.TMP_DOWNLOAD_DIRECTORY,
             progress_callback=lambda d, t: asyncio.get_event_loop().create_task(
-                progress(d, t, event, time.time(), "trying to download")
+                progress(d, t, event, c_time, "trying to download")
             )
         )
         end = datetime.now()
@@ -47,12 +48,13 @@ async def _(event):
         file_name = file_name.strip()
         downloaded_file_name = os.path.join(to_download_directory, file_name)
         async with aiohttp.ClientSession() as session:
+            c_time = time.time()
             await download_coroutine(
                 session,
                 url,
                 downloaded_file_name,
                 event,
-                time.time()
+                c_time
             )
         end = datetime.now()
         ms = (end - start).seconds
@@ -94,7 +96,7 @@ File Size: {}""".format(url, file_name, humanbytes(total_length)))
                         (total_length - downloaded) / speed) * 1000
                     estimated_total_time = elapsed_time + time_to_completion
                     try:
-                        current_message = """Initiating Download
+                        current_message = """**Download Status**
 URL: {}
 File Name: {}
 File Size: {}
