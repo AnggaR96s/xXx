@@ -21,9 +21,17 @@ async def _(event):
         if event.message.entities is not None:
             mention_entity = event.message.entities
             probable_user_mention_entity = mention_entity[0]
-            if type(probable_user_mention_entity) == MessageEntityMentionName:
+            if isinstance(probable_user_mention_entity, MessageEntityMentionName):
                 user_id = probable_user_mention_entity.user_id
                 replied_user = await borg(GetFullUserRequest(user_id))
+            else:
+                try:
+                    user_object = await borg.get_entity(input_str)
+                    user_id = user_object.id
+                    replied_user = await borg(GetFullUserRequest(user_id))
+                except Exception as e:
+                    await event.edit(str(e))
+                    return None
         else:
             try:
                 user_object = await borg.get_entity(input_str)
@@ -32,6 +40,7 @@ async def _(event):
             except Exception as e:
                 await event.edit(str(e))
                 return None
+    logger.info(replied_user)
     user_id = replied_user.user.id
     first_name = replied_user.user.first_name
     # some Deleted Accounts do not have first_name
