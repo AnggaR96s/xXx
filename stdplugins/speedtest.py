@@ -30,6 +30,7 @@ async def _(event):
             event.chat_id,
             speedtest_image,
             caption="**SpeedTest** completed in {} seconds".format(ms),
+            force_document=True,
             reply_to=reply_msg_id
         )
         await event.delete()
@@ -57,4 +58,3 @@ def convert_from_bytes(size):
         size /= power
         n += 1
     return f"{round(size, 2)} {units[n]}"
-
