@@ -1,5 +1,5 @@
 from telethon import events
-from telethon.tl.types import ChannelParticipantsAdmins, ChatParticipantCreator
+from telethon.tl.types import ChannelParticipantsAdmins, ChannelParticipantAdmin, ChannelParticipantCreator
 from telethon.errors import ChatAdminRequiredError, InputUserDeactivatedError
 
 
@@ -14,20 +14,25 @@ async def _(event):
     if not input_str:
         chat = to_write_chat
     else:
-        mentions = "Admins in {} channel: \n".format(input_str)
+        mentions_heading = "Admins in {} channel: \n".format(input_str)
+        mentions = mentions_heading
         try:
             chat = await borg.get_entity(input_str)
-        except ValueError as e:
+        except Exception as e:
             await event.edit(str(e))
             return None
     try:
-        # mentions += " \tC\tP\tE\tD\tB\tU\tL\tP\tA\tM"
         async for x in borg.iter_participants(chat, filter=ChannelParticipantsAdmins):
-            is_admin = ""
             if not x.deleted:
-                mentions += "\n {} [{}](tg://user?id={}) `{}`".format(is_admin, x.first_name, x.id, x.id)
+                if isinstance(x.participant, ChannelParticipantCreator):
+                    mentions += "\n 👑 [{}](tg://user?id={}) `{}`".format(x.first_name, x.id, x.id)
+        mentions += "\n"
+        async for x in borg.iter_participants(chat, filter=ChannelParticipantsAdmins):
+            if not x.deleted:
+                if isinstance(x.participant, ChannelParticipantAdmin):
+                    mentions += "\n ⚜️ [{}](tg://user?id={}) `{}`".format(x.first_name, x.id, x.id)
             else:
-                mentions += "\n {} `{}`".format(is_admin, x.id)
-    except ChatAdminRequiredError as e:
+                mentions += "\n `{}`".format(x.id)
+    except Exception as e:
         mentions += " " + str(e) + "\n"
     await event.edit(mentions)
