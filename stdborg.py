@@ -4,8 +4,11 @@
 
 import logging
 import os
+from pathlib import Path
 import sys
 from uniborg import Uniborg
+from uniborg.storage import Storage
+
 
 logging.basicConfig(level=logging.INFO)
 
@@ -33,6 +36,7 @@ if len(sys.argv) == 2:
     borg = Uniborg(
         session_name,
         plugin_path="stdplugins",
+        storage=lambda n: Storage(Path("data") / n),
         connection_retries=None,
         api_config=Config,
         api_id=Config.APP_ID,
