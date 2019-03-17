@@ -31,7 +31,6 @@ borg = Uniborg(
     StringSession(session_name),
     plugin_path="stdplugins",
     storage=lambda n: Storage(Path("data") / n),
-    connection_retries=None,
     api_config=Config,
     api_id=Config.APP_ID,
     api_hash=Config.API_HASH
