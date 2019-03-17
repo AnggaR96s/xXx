@@ -41,3 +41,17 @@ async def _(event):
         await event.edit("Generated {} for {}.".format(response_api, input_str))
     else:
         await event.edit("something is wrong. please try again later.")
+
+
+@borg.on(events.NewMessage(pattern=r"\.unshort (.*)", outgoing=True))
+async def _(event):
+    if event.fwd_from:
+        return
+    input_str = event.pattern_match.group(1)
+    if not input_str.startswith("http"):
+        input_str = "http://" + input_str
+    r = requests.get(input_str, allow_redirects=False)
+    if str(r.status_code).startswith('3'):
+        await event.edit("Input URL: {}\nReDirected URL: {}".format(input_str, r.headers["Location"]))
+    else:
+        await event.edit("Input URL {} returned status_code {}".format(input_str, r.status_code))
