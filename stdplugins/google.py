@@ -6,9 +6,7 @@ from gsearch.googlesearch import search
 from google_images_download import google_images_download
 import json
 import os
-from PIL import Image
 import requests
-from telegraph import upload_file
 
 
 def progress(current, total):
@@ -77,7 +75,6 @@ async def _(event):
     if event.fwd_from:
         return
     start = datetime.now()
-    SEARCH_URL = "https://www.google.com/searchbyimage?image_url={}"
     OUTPUT_STR = "Reply to an image to do Google Reverse Search"
     if event.reply_to_msg_id:
         previous_message = await event.get_reply_message()
@@ -87,24 +84,21 @@ async def _(event):
                 previous_message,
                 Config.TMP_DOWNLOAD_DIRECTORY
             )
-            im = Image.open(downloaded_file_name).convert("RGB")
-            # https://stackoverflow.com/a/33298016/4723940
-            im.save(downloaded_file_name + ".jpg","jpeg")
-            # os.rename(downloaded_file_name, downloaded_file_name + ".jpg")
-            downloaded_file_name = downloaded_file_name + ".jpg"
-            try:
-                media_urls = upload_file(downloaded_file_name)
-            except Exception as exc:
-                await event.edit("ERROR: " + str(exc))
-                os.remove(downloaded_file_name)
-                return False
-            else:
-                os.remove(downloaded_file_name)
-                previous_message_text = "https://telegra.ph/{}".format(media_urls[0][1:])
-        logger.info(previous_message_text)
-        request_url = SEARCH_URL.format(previous_message_text)
-        google_rs_response = requests.get(request_url, allow_redirects=False)
-        the_location = google_rs_response.headers.get("Location")
+            SEARCH_URL = "http://www.google.com/searchbyimage/upload"
+            multipart = {
+                "encoded_image": (downloaded_file_name, open(downloaded_file_name, "rb")),
+                "image_content": ""
+            }
+            # https://stackoverflow.com/a/28792943/4723940
+            google_rs_response = requests.post(SEARCH_URL, files=multipart, allow_redirects=False)
+            the_location = google_rs_response.headers.get("Location")
+            os.remove(downloaded_file_name)
+        else:
+            previous_message_text = previous_message.message
+            SEARCH_URL = "https://www.google.com/searchbyimage?image_url={}"
+            request_url = SEARCH_URL.format(previous_message_text)
+            google_rs_response = requests.get(request_url, allow_redirects=False)
+            the_location = google_rs_response.headers.get("Location")
         OUTPUT_STR = "Open this [link]({})".format(the_location)
     end = datetime.now()
     ms = (end - start).seconds
