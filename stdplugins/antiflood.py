@@ -26,7 +26,7 @@ async def _(event):
                         reply_to=event.message.id
                     )
                     await asyncio.sleep(10)
-                    await event.edit("https://t.me/keralagram/724970")
+                    await m1.edit("https://t.me/keralagram/724970")
                 else:
                     await borg.send_message(
                         entity=event.chat_id,
