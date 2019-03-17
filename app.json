@@ -1,13 +1,17 @@
 {
   "name": "UniBorg",
   "description": "Modular UserBot powered by @TelethonChat!",
+  "logo": "https://telegra.ph/file/6ce444f5ba54d79fb8622.jpg",
   "keywords": [
     "telegram",
     "userbot",
     "plugin",
-    "modular"
+    "modular",
+    "productivity"
   ],
-  "repository": "https://github.com/SpEcHiDe/uniborg",
+  "repository": "https://gitlab.com/SpEcHiDe/UniBorg",
+  "website": "https://telegram.dog/UniBorg",
+  "success_url": "https://t.me/UniBorg/5",
   "env": {
     "ENV": {
       "description": "Setting this to ANYTHING will enable environment variables.",
@@ -19,6 +23,10 @@
     },
     "API_HASH": {
       "description": "Get this value from my.telegram.org! Please do not steal",
+      "value": ""
+    },
+    "HU_STRING_SESSION": {
+      "description": "Get this value by running python3 GenerateStringSession.py locally",
       "value": ""
     },
     "OPEN_WEATHER_MAP_APPID": {
@@ -83,6 +91,11 @@
     },
     "TG_BOT_TOKEN_BF_HER": {
       "description": "Obtain a Telegram bot token by contacting @BotFather",
+      "value": "",
+      "required": false
+    },
+    "TG_BOT_USER_NAME_BF_HER": {
+      "description": "Obtain a Telegram bot @username by contacting @BotFather",
       "value": "",
       "required": false
     }

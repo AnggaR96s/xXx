@@ -8,6 +8,7 @@ from pathlib import Path
 import sys
 from uniborg import Uniborg
 from uniborg.storage import Storage
+from telethon.sessions import StringSession
 
 
 logging.basicConfig(level=logging.INFO)
@@ -21,30 +22,18 @@ else:
         from config import Config
     else:
         logging.warning("No config.py Found!")
-        logging.info("[BETA] Trying to create config.py")
-        with open("app.json") as auto_json_file:
-            json_data = json.load(json_file)
-            app_variables = json_data["env"]
-            logging.info(app_variables)
-            logging.info("Need to finish this, but not now!")
         logging.info("Please run the command, again, after creating config.py similar to README.md")
         sys.exit(1)
 
 
-if len(sys.argv) == 2:
-    session_name = str(sys.argv[1])
-    borg = Uniborg(
-        session_name,
-        plugin_path="stdplugins",
-        storage=lambda n: Storage(Path("data") / n),
-        connection_retries=None,
-        api_config=Config,
-        api_id=Config.APP_ID,
-        api_hash=Config.API_HASH
-    )
-    borg.run_until_disconnected()
-else:
-    logging.error("USAGE EXAMPLE:\n"
-                  "python3 -m stdborg <SESSION_NAME>"
-                  "\n 👆👆 Please follow the above format to run your userbot."
-                  "\n Bot quitting.")
+session_name = str(Config.HU_STRING_SESSION)
+borg = Uniborg(
+    StringSession(session_name),
+    plugin_path="stdplugins",
+    storage=lambda n: Storage(Path("data") / n),
+    connection_retries=None,
+    api_config=Config,
+    api_id=Config.APP_ID,
+    api_hash=Config.API_HASH
+)
+borg.run_until_disconnected()

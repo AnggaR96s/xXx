@@ -1,1 +1,1 @@
-worker: python3 -m stdborg stdborg
+worker: python3 -m stdborg
