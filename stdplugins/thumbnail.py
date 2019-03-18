@@ -70,3 +70,34 @@ def get_video_thumb(file, output=None, width=90):
     if not p.returncode and os.path.lexists(file):
         os.remove(file)
         return output
+
+
+@borg.on(events.NewMessage(pattern=r"\.getthumbnail", outgoing=True))
+async def _(event):
+    if event.fwd_from:
+        return
+    if event.reply_to_msg_id:
+        r = await event.get_reply_message()
+        try:
+            a = await borg.download_media(
+                r.media.document.thumbs[0],
+                Config.TMP_DOWNLOAD_DIRECTORY
+            )
+        except Exception as e:
+            await event.edit(str(e))
+        try:
+            await borg.send_file(
+                event.chat_id,
+                a,
+                force_document=False,
+                allow_cache=False,
+                reply_to=event.reply_to_msg_id,
+            )
+            os.remove(a)
+            await event.delete()
+        except Exception as e:
+            await event.edit(str(e))
+    else:
+        await event.edit("Reply `.gethumbnail` as a reply to a media")
+
+
