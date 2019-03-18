@@ -1,5 +1,6 @@
 from telethon import events
 import os
+import subprocess
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
 from PIL import Image
@@ -20,6 +21,8 @@ async def _(event):
             await event.get_reply_message(),
             Config.TMP_DOWNLOAD_DIRECTORY
         )
+        if downloaded_file_name.endswith(".mp4"):
+            downloaded_file_name = get_video_thumb(downloaded_file_name)
         metadata = extractMetadata(createParser(downloaded_file_name))
         height = 0
         if metadata.has("height"):
@@ -47,3 +50,23 @@ async def _(event):
     if os.path.exists(thumb_image_path):
         os.remove(thumb_image_path)
     await event.edit("✅ Custom thumbnail cleared succesfully.")
+
+
+def video_metadata(file):
+    return extractMetadata(createParser(file))
+
+
+def get_video_thumb(file, output=None, width=90):
+    output = file + ".jpg"
+    metadata = video_metadata(file)
+    p = subprocess.Popen([
+        'ffmpeg', '-i', file,
+        '-ss', str(int((0, metadata.get('duration').seconds)[metadata.has('duration')] / 2)),
+        # '-filter:v', 'scale={}:-1'.format(width),
+        '-vframes', '1',
+        output,
+    ], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+    p.communicate()
+    if not p.returncode and os.path.lexists(file):
+        os.remove(file)
+        return output
