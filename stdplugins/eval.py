@@ -7,7 +7,7 @@ import inspect
 import io
 
 
-@borg.on(events.NewMessage(pattern=r"\.eval ?(.*)", outgoing=True))
+@borg.on(events.NewMessage(pattern=r"\.eval ?((.|\n)*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
@@ -15,7 +15,6 @@ async def _(event):
     cmd = event.pattern_match.group(1)
     reply_to_id = event.message.id
     if event.reply_to_msg_id:
-        cmd = (await event.get_reply_message()).text
         reply_to_id = event.reply_to_msg_id
     evaluation = None
     # https://t.me/telethonofftopic/43873

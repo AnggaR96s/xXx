@@ -1,3 +1,4 @@
+aiohttp
 beautifulsoup4
 cfscrape
 cryptg
@@ -13,4 +14,5 @@ speedtest-cli
 telegraph
 urbandict
 wikipedia
-aiohttp
+youtube-dl
+

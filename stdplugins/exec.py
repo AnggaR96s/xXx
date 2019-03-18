@@ -15,7 +15,6 @@ async def _(event):
     cmd = event.pattern_match.group(1)
     reply_to_id = event.message.id
     if event.reply_to_msg_id:
-        cmd = (await event.get_reply_message()).text
         reply_to_id = event.reply_to_msg_id
     start_time = time.time() + PROCESS_RUN_TIME
     process = await asyncio.create_subprocess_shell(
@@ -58,4 +57,8 @@ async def _(event):
                 await asyncio.sleep(DELAY_BETWEEN_EDITS)
             except (Exception) as e:
                 logger.warn(str(e))
-                break
+                if "seconds" in str(e):
+                    break
+                else:
+                    pass
+
