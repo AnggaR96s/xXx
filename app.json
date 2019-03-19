@@ -31,12 +31,10 @@
     },
     "OPEN_WEATHER_MAP_APPID": {
       "description": "Get your own APPID from https://api.openweathermap.org/data/2.5/weather",
-      "value": "",
       "required": false
     },
     "SCREEN_SHOT_LAYER_ACCESS_KEY": {
       "description": "Get your own ACCESS_KEY from http://api.screenshotlayer.com/api/capture",
-      "value": "",
       "required": false
     },
     "PRIVATE_GROUP_BOT_API_ID": {
@@ -56,12 +54,10 @@
     },
     "IBM_WATSON_CRED_USERNAME": {
       "description": "This is required for the speech to text module. Get your USERNAME from https://console.bluemix.net/docs/services/speech-to-text/getting-started.html",
-      "value": "",
       "required": false
     },
     "IBM_WATSON_CRED_PASSWORD": {
       "description": "This is required for the speech to text module. Get your PASSWORD from https://console.bluemix.net/docs/services/speech-to-text/getting-started.html",
-      "value": "",
       "required": false
     },
     "HASH_TO_TORRENT_API": {
@@ -76,7 +72,6 @@
     },
     "OCR_SPACE_API_KEY": {
       "description": "Get an API Key from http://OCR.Space",
-      "value": "",
       "required": false
     },
     "G_BAN_LOGGER_GROUP": {
@@ -91,12 +86,10 @@
     },
     "TG_BOT_TOKEN_BF_HER": {
       "description": "Obtain a Telegram bot token by contacting @BotFather",
-      "value": "",
       "required": false
     },
     "TG_BOT_USER_NAME_BF_HER": {
       "description": "Obtain a Telegram bot @username by contacting @BotFather",
-      "value": "",
       "required": false
     }
   },
