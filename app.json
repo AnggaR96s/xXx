@@ -41,12 +41,12 @@
     },
     "PRIVATE_GROUP_BOT_API_ID": {
       "description": "Send .get_id in any group to fill this value.",
-      "value": "",
+      "value": "-100",
       "required": false
     },
     "PRIVATE_CHANNEL_BOT_API_ID": {
       "description": "Send .get_id in any channel to fill this value. ReQuired for @Manuel15 inspiration to work!",
-      "value": "",
+      "value": "-100",
       "required": false
     },
     "TMP_DOWNLOAD_DIRECTORY": {
@@ -81,7 +81,7 @@
     },
     "G_BAN_LOGGER_GROUP": {
       "description": "Send .get_id in any group with all your administration bots (added)",
-      "value": "",
+      "value": "-100",
       "required": false
     },
     "TG_GLOBAL_ALBUM_LIMIT": {

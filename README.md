@@ -18,9 +18,8 @@ cd uniborg
 virtualenv -p /usr/bin/python3 venv
 . ./venv/bin/activate
 pip install -r requirements.txt
-pip install -r requirements-stdborg.txt
-# <Create config.py with variables available in sample_config.py>
-python3 -m stdborg stdborg
+# <Create config.py with variables as given below>
+python3 -m stdborg
 ```
 
 An example `config.py` file could be:
