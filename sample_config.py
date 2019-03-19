@@ -5,7 +5,7 @@ from telethon.tl.types import ChatBannedRights
 class Config(object):
     LOGGER = True
     # Get this value from my.telegram.org! Please do not steal
-    APP_ID = int(os.environ.get("APP_ID", "6"))
+    APP_ID = int(os.environ.get("APP_ID", 6))
     API_HASH = os.environ.get("API_HASH", "eb06d4abfb49dc3eeb1aeb98ae0f581e")
     # string session for running on Heroku
     # some people upload their session files on GitHub or other third party hosting
@@ -17,9 +17,9 @@ class Config(object):
     # Get your own ACCESS_KEY from http://api.screenshotlayer.com/api/capture
     SCREEN_SHOT_LAYER_ACCESS_KEY = os.environ.get("SCREEN_SHOT_LAYER_ACCESS_KEY", None)
     # Send .get_id in any group to fill this value.
-    PRIVATE_GROUP_BOT_API_ID = int(os.environ.get("PRIVATE_GROUP_BOT_API_ID", "-100123456789"))
+    PRIVATE_GROUP_BOT_API_ID = int(os.environ.get("PRIVATE_GROUP_BOT_API_ID", -100123456789))
     # Send .get_id in any channel to fill this value. ReQuired for @Manuel15 inspiration to work!
-    PRIVATE_CHANNEL_BOT_API_ID = int(os.environ.get("PRIVATE_CHANNEL_BOT_API_ID", "-100123456789"))
+    PRIVATE_CHANNEL_BOT_API_ID = int(os.environ.get("PRIVATE_CHANNEL_BOT_API_ID", -100123456789))
     # This is required for the plugins involving the file system.
     TMP_DOWNLOAD_DIRECTORY = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./DOWNLOADS/")
     # This is required for the speech to text module. Get your USERNAME from https://console.bluemix.net/docs/services/speech-to-text/getting-started.html
@@ -32,7 +32,7 @@ class Config(object):
     # Get a Free API Key from OCR.Space
     OCR_SPACE_API_KEY = os.environ.get("OCR_SPACE_API_KEY", None)
     # Send .get_id in any group with all your administration bots (added)
-    G_BAN_LOGGER_GROUP = int(os.environ.get("G_BAN_LOGGER_GROUP", "-100123456789"))
+    G_BAN_LOGGER_GROUP = int(os.environ.get("G_BAN_LOGGER_GROUP", -100123456789))
     # TG API limit. An album can have atmost 10 media!
     TG_GLOBAL_ALBUM_LIMIT = int(os.environ.get("TG_GLOBAL_ALBUM_LIMIT", 9))
     # Telegram BOT Token from @BotFather
