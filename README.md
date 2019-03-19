@@ -25,10 +25,14 @@ python3 -m stdborg stdborg
 
 An example `config.py` file could be:
 
-```python3
-from telethon.tl.types import ChatBannedRights
+**Not All of the variables are mandatory**
 
-class Config(object):
+__The UniBorg should work by setting only the first three variables__
+
+```python3
+from sample_config import Config
+
+class Development(Config):
   APP_ID = 6
   API_HASH = "eb06d4abfb49dc3eeb1aeb98ae0f581e"
   HU_STRING_SESSION = ""
@@ -48,16 +52,7 @@ class Config(object):
   TG_GLOBAL_ALBUM_LIMIT = 3
   TG_BOT_TOKEN_BF_HER = ""
   TG_BOT_USER_NAME_BF_HER = ""
-  MAX_MESSAGE_SIZE_LIMIT = 4095
   UB_BLACK_LIST_CHAT = []
-  # maximum number of messages for antiflood
-  MAX_ANTI_FLOOD_MESSAGES = 10
-  # warn mode for anti flood
-  ANTI_FLOOD_WARN_MODE = ChatBannedRights(
-      until_date=None,
-      view_messages=None,
-      send_messages=True
-  )
   # chat ids or usernames, it is recommended to use chat ids,
   # providing usernames means an additional overhead for the user
   CHATS_TO_MONITOR_FOR_ANTI_FLOOD = []
