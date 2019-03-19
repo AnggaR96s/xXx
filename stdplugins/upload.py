@@ -128,6 +128,7 @@ async def _(event):
             event.chat_id,
             input_str,
             force_document=True,
+            supports_streaming=False,
             allow_cache=False,
             reply_to=event.message.id,
             thumb=thumb,
@@ -191,7 +192,11 @@ async def _(event):
                     progress(d, t, event, c_time, "trying to upload")
                 )
             )
-            os.remove(file_name)
+            # os.remove(file_name)
+            print(file_i_big)
+        except Exception as e:
+            await event.edit(str(e))
+        else:
             await borg.send_file(
                 event.chat_id,
                 file_i_big,
@@ -227,7 +232,7 @@ async def _(event):
                 video_note=True,
                 attributes=[
                     DocumentAttributeVideo(
-                        duration=0,
+                        duration=duration,
                         w=1,
                         h=1,
                         round_message=True,
@@ -238,7 +243,5 @@ async def _(event):
             end = datetime.now()
             ms = (end - start).seconds
             await event.edit("Uploaded in {} seconds.".format(ms))
-        except Exception as e:
-            await event.edit(str(e))
     else:
         await event.edit("404: File Not Found")
