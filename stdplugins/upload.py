@@ -1,3 +1,6 @@
+# This Source Code Form is subject to the terms of the GNU
+# General Public License, v.3.0. If a copy of the GPL was not distributed with this
+# file, You can obtain one at https://www.gnu.org/licenses/gpl-3.0.en.html
 from telethon import events
 import json
 import os
@@ -133,6 +136,7 @@ async def _(event):
             )
         )
         end = datetime.now()
+        os.remove(input_str)
         ms = (end - start).seconds
         await event.edit("Uploaded in {} seconds.".format(ms))
     else:
@@ -152,22 +156,12 @@ def get_video_thumb(file, output=None, width=90):
         return output
 
 
-@borg.on(events.NewMessage(pattern=r"\.uploadas(stream|vn|all) (.*)", outgoing=True))
+@borg.on(events.NewMessage(pattern=r"\.uploadasall (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
     await event.edit("Processing ...")
-    type_of_upload = event.pattern_match.group(1)
-    supports_streaming = False
-    round_message = False
-    spam_big_messages = False
-    if type_of_upload == "stream":
-        supports_streaming = True
-    if type_of_upload == "vn":
-        round_message = True
-    if type_of_upload == "all":
-        spam_big_messages = True
-    input_str = event.pattern_match.group(2)
+    input_str = event.pattern_match.group(1)
     thumb = None
     if os.path.exists(thumb_image_path):
         thumb = thumb_image_path
@@ -191,57 +185,60 @@ async def _(event):
         # Bad Request: VIDEO_CONTENT_TYPE_INVALID
         c_time = time.time()
         try:
-            if supports_streaming:
-                await borg.send_file(
-                    event.chat_id,
-                    file_name,
-                    thumb=thumb,
-                    caption=input_str,
-                    force_document=False,
-                    allow_cache=False,
-                    reply_to=event.message.id,
-                    attributes=[
-                        DocumentAttributeVideo(
-                            duration=duration,
-                            w=width,
-                            h=height,
-                            round_message=False,
-                            supports_streaming=True
-                        )
-                    ],
-                    progress_callback=lambda d, t: asyncio.get_event_loop().create_task(
-                        progress(d, t, event, c_time, "trying to upload")
-                    )
+            file_i_big = await borg.upload_file(
+                file=file_name,
+                progress_callback=lambda d, t: asyncio.get_event_loop().create_task(
+                    progress(d, t, event, c_time, "trying to upload")
                 )
-            elif round_message:
-                await borg.send_file(
-                    event.chat_id,
-                    file_name,
-                    thumb=thumb,
-                    allow_cache=False,
-                    reply_to=event.message.id,
-                    video_note=True,
-                    attributes=[
-                        DocumentAttributeVideo(
-                            duration=0,
-                            w=1,
-                            h=1,
-                            round_message=True,
-                            supports_streaming=True
-                        )
-                    ],
-                    progress_callback=lambda d, t: asyncio.get_event_loop().create_task(
-                        progress(d, t, event, c_time, "trying to upload")
+            )
+            os.remove(file_name)
+            await borg.send_file(
+                event.chat_id,
+                file_i_big,
+                thumb=thumb,
+                caption=input_str,
+                force_document=False,
+                allow_cache=False,
+                reply_to=event.message.id,
+                attributes=[
+                    DocumentAttributeVideo(
+                        duration=duration,
+                        w=width,
+                        h=height,
+                        round_message=False,
+                        supports_streaming=True
                     )
-                )
-            elif spam_big_messages:
-                await event.edit("TBD: Not (yet) Implemented")
-                return
+                ],
+            )
+            await borg.send_file(
+                event.chat_id,
+                file_i_big,
+                force_document=True,
+                allow_cache=False,
+                reply_to=event.message.id,
+                thumb=thumb
+            )
+            await borg.send_file(
+                event.chat_id,
+                file_i_big,
+                thumb=thumb,
+                allow_cache=False,
+                reply_to=event.message.id,
+                video_note=True,
+                attributes=[
+                    DocumentAttributeVideo(
+                        duration=0,
+                        w=1,
+                        h=1,
+                        round_message=True,
+                        supports_streaming=True
+                    )
+                ]
+            )
             end = datetime.now()
             ms = (end - start).seconds
-            os.remove(thumb)
             await event.edit("Uploaded in {} seconds.".format(ms))
-        except FileNotFoundError as e:
+        except Exception as e:
             await event.edit(str(e))
     else:
         await event.edit("404: File Not Found")
