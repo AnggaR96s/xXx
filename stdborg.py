@@ -19,7 +19,7 @@ if ENV:
     from sample_config import Config
 else:
     if os.path.exists("config.py"):
-        from config import Config
+        from config import Development as Config
     else:
         logging.warning("No config.py Found!")
         logging.info("Please run the command, again, after creating config.py similar to README.md")

@@ -1,10 +1,12 @@
+# Create a new config.py file in same dir and import, then extend this class.
 import os
 from telethon.tl.types import ChatBannedRights
 
 class Config(object):
+    LOGGER = True
     # Get this value from my.telegram.org! Please do not steal
-    APP_ID = int(os.environ.get("APP_ID", "12345"))
-    API_HASH = os.environ.get("API_HASH", "")
+    APP_ID = int(os.environ.get("APP_ID", "6"))
+    API_HASH = os.environ.get("API_HASH", "eb06d4abfb49dc3eeb1aeb98ae0f581e")
     # string session for running on Heroku
     # some people upload their session files on GitHub or other third party hosting
     # websites, this might prevent the un-authorized use of the
@@ -61,3 +63,11 @@ class Config(object):
     # specify LOAD and NO_LOAD
     LOAD = []
     NO_LOAD = []
+
+
+class Production(Config):
+    LOGGER = False
+
+
+class Development(Config):
+    LOGGER = True
