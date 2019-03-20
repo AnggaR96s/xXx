@@ -111,4 +111,5 @@ All instaructions to run @UniBorg in your PC has been explained in https://t.me/
         plugin_name = event.data_match.group(1).decode("UTF-8")
         help_string = borg._plugins[plugin_name]._.__doc__
         reply_pop_up_alert = help_string if help_string is not None else "No DOCSTRING has been setup for {} plugin".format(plugin_name)
+        reply_pop_up_alert += "\n\n Use .unload {} to remove this plugin from the loaded plugins\n© @UniBorg".format(plugin_name)
         await event.answer(reply_pop_up_alert, cache_time=0, alert=True)
