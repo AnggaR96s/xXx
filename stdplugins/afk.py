@@ -17,16 +17,26 @@ intervals = (
 
 
 @borg.on(events.NewMessage(outgoing=True))
-async def _(event):
+async def set_not_afk(event):
     current_message = event.message.message
     if ".afk" not in current_message and "yes" in borg.storage.USER_AFK:
-        await borg.send_message(Config.PRIVATE_GROUP_BOT_API_ID, "Set AFK mode to False")
+        try:
+            await borg.send_message(Config.PRIVATE_GROUP_BOT_API_ID, "Set AFK mode to False")
+        except ValueError:
+            await borg.send_message(
+                event.chat_id,
+                "Please set `PRIVATE_GROUP_BOT_API_ID` for the proper functioning of @UniBorg",
+                reply_to=event.message.id,
+                silent=True
+            )
         borg.storage.USER_AFK = {}
         borg.storage.afk_time = None
 
 
 @borg.on(events.NewMessage(pattern=r"\.afk ?(.*)", outgoing=True))
 async def _(event):
+    """AFK Plugin for @UniBorg
+Syntax: .afk REASON"""
     if event.fwd_from:
         return
     reason = event.pattern_match.group(1)
@@ -47,7 +57,7 @@ async def _(event):
     func=lambda e: True if e.mentioned or e.is_private else False,
     blacklist_chats=Config.UB_BLACK_LIST_CHAT
 ))
-async def _(event):
+async def on_afk(event):
     if event.fwd_from:
         return
     chat = await event.get_chat()

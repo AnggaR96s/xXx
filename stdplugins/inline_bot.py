@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # (c) Shrimadhav U K
-
+import re
 from telethon import events, custom
 
 
@@ -65,7 +65,10 @@ if Config.TG_BOT_USER_NAME_BF_HER is not None and tgbot is not None:
                 i = 1
                 for plugin in borg._plugins:
                     same_row_buttons.append(
-                        custom.Button.inline("{} {}".format("✅", plugin))
+                        custom.Button.inline(
+                            "{} {}".format("✅", plugin),
+                            data="ub_plugin_{}".format(plugin)
+                        )
                     )
                     if (i % 2) == 0:
                         buttons.append(same_row_buttons)
@@ -101,3 +104,11 @@ All instaructions to run @UniBorg in your PC has been explained in https://t.me/
                 link_preview=False
             )
         await event.answer([result] if result else None)
+
+
+    @tgbot.on(events.callbackquery.CallbackQuery(data=re.compile(b"ub_plugin_(.*)")))
+    async def on_plug_in_callback_query_handler(event):
+        plugin_name = event.data_match.group(1).decode("UTF-8")
+        help_string = borg._plugins[plugin_name]._.__doc__
+        reply_pop_up_alert = help_string if help_string is not None else "No DOCSTRING has been setup for {} plugin".format(plugin_name)
+        await event.answer(reply_pop_up_alert, cache_time=0, alert=True)
