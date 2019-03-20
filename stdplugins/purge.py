@@ -1,3 +1,4 @@
+"""Purge your messages without the admins seeing it in Recent Actions"""
 from telethon import events
 import asyncio
 

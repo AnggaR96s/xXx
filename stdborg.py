@@ -29,7 +29,7 @@ else:
 session_name = str(Config.HU_STRING_SESSION)
 borg = Uniborg(
     StringSession(session_name),
-    plugin_path="stdplugins",
+    plugin_path="stdplugins/",
     storage=lambda n: Storage(Path("data") / n),
     api_config=Config,
     api_id=Config.APP_ID,

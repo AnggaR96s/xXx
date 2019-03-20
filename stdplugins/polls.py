@@ -1,3 +1,5 @@
+"""Get Poll Info on non supported clients
+Syntax: .get_poll"""
 from telethon import events
 import asyncio
 
@@ -29,4 +31,3 @@ Answers: \n""".format(closed_status, question)
             for answer in answers:
                 edit_caption += "{}> {}\n".format(answer.option, answer.text)
         await event.edit(edit_caption)
-

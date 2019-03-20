@@ -1,3 +1,7 @@
+"""Restart or Terminate the bot from any chat
+Available Commands:
+.restart
+.shutdown"""
 # This Source Code Form is subject to the terms of the GNU
 # General Public License, v.3.0. If a copy of the GPL was not distributed with this
 # file, You can obtain one at https://www.gnu.org/licenses/gpl-3.0.en.html
@@ -24,4 +28,3 @@ async def _(event):
         return
     await event.edit("Turning off ... Manually turn me on later")
     await borg.disconnect()
-

@@ -1,29 +1,31 @@
+"""Enable Seen Counter in any message,
+to know how many users have seen your message
+Syntax: .fwd as reply to any message"""
 from telethon import events
-import os
 
 
 @borg.on(events.NewMessage(pattern=r"\.fwd", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
-    if Config.PRIVATE_CHANNEL_BOT_API_ID is not None:
-        try:
-            e = await borg.get_entity(int(Config.PRIVATE_CHANNEL_BOT_API_ID))
-        except e:
-            await event.edit(str(e))
-        else:
-            re_message = await event.get_reply_message()
-            # https://t.me/telethonofftopic/78166
-            fwd_message = await borg.forward_messages(
-                e,
-                re_message,
-                silent=True
-            )
-            await borg.forward_messages(
-                event.chat_id,
-                fwd_message
-            )
-            await fwd_message.delete()
-            await event.delete()
+    if Config.PRIVATE_CHANNEL_BOT_API_ID is None:
+        await event.edit("Please set the required environment variable `PRIVATE_CHANNEL_BOT_API_ID` for this plugin to work")
+        return False
+    try:
+        e = await borg.get_entity(int(Config.PRIVATE_CHANNEL_BOT_API_ID))
+    except e:
+        await event.edit(str(e))
     else:
-        await event.edit("Please set the required environment variables for this plugin to work")
+        re_message = await event.get_reply_message()
+        # https://t.me/telethonofftopic/78166
+        fwd_message = await borg.forward_messages(
+            e,
+            re_message,
+            silent=True
+        )
+        await borg.forward_messages(
+            event.chat_id,
+            fwd_message
+        )
+        await fwd_message.delete()
+        await event.delete()

@@ -1,3 +1,5 @@
+"""WikiMedia.ORG
+Syntax: .wikimedia Query"""
 from telethon import events
 import requests
 

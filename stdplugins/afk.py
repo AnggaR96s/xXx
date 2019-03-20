@@ -1,3 +1,5 @@
+"""AFK Plugin for @UniBorg
+Syntax: .afk REASON"""
 from telethon import events
 import datetime
 import asyncio
@@ -35,8 +37,6 @@ async def set_not_afk(event):
 
 @borg.on(events.NewMessage(pattern=r"\.afk ?(.*)", outgoing=True))
 async def _(event):
-    """AFK Plugin for @UniBorg
-Syntax: .afk REASON"""
     if event.fwd_from:
         return
     reason = event.pattern_match.group(1)

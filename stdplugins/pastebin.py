@@ -1,3 +1,5 @@
+"""IX.IO pastebin like site
+Syntax: .paste"""
 from telethon import events
 import asyncio
 from datetime import datetime

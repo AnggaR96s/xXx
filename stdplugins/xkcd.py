@@ -1,3 +1,5 @@
+"""XKCD Search
+Syntax: .xkcd <search>"""
 from telethon import events
 import asyncio
 import json

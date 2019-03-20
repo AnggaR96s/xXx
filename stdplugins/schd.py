@@ -1,12 +1,11 @@
+"""Schedule Plugin for @UniBorg
+Syntax: .schd <time_in_seconds> ;=; <message to send>"""
 from telethon import events
-import random
 import asyncio
 
 
 @borg.on(events.NewMessage(pattern=r"\.schd ?(.*)", outgoing=True))
 async def _(event):
-    """Schedule Plugin for @UniBorg
-Syntax: .schd <time_in_seconds> ;=; <message to send>"""
     if event.fwd_from:
         return
     input_str = event.pattern_match.group(1)

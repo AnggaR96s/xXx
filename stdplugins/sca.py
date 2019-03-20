@@ -1,3 +1,6 @@
+"""Send Chat Actions
+Syntax: .sca <option>
+Available Options: ra, rv, ua, up, uv, rr, mt, ud"""
 from telethon import events
 from telethon.tl.types import SendMessageRecordAudioAction, \
     SendMessageRecordVideoAction, SendMessageUploadAudioAction, \
@@ -26,4 +29,3 @@ async def _(event):
         action = actions[input_str]
     await borg(SetTypingRequest(event.chat_id, action))
     await event.delete()
-

@@ -1,3 +1,7 @@
+"""Quick Response Codes
+Available Commands
+.getqr
+.makeqr <long text to include>"""
 from telethon import events
 import asyncio
 from datetime import datetime

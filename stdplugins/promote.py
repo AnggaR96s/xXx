@@ -1,10 +1,9 @@
+"""Reply to a user to .promote them in the current chat"""
 from telethon import events
 import asyncio
 from datetime import datetime
-
 from telethon.tl.functions.channels import EditAdminRequest
 from telethon.tl.types import ChatAdminRights
-from telethon.errors import RightForbiddenError, UserIdInvalidError, ChatAdminRequiredError
 
 
 @borg.on(events.NewMessage(pattern=r"\.promote ?(.*)", outgoing=True))

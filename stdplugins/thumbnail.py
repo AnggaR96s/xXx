@@ -1,3 +1,8 @@
+"""Thumbnail Utilities, © @AnyDLBot
+Available Commands:
+.savethumbnail
+.clearthumbnail
+.getthumbnail"""
 from telethon import events
 import os
 import subprocess
@@ -52,13 +57,9 @@ async def _(event):
     await event.edit("✅ Custom thumbnail cleared succesfully.")
 
 
-def video_metadata(file):
-    return extractMetadata(createParser(file))
-
-
 def get_video_thumb(file, output=None, width=90):
     output = file + ".jpg"
-    metadata = video_metadata(file)
+    metadata = extractMetadata(createParser(file))
     p = subprocess.Popen([
         'ffmpeg', '-i', file,
         '-ss', str(int((0, metadata.get('duration').seconds)[metadata.has('duration')] / 2)),
@@ -99,5 +100,3 @@ async def _(event):
             await event.edit(str(e))
     else:
         await event.edit("Reply `.gethumbnail` as a reply to a media")
-
-

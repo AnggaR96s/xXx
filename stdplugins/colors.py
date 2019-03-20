@@ -1,3 +1,5 @@
+"""Color Plugin for @UniBorg
+Syntax: .color <color_code>"""
 from telethon import events
 import os
 from PIL import Image, ImageColor
@@ -19,12 +21,15 @@ async def _(event):
             return False
         else:
             im = Image.new(mode="RGB", size=(128, 128), color=usercolor)
-            im.save("UniBorg.webp", "PNG")
+            im.save("UniBorg.png", "PNG")
             await borg.send_file(
                 event.chat_id,
                 "UniBorg.webp",
+                force_document=False,
                 caption=input_str,
                 reply_to=message_id
             )
-            os.remove("UniBorg.webp")
+            os.remove("UniBorg.png")
             await event.delete()
+    else:
+        await event.edit("Syntax: `.color <color_code>`")

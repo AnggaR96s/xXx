@@ -1,3 +1,7 @@
+""" Google Text to Speech
+Available Commands:
+.tr LanguageCode as reply to a message
+.tr LangaugeCode | text to sepak"""
 from telethon import events
 from mtranslate import translate
 

@@ -1,3 +1,7 @@
+""" Google Text to Speech
+Available Commands:
+.tts LanguageCode as reply to a message
+.tts LangaugeCode | text to sepak"""
 from telethon import events
 import requests
 import os
@@ -64,5 +68,5 @@ async def _(event):
         await event.edit("Processed {} ({}) in {} seconds!".format(text[0:97], lan, ms))
         await asyncio.sleep(5)
         await event.delete()
-    except AssertionError as e:
+    except Exception as e:
         await event.edit(str(e))

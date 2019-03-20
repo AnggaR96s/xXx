@@ -1,7 +1,7 @@
+"""Get information about an user on GitHub
+Syntax: .github USERNAME"""
 from telethon import events
-import asyncio
 import requests
-import json
 
 
 @borg.on(events.NewMessage(pattern=r"\.github (.*)"))

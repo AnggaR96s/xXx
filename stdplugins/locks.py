@@ -1,6 +1,8 @@
+"""Default Permission in Telegram 5.0.1
+Syntax: .lock <option>
+Avaiilable Options: msg, media, sticker, gif, gamee, ainline, gpoll, adduser, cpin, changeinfo"""
 from telethon import events, functions, types
 import asyncio
-# import datetime
 
 
 @borg.on(events.NewMessage(pattern=r"\.lock ?(.*)", outgoing=True))

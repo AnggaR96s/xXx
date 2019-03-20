@@ -1,3 +1,5 @@
+"""Greetings
+Syntax: .savewelcome <Welcome Message>"""
 from telethon import events
 
 borg.storage.WELCOME = {}

@@ -1,3 +1,4 @@
+"""Syntax: .whatscrapp as reply to a message copied from @WhatsCRApp"""
 from telethon import events
 
 

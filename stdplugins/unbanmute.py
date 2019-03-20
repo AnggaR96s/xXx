@@ -1,10 +1,10 @@
+"""Restrict Users
+Available Commands: .ban, .unban, .mute """
 from telethon import events
 import asyncio
 from datetime import datetime
-
 from telethon.tl.functions.channels import EditBannedRequest
 from telethon.tl.types import ChatBannedRights
-from telethon.errors import ChatAdminRequiredError, UserIdInvalidError
 
 unbanned_rights = ChatBannedRights(
     until_date=None,

@@ -1,6 +1,7 @@
+"""Take screenshot of any website
+Syntax: .screencapture <Website URL>"""
 from telethon import events
 import io
-import os
 import requests
 
 

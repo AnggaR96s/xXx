@@ -1,7 +1,7 @@
-from telethon import events, sync, errors
-from telethon.tl import functions as f, types as t
-import inspect
-import os
+"""Pins the replied message
+Syntax: .cpin [LOUD]"""
+from telethon import events
+from telethon.tl import functions, types
 
 
 @borg.on(events.NewMessage(pattern=r"\.cpin ?(.*)", outgoing=True))
@@ -15,7 +15,7 @@ async def _(event):
     if event.message.reply_to_msg_id is not None:
         message_id = event.message.reply_to_msg_id
         try:
-            await borg(f.messages.UpdatePinnedMessageRequest(event.chat_id, message_id, silent))
+            await borg(functions.messages.UpdatePinnedMessageRequest(event.chat_id, message_id, silent))
         except Exception as e:
             await event.edit(str(e))
         else:

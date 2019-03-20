@@ -1,4 +1,8 @@
+"""Optical Character Recognition by OCR.Space
+Syntax: .ocr <LangCode>
+Available Languages: .ocrlanguages"""
 from telethon import events
+import json
 import os
 import requests
 
@@ -59,8 +63,41 @@ def progress(current, total):
         current, total, (current / total) * 100))
 
 
+@borg.on(events.NewMessage(pattern=r"\.ocrlanguages", outgoing=True))
+async def get_ocr_languages(event):
+    if event.fwd_from:
+        return
+    languages = {}
+    languages["English"] = "eng"
+    languages["Arabic"] = "ara"
+    languages["Bulgarian"] = "bul"
+    languages["Chinese (Simplified)"] = "chs"
+    languages["Chinese (Traditional)"] = "cht"
+    languages["Croatian"] = "hrv"
+    languages["Czech"] = "cze"
+    languages["Danish"] = "dan"
+    languages["Dutch"] = "dut"
+    languages["Finnish"] = "fin"
+    languages["French"] = "fre"
+    languages["German"] = "ger"
+    languages["Greek"] = "gre"
+    languages["Hungarian"] = "hun"
+    languages["Korean"] = "kor"
+    languages["Italian"] = "ita"
+    languages["Japanese"] = "jpn"
+    languages["Polish"] = "pol"
+    languages["Portuguese"] = "por"
+    languages["Russian"] = "rus"
+    languages["Slovenian"] = "slv"
+    languages["Spanish"] = "spa"
+    languages["Swedish"] = "swe"
+    languages["Turkish"] = "tur"
+    a = json.dumps(languages, sort_keys=True, indent=4)
+    await event.edit(str(a))
+
+
 @borg.on(events.NewMessage(pattern=r"\.ocr (.*)", outgoing=True))
-async def _(event):
+async def parse_ocr_space_api(event):
     if event.fwd_from:
         return
     await event.edit("Processing 🙄🙇‍♂️🙇‍♂️🙇‍♀️")

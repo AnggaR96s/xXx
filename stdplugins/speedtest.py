@@ -1,3 +1,5 @@
+"""Check your internet speed powered by speedtest.net
+Syntax: .speedtest"""
 from telethon import events
 from datetime import datetime
 import io

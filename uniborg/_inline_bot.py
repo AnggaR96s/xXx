@@ -64,19 +64,22 @@ if Config.TG_BOT_USER_NAME_BF_HER is not None and tgbot is not None:
                 same_row_buttons = []
                 i = 1
                 for plugin in borg._plugins:
-                    same_row_buttons.append(
-                        custom.Button.inline(
-                            "{} {}".format("✅", plugin),
-                            data="ub_plugin_{}".format(plugin)
+                    helpable_plugin = not plugin.startswith("_")
+                    if helpable_plugin:
+                        same_row_buttons.append(
+                            custom.Button.inline(
+                                "{} {}".format("✅", plugin),
+                                data="ub_plugin_{}".format(plugin)
+                            )
                         )
-                    )
-                    if (i % 2) == 0:
+                    if (i % 3) == 0:
                         buttons.append(same_row_buttons)
                         same_row_buttons = []
-                    i = i + 1
+                    if helpable_plugin:
+                        i = i + 1
                 result = builder.article(
                     "© @UniBorg",
-                    text="{}\nCurrently Loaded Plugins".format(query),
+                    text="{}\nCurrently Loaded Plugins: {}".format(query, len(borg._plugins)),
                     buttons=buttons,
                     link_preview=False
                 )
@@ -109,7 +112,7 @@ All instaructions to run @UniBorg in your PC has been explained in https://t.me/
     @tgbot.on(events.callbackquery.CallbackQuery(data=re.compile(b"ub_plugin_(.*)")))
     async def on_plug_in_callback_query_handler(event):
         plugin_name = event.data_match.group(1).decode("UTF-8")
-        help_string = borg._plugins[plugin_name]._.__doc__
+        help_string = borg._plugins[plugin_name].__doc__
         reply_pop_up_alert = help_string if help_string is not None else "No DOCSTRING has been setup for {} plugin".format(plugin_name)
         reply_pop_up_alert += "\n\n Use .unload {} to remove this plugin from the loaded plugins\n© @UniBorg".format(plugin_name)
         await event.answer(reply_pop_up_alert, cache_time=0, alert=True)

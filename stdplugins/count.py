@@ -1,3 +1,5 @@
+"""Count the Number of Dialogs you have in your Telegram Account
+Syntax: .count"""
 from telethon import events
 import asyncio
 from datetime import datetime

@@ -1,13 +1,12 @@
+""" @ukinti_bot
+Available Commands:
+.unbanall
+.kick option
+Available Options: d, y, m, w, o, q, r """
 from telethon import events
-
-from telethon.tl.functions.channels import EditBannedRequest
-from telethon.tl.types import ChatBannedRights
 from datetime import datetime, timedelta
-from telethon.errors import UserAdminInvalidError, FloodWaitError, UserNotParticipantError, ChatAdminRequiredError
-from telethon.tl.types import UserStatusEmpty, UserStatusLastMonth, UserStatusLastWeek, UserStatusOffline, UserStatusOnline, UserStatusRecently
-from telethon.tl.types import ChannelParticipantsKicked
-from telethon.tl import functions as f, types as t
-
+from telethon.tl.types import UserStatusEmpty, UserStatusLastMonth, UserStatusLastWeek, UserStatusOffline, UserStatusOnline, UserStatusRecently, ChannelParticipantsKicked, ChatBannedRights
+from telethon.tl import functions, types
 from time import sleep
 import asyncio
 
@@ -28,7 +27,7 @@ async def _(event):
                 view_messages=False
             )
             try:
-                await borg(EditBannedRequest(event.chat_id, i, rights))
+                await borg(functions.channels.EditBannedRequest(event.chat_id, i, rights))
             except UserNotParticipantError as ex:
                 pass
             except FloodWaitError as ex:
@@ -70,7 +69,7 @@ async def _(event):
             d = d + 1
             if input_str == "d":
                 try:
-                    await borg(EditBannedRequest(event.chat_id, i, rights))
+                    await borg(functions.channels.EditBannedRequest(event.chat_id, i, rights))
                     c = c + 1
                 except UserAdminInvalidError as exc:
                     await event.edit("I need admin priveleges to perform this action!")
@@ -81,7 +80,7 @@ async def _(event):
             y = y + 1
             if input_str == "y":
                 try:
-                    await borg(EditBannedRequest(event.chat_id, i, rights))
+                    await borg(functions.channels.EditBannedRequest(event.chat_id, i, rights))
                     c = c + 1
                 except UserAdminInvalidError as exc:
                     await event.edit("I need admin priveleges to perform this action!")
@@ -92,7 +91,7 @@ async def _(event):
             m = m + 1
             if input_str == "m":
                 try:
-                    await borg(EditBannedRequest(event.chat_id, i, rights))
+                    await borg(functions.channels.EditBannedRequest(event.chat_id, i, rights))
                     c = c + 1
                 except UserAdminInvalidError as exc:
                     await event.edit("I need admin priveleges to perform this action!")
@@ -103,7 +102,7 @@ async def _(event):
             w = w + 1
             if input_str == "w":
                 try:
-                    await borg(EditBannedRequest(event.chat_id, i, rights))
+                    await borg(functions.channels.EditBannedRequest(event.chat_id, i, rights))
                     c = c + 1
                 except UserAdminInvalidError as exc:
                     await event.edit("I need admin priveleges to perform this action!")
@@ -114,7 +113,7 @@ async def _(event):
             o = o + 1
             if input_str == "o":
                 try:
-                    await borg(EditBannedRequest(event.chat_id, i, rights))
+                    await borg(functions.channels.EditBannedRequest(event.chat_id, i, rights))
                     c = c + 1
                 except UserAdminInvalidError as exc:
                     await event.edit("I need admin priveleges to perform this action!")
@@ -125,7 +124,7 @@ async def _(event):
             q = q + 1
             if input_str == "q":
                 try:
-                    await borg(EditBannedRequest(event.chat_id, i, rights))
+                    await borg(functions.channels.EditBannedRequest(event.chat_id, i, rights))
                     c = c + 1
                 except UserAdminInvalidError as exc:
                     await event.edit("I need admin priveleges to perform this action!")
@@ -136,7 +135,7 @@ async def _(event):
             r = r + 1
             if input_str == "r":
                 try:
-                    await borg(EditBannedRequest(event.chat_id, i, rights))
+                    await borg(functions.channels.EditBannedRequest(event.chat_id, i, rights))
                     c = c + 1
                 except UserAdminInvalidError as exc:
                     await event.edit("I need admin priveleges to perform this action!")

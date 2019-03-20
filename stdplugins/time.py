@@ -1,3 +1,5 @@
+""" It does not do to dwell on dreams and forget to live
+Syntax: .getime"""
 from telethon import events
 import asyncio
 from datetime import datetime
@@ -53,4 +55,3 @@ async def _(event):
         return
     input_str = event.pattern_match.group(1)
     logger.info(input_str)
-

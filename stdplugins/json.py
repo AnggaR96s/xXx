@@ -1,5 +1,6 @@
+"""Get Detailed info about any message
+Syntax: .json"""
 from telethon import events
-from telethon.errors import MessageTooLongError
 import io
 
 

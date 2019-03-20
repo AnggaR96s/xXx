@@ -12,7 +12,9 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
-# This file is part of @UniBorg
+"""Remove.BG Plugin for @UniBorg
+Syntax: .remove.bg https://link.to/image.extension
+Syntax: .remove.bg as reply to a media"""
 import asyncio
 from datetime import datetime
 import os
@@ -24,9 +26,6 @@ from uniborg.util import progress
 
 @borg.on(events.NewMessage(pattern=r"\.remove\.bg ?(.*)", outgoing=True))
 async def _(event):
-    """Remove.BG Plugin for @UniBorg
-Syntax: .remove.bg https://link.to/image.extension
-Syntax: .remove.bg as reply to a media"""
     HELP_STR = "`.remove.bg` as reply to a media, or give a link as an argument to this command"
     output_file_name = Config.TMP_DOWNLOAD_DIRECTORY + "/@uniBorg_ReMove.png"
     if event.fwd_from:

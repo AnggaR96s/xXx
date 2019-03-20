@@ -1,3 +1,7 @@
+"""Download Files to your local server
+Syntax:
+.download as reply to a Telegram media
+.download url | file.name to download files from a Public Link"""
 from telethon import events
 import aiohttp
 import asyncio

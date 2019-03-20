@@ -1,5 +1,6 @@
+"""Query Indian Financial System Code to get address of the relevant bank or branch
+Syntax: .ifsc rp <IFSC CODE>"""
 from telethon import events
-import asyncio
 import requests
 import json
 
@@ -19,4 +20,3 @@ async def _(event):
         await event.edit(str(a))
     else:
         await event.edit("`{}`: {}".format(input_str, r.text))
-

@@ -1,3 +1,5 @@
+"""Currency Converter Plugin for @UniBorg
+Syntax: .currency number from to"""
 from telethon import events
 import asyncio
 from datetime import datetime

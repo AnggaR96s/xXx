@@ -23,7 +23,7 @@ class Uniborg(TelegramClient):
         #
         # storage should be a callable accepting plugin name -> Storage object.
         # This means that using the Storage type as a storage would work too.
-        self._name = "Logged In Using @UniBorg"
+        self._name = "LoggedIn"
         self.storage = storage or (lambda n: Storage(Path("data") / n))
         self._logger = logging.getLogger("UniBorg")
         self._plugins = {}
@@ -58,6 +58,9 @@ class Uniborg(TelegramClient):
 
         core_plugin = Path(__file__).parent / "_core.py"
         self.load_plugin_from_file(core_plugin)
+
+        inline_bot_plugin = Path(__file__).parent / "_inline_bot.py"
+        self.load_plugin_from_file(inline_bot_plugin)
 
         for p in Path().glob(f"{self._plugin_path}/*.py"):
             self.load_plugin_from_file(p)

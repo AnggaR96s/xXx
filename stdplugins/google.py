@@ -1,10 +1,13 @@
+""" Powered by @Google
+Available Commands:
+.google search <query>
+.google image <query>
+.google reverse search"""
 from telethon import events
 import asyncio
-from bs4 import BeautifulSoup
 from datetime import datetime
 from gsearch.googlesearch import search
 from google_images_download import google_images_download
-import json
 import os
 import requests
 

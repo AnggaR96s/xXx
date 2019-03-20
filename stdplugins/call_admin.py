@@ -1,3 +1,4 @@
+"""/admin Plugin for @UniBorg"""
 from telethon import events
 import asyncio
 
