@@ -13,7 +13,9 @@
 # GNU General Public License for more details.
 #
 # This file is part of @UniBorg
+import asyncio
 from datetime import datetime
+import os
 import requests
 from telethon import events
 import time
