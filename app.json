@@ -91,6 +91,10 @@
     "TG_BOT_USER_NAME_BF_HER": {
       "description": "Obtain a Telegram bot @username by contacting @BotFather",
       "required": false
+    },
+    "REM_BG_API_KEY": {
+      "description": "Get your own API key from https://www.remove.bg/ or feel free to use http://telegram.dog/Remove_BGBot",
+      "required": false
     }
   },
   "addons": [],
