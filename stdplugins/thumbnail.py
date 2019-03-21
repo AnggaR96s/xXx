@@ -98,5 +98,16 @@ async def _(event):
             await event.delete()
         except Exception as e:
             await event.edit(str(e))
+    elif os.path.exists(thumb_image_path):
+        caption_str = "Currently Saved Thumbnail. Clear with `.clearthumbnail`"
+        await borg.send_file(
+            event.chat_id,
+            thumb_image_path,
+            caption=caption_str,
+            force_document=False,
+            allow_cache=False,
+            reply_to=event.message.id
+        )
+        await event.edit(caption_str)
     else:
         await event.edit("Reply `.gethumbnail` as a reply to a media")

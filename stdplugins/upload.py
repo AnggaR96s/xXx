@@ -4,7 +4,8 @@
 """Uploads Files to Telegram
 Available Commands:
 .upload <Path To File>
-.uploadir <Path To Directory>"""
+.uploadir <Path To Directory>
+.uploadasstream <Path To File>"""
 from telethon import events
 import json
 import os
@@ -161,17 +162,22 @@ def get_video_thumb(file, output=None, width=90):
         return output
 
 
-@borg.on(events.NewMessage(pattern=r"\.uploadasall (.*)", outgoing=True))
+@borg.on(events.NewMessage(pattern=r"\.uploadasstream (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
     await event.edit("Processing ...")
     input_str = event.pattern_match.group(1)
     thumb = None
-    if os.path.exists(thumb_image_path):
-        thumb = thumb_image_path
     file_name = input_str
     if os.path.exists(file_name):
+        if not file_name.endswith((".mkv", ".mp4", ".mp3", ".flac")):
+            await event.edit("Sorry. But I don't think {} is a streamable file. Please try again.\n**Supported Formats**: MKV, MP4, MP3, FLAC".format(file_name))
+            return False
+        if os.path.exists(thumb_image_path):
+            thumb = thumb_image_path
+        else:
+            thumb = get_video_thumb(file_name, thumb_image_path)
         start = datetime.now()
         metadata = extractMetadata(createParser(file_name))
         duration = 0
@@ -190,20 +196,9 @@ async def _(event):
         # Bad Request: VIDEO_CONTENT_TYPE_INVALID
         c_time = time.time()
         try:
-            file_i_big = await borg.upload_file(
-                file=file_name,
-                progress_callback=lambda d, t: asyncio.get_event_loop().create_task(
-                    progress(d, t, event, c_time, "trying to upload")
-                )
-            )
-            # os.remove(file_name)
-            print(file_i_big)
-        except Exception as e:
-            await event.edit(str(e))
-        else:
             await borg.send_file(
                 event.chat_id,
-                file_i_big,
+                file_name,
                 thumb=thumb,
                 caption=input_str,
                 force_document=False,
@@ -218,34 +213,17 @@ async def _(event):
                         supports_streaming=True
                     )
                 ],
+                progress_callback=lambda d, t: asyncio.get_event_loop().create_task(
+                    progress(d, t, event, c_time, "trying to upload")
+                )
             )
-            await borg.send_file(
-                event.chat_id,
-                file_i_big,
-                force_document=True,
-                allow_cache=False,
-                reply_to=event.message.id,
-                thumb=thumb
-            )
-            await borg.send_file(
-                event.chat_id,
-                file_i_big,
-                thumb=thumb,
-                allow_cache=False,
-                reply_to=event.message.id,
-                video_note=True,
-                attributes=[
-                    DocumentAttributeVideo(
-                        duration=duration,
-                        w=1,
-                        h=1,
-                        round_message=True,
-                        supports_streaming=True
-                    )
-                ]
-            )
+        except Exception as e:
+            await event.edit(str(e))
+        else:
             end = datetime.now()
+            os.remove(input_str)
             ms = (end - start).seconds
             await event.edit("Uploaded in {} seconds.".format(ms))
     else:
         await event.edit("404: File Not Found")
+
