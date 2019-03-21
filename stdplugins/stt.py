@@ -34,7 +34,7 @@ async def _(event):
                 "https://stream.watsonplatform.net/speech-to-text/api/v1/recognize",
                 headers=headers,
                 data=data,
-                auth=(IBM_WATSON_CRED_USERNAME, IBM_WATSON_CRED_PASSWORD)
+                auth=(Config.IBM_WATSON_CRED_USERNAME, Config.IBM_WATSON_CRED_PASSWORD)
             )
             r = response.json()
             if "results" in r:

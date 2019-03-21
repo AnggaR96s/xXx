@@ -26,13 +26,34 @@ else:
         sys.exit(1)
 
 
-session_name = str(Config.HU_STRING_SESSION)
-borg = Uniborg(
-    StringSession(session_name),
-    plugin_path="stdplugins/",
-    storage=lambda n: Storage(Path("data") / n),
-    api_config=Config,
-    api_id=Config.APP_ID,
-    api_hash=Config.API_HASH
-)
-borg.run_until_disconnected()
+if Config.HU_STRING_SESSION is not None:
+    # for Running on Heroku
+    session_name = str(Config.HU_STRING_SESSION)
+    borg = Uniborg(
+        StringSession(session_name),
+        plugin_path="stdplugins/",
+        storage=lambda n: Storage(Path("data") / n),
+        api_config=Config,
+        api_id=Config.APP_ID,
+        api_hash=Config.API_HASH
+    )
+    borg.run_until_disconnected()
+elif len(sys.argv) == 2:
+    # for running on GNU/Linux
+    session_name = str(sys.argv[1])
+    borg = Uniborg(
+        session_name,
+        plugin_path="stdplugins/",
+        storage=lambda n: Storage(Path("data") / n),
+        connection_retries=None,
+        api_config=Config,
+        api_id=Config.APP_ID,
+        api_hash=Config.API_HASH
+    )
+    borg.run_until_disconnected()
+else:
+    # throw error
+    logging.error("USAGE EXAMPLE:\n"
+                  "python3 -m stdborg <SESSION_NAME>"
+                  "\n 👆👆 Please follow the above format to run your userbot."
+                  "\n Bot quitting.")
