@@ -50,6 +50,17 @@ async def _(event):
             title_of_page = user_object.first_name # + " " + user_object.last_name
             # apparently, all Users do not have last_name field
             page_content = r_message.message
+            if r_message.media and page_content == "":
+                downloaded_file_name = await borg.download_media(
+                    r_message,
+                    Config.TMP_DOWNLOAD_DIRECTORY
+                )
+                m_list = None
+                with open(downloaded_file_name, "rb") as fd:
+                    m_list = fd.readlines()
+                for m in m_list:
+                    page_content += m.decode("UTF-8") + "\n"
+                os.remove(downloaded_file_name)
             page_content = page_content.replace("\n", "<br>")
             response = telegraph.create_page(
                 title_of_page,
