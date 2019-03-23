@@ -34,7 +34,6 @@ from sample_config import Config
 class Development(Config):
   APP_ID = 6
   API_HASH = "eb06d4abfb49dc3eeb1aeb98ae0f581e"
-  HU_STRING_SESSION = ""
   OPEN_WEATHER_MAP_APPID = ""
   SCREEN_SHOT_LAYER_ACCESS_KEY = ""
   # Send .get_id in any private group to fill this value.
@@ -63,5 +62,5 @@ class Development(Config):
 ## internals
 
 The core features offered by the custom `TelegramClient` live under the
-[`uniborg/`](https://gitlab.com/SpEcHiDe/uniborg/tree/master/uniborg)
+[`uniborg/`](https://github.com/SpEcHiDe/uniborg/tree/master/uniborg)
 directory, with some utilities, enhancements and the `_core` plugin.
