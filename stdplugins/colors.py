@@ -20,11 +20,12 @@ async def _(event):
             await event.edit(str(e))
             return False
         else:
-            im = Image.new(mode="RGB", size=(128, 128), color=usercolor)
+            im = Image.new(mode="RGB", size=(1280, 720), color=usercolor)
             im.save("UniBorg.png", "PNG")
+            input_str = input_str.replace("#", "#COLOR_")
             await borg.send_file(
                 event.chat_id,
-                "UniBorg.webp",
+                "UniBorg.png",
                 force_document=False,
                 caption=input_str,
                 reply_to=message_id
