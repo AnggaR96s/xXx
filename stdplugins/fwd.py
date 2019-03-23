@@ -13,7 +13,7 @@ async def _(event):
         return False
     try:
         e = await borg.get_entity(int(Config.PRIVATE_CHANNEL_BOT_API_ID))
-    except e:
+    except Exception as e:
         await event.edit(str(e))
     else:
         re_message = await event.get_reply_message()
