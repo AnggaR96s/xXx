@@ -74,7 +74,8 @@ class Uniborg(TelegramClient):
                 self._logger.info(to_load)
             if NO_LOAD:
                 for plugin_name in NO_LOAD:
-                    self.remove_plugin(plugin_name)
+                    if plugin_name in self._plugins:
+                        self.remove_plugin(plugin_name)
 
 
     async def _async_init(self, **kwargs):
