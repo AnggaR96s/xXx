@@ -79,6 +79,10 @@ class Config(object):
     NO_P_M_SPAM = bool(os.environ.get("NO_P_M_SPAM", False))
     # define "spam" in PMs
     MAX_FLOOD_IN_P_M_s = int(os.environ.get("MAX_FLOOD_IN_P_M_s", 3))
+    # set to True if you want to log PMs to your PRIVATE_GROUP_BOT_API_ID
+    NC_LOG_P_M_S = bool(os.environ.get("NC_LOG_P_M_S", False))
+    # send .get_id in any channel to forward all your NEW PMs to this group
+    PM_LOGGR_GROUP_BOT_API_ID = int(os.environ.get("PM_LOGGR_GROUP_BOT_API_ID", "-100"))
 
 
 class Production(Config):
