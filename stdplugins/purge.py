@@ -11,9 +11,13 @@ async def _(event):
         i = 1
         msgs = []
         shiiinabot = "\u2060"
-        for i in range(4000):
+        for i in range(601):
             shiiinabot += "\u2060"
-        await event.edit(shiiinabot)
+        try:
+            await event.edit(shiiinabot)
+        except Exception as e:
+            logger.warn(str(e))
+            pass
         from_user = None
         input_str = event.pattern_match.group(1)
         if input_str:
