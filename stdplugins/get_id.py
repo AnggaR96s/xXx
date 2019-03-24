@@ -9,6 +9,7 @@ async def _(event):
     if event.fwd_from:
         return
     input_str = event.pattern_match.group(1)
+    a_msg = ""
     if input_str:
         try:
             chat = await borg.get_entity(input_str)
