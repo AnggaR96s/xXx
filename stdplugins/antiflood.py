@@ -12,7 +12,10 @@ async def _(event):
     if not event.chat_id in borg.storage.CHAT_FLOOD:
         borg.storage.CHAT_FLOOD[event.chat_id] = {}
     if event.chat_id in borg.storage.CHAT_FLOOD:
-        max_count = int(borg.storage.CHAT_FLOOD[event.chat_id][2]) or Config.MAX_ANTI_FLOOD_MESSAGES
+        try:
+            max_count = int(borg.storage.CHAT_FLOOD[event.chat_id][2]) or Config.MAX_ANTI_FLOOD_MESSAGES
+        except KeyError as e:
+            max_count = Config.MAX_ANTI_FLOOD_MESSAGES
         if event.message.from_id in borg.storage.CHAT_FLOOD[event.chat_id]:
             current_count = int(borg.storage.CHAT_FLOOD[event.chat_id][1])
             current_count += 1
