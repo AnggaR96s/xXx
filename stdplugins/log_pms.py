@@ -15,7 +15,7 @@ async def monito_p_m_s(event):
         chat = await event.get_chat()
         if chat.id not in borg.storage.NO_PM_LOG_USERS and chat.id != borg.uid:
             try:
-                e = await borg.get_entity(int(Config.PM_LOGGR_GROUP_BOT_API_ID))
+                e = await borg.get_entity(int(Config.PM_LOGGR_BOT_API_ID))
                 fwd_message = await borg.forward_messages(
                     e,
                     event.message,
