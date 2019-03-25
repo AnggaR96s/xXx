@@ -1,8 +1,9 @@
 """AFK Plugin for @UniBorg
 Syntax: .afk REASON"""
-from telethon import events
-import datetime
 import asyncio
+import datetime
+from telethon import events
+from telethon.tl import functions, types
 
 
 borg.storage.USER_AFK = {}
@@ -24,10 +25,10 @@ async def set_not_afk(event):
     if ".afk" not in current_message and "yes" in borg.storage.USER_AFK:
         try:
             await borg.send_message(Config.PRIVATE_GROUP_BOT_API_ID, "Set AFK mode to False")
-        except ValueError:
+        except Exception as e:
             await borg.send_message(
                 event.chat_id,
-                "Please set `PRIVATE_GROUP_BOT_API_ID` for the proper functioning of @UniBorg",
+                "Please set `PRIVATE_GROUP_BOT_API_ID` for the proper functioning of afk functionality in @UniBorg\n `{}`".format(str(e)),
                 reply_to=event.message.id,
                 silent=True
             )
@@ -41,7 +42,9 @@ async def _(event):
         return
     reason = event.pattern_match.group(1)
     if not borg.storage.USER_AFK:
-        borg.storage.afk_time = datetime.datetime.now()
+        last_seen_status = await borg(functions.account.GetPrivacyRequest(types.InputPrivacyKeyStatusTimestamp()))
+        if isinstance(last_seen_status.rules, types.PrivacyValueAllowAll):
+            borg.storage.afk_time = datetime.datetime.now()
         borg.storage.USER_AFK.update({"yes": reason})
         if reason:
             await event.edit(f"Set AFK mode to True, and Reason is {reason}")
@@ -61,38 +64,42 @@ async def on_afk(event):
     if event.fwd_from:
         return
     chat = await event.get_chat()
+    afk_since = "**a while ago**"
     if event.mentioned or event.is_private and not (await event.get_sender()).bot:
+        current_message_text = event.message.message.lower()
+        if "afk" in current_message_text:
+            # userbot's should not reply to other userbot's
+            # https://core.telegram.org/bots/faq#why-doesn-39t-my-bot-see-messages-from-other-bots
+            return False
         if borg.storage.USER_AFK:
             reason = borg.storage.USER_AFK["yes"]
-            now = datetime.datetime.now()
-
-            dt = now - borg.storage.afk_time
-            time = float(dt.seconds)
-            days = time // (24 * 3600)
-            time = time % (24 * 3600)
-            hours = time // 3600
-            time %= 3600
-            minutes = time // 60
-            time %= 60
-            seconds = time
-
-            if days == 1:
-                afk_since = "**Yesterday**"
-            elif days > 1:
-                if days > 6:
-                    date = now + \
-                        datetime.timedelta(days=-days, hours=-hours, minutes=-minutes)
-                    afk_since = date.strftime('%A, %Y %B %m, %H:%I')
+            if borg.storage.afk_time:
+                now = datetime.datetime.now()
+                dt = now - borg.storage.afk_time
+                time = float(dt.seconds)
+                days = time // (24 * 3600)
+                time = time % (24 * 3600)
+                hours = time // 3600
+                time %= 3600
+                minutes = time // 60
+                time %= 60
+                seconds = time
+                if days == 1:
+                    afk_since = "**Yesterday**"
+                elif days > 1:
+                    if days > 6:
+                        date = now + \
+                            datetime.timedelta(days=-days, hours=-hours, minutes=-minutes)
+                        afk_since = date.strftime('%A, %Y %B %m, %H:%I')
+                    else:
+                        wday = now + datetime.timedelta(days=-days)
+                        afk_since = wday.strftime('%A')
+                elif hours > 1:
+                    afk_since = f"`{int(hours)}h{int(minutes)}m` **ago**"
+                elif minutes > 0:
+                    afk_since = f"`{int(minutes)}m{int(seconds)}s` **ago**"
                 else:
-                    wday = now + datetime.timedelta(days=-days)
-                    afk_since = wday.strftime('%A')
-            elif hours > 1:
-                afk_since = f"`{int(hours)}h{int(minutes)}m` **ago**"
-            elif minutes > 0:
-                afk_since = f"`{int(minutes)}m{int(seconds)}s` **ago**"
-            else:
-                afk_since = f"`{int(seconds)}s` **ago**"
-
+                    afk_since = f"`{int(seconds)}s` **ago**"
             msg = None
             if not reason:
                 msg = await event.reply(f"I'm afk since {afk_since} and I will be back soon.")
