@@ -17,17 +17,16 @@ Syntax: .remove.bg https://link.to/image.extension
 Syntax: .remove.bg as reply to a media"""
 import asyncio
 from datetime import datetime
+import io
 import os
 import requests
 from telethon import events
-import time
 from uniborg.util import progress
 
 
 @borg.on(events.NewMessage(pattern=r"\.remove\.bg ?(.*)", outgoing=True))
 async def _(event):
     HELP_STR = "`.remove.bg` as reply to a media, or give a link as an argument to this command"
-    output_file_name = Config.TMP_DOWNLOAD_DIRECTORY + "/@uniBorg_ReMove.png"
     if event.fwd_from:
         return
     if Config.REM_BG_API_KEY is None:
@@ -40,59 +39,47 @@ async def _(event):
         message_id = event.reply_to_msg_id
         reply_message = await event.get_reply_message()
         # check if media message
+        await event.edit("Downloading this media ...")
         try:
-            c_time = time.time()
             downloaded_file_name = await borg.download_media(
                 reply_message,
-                Config.TMP_DOWNLOAD_DIRECTORY,
-                progress_callback=lambda d, t: asyncio.get_event_loop().create_task(
-                    progress(d, t, event, c_time, "trying to download")
-                )
+                Config.TMP_DOWNLOAD_DIRECTORY
             )
         except Exception as e:
             await event.edit(str(e))
+            return
         else:
-            output_file_name = ReTrieveFile(downloaded_file_name, output_file_name)
+            await event.edit("sending to ReMove.BG")
+            output_file_name = ReTrieveFile(downloaded_file_name)
             os.remove(downloaded_file_name)
-            await borg.send_file(
-                event.chat_id,
-                output_file_name,
-                force_document=True,
-                supports_streaming=False,
-                allow_cache=False,
-                reply_to=message_id
-            )
-            os.remove(output_file_name)
-            end = datetime.now()
-            ms = (end - start).seconds
-            await event.edit("Background Removed in {} seconds using ReMove.BG API, powered by @UniBorg".format(ms))
     elif input_str:
-        # check if starts with http
-        if input_str.startswith("http"):
-            output_file_name = ReTrieveURL(input_str, output_file_name)
-            await borg.send_file(
-                event.chat_id,
-                output_file_name,
-                force_document=True,
-                supports_streaming=False,
-                allow_cache=False,
-                reply_to=message_id
-            )
-            os.remove(output_file_name)
-            end = datetime.now()
-            ms = (end - start).seconds
-            await event.edit("Background Removed in {} seconds using ReMove.BG API, powered by @UniBorg".format(ms))
-        else:
-            await event.edit(HELP_STR)
+        await event.edit("sending to ReMove.BG")
+        output_file_name = ReTrieveURL(input_str)
     else:
         await event.edit(HELP_STR)
+        return
+    contentType = output_file_name.headers.get("content-type")
+    if "image" in contentType:
+        with io.BytesIO(output_file_name.content) as remove_bg_image:
+            remove_bg_image.name = "@UniBorg_ReMove.png"
+            await borg.send_file(
+                event.chat_id,
+                remove_bg_image,
+                force_document=True,
+                supports_streaming=False,
+                allow_cache=False,
+                reply_to=message_id
+            )
+        end = datetime.now()
+        ms = (end - start).seconds
+        await event.edit("Background Removed in {} seconds using ReMove.BG API, powered by @UniBorg".format(ms))
+    else:
+        await event.edit("ReMove.BG API returned Errors. Please report to @UniBorg\n`{}".format(output_file_name.content.decode("UTF-8")))
 
 
 # this method will call the API, and return in the appropriate format
 # with the name provided.
-def ReTrieveFile(input_file_name, output_file_name):
-    if os.path.exists(output_file_name):
-        os.remove(output_file_name)
+def ReTrieveFile(input_file_name):
     headers = {
         "X-API-Key": Config.REM_BG_API_KEY,
     }
@@ -106,15 +93,10 @@ def ReTrieveFile(input_file_name, output_file_name):
         allow_redirects=True,
         stream=True
     )
-    with open(output_file_name, "wb") as fd:
-        for chunk in r.iter_content(chunk_size=10214):
-            fd.write(chunk)
-    return output_file_name
+    return r
 
 
-def ReTrieveURL(input_url, output_file_name):
-    if os.path.exists(output_file_name):
-        os.remove(output_file_name)
+def ReTrieveURL(input_url):
     headers = {
         "X-API-Key": Config.REM_BG_API_KEY,
     }
@@ -128,7 +110,4 @@ def ReTrieveURL(input_url, output_file_name):
         allow_redirects=True,
         stream=True
     )
-    with open(output_file_name, "wb") as fd:
-        for chunk in r.iter_content(chunk_size=10214):
-            fd.write(chunk)
-    return output_file_name
+    return r
