@@ -4,8 +4,7 @@ from telethon import events
 import requests
 
 
-@borg.on(events.NewMessage(pattern=r"\.github (.*)"))
-@borg.on(events.MessageEdited(pattern=r"\.github (.*)"))
+@borg.on(events.NewMessage(pattern=r"\.github (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
@@ -23,12 +22,20 @@ async def _(event):
         location = b["location"]
         bio = b["bio"]
         created_at = b["created_at"]
-        await event.edit("""[\u2063]({})Name: [{}]({})
+        await borg.send_file(
+            event.chat_id,
+            caption="""Name: [{}]({})
 Type: {}
 Company: {}
 Blog: {}
 Location: {}
 Bio: {}
-Profile Created: {}""".format(avatar_url, name, html_url, gh_type, company, blog, location, bio, created_at))
+Profile Created: {}""".format(name, html_url, gh_type, company, blog, location, bio, created_at),
+            file=avatar_url,
+            force_document=False,
+            allow_cache=False,
+            reply_to=event
+        )
+        await event.delete()
     else:
         await event.edit("`{}`: {}".format(input_str, r.text))
