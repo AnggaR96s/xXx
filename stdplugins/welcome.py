@@ -1,5 +1,7 @@
 """Greetings
-Syntax: .savewelcome <Welcome Message>"""
+Commands:
+.clearwelcome
+.savewelcome <Welcome Message>"""
 from telethon import events
 
 borg.storage.WELCOME = {}
@@ -28,10 +30,6 @@ async def welcome(event):
                 user_obj = await borg.get_entity(user_id)
                 mention = "[{}](tg://user?id={})".format(user_obj.first_name, user_id)
                 borg.storage.last_welcome[event.chat_id] = await event.reply(current_saved_welcome_message.format(mention=mention))
-                try:
-                    await event.delete()
-                except Exception as e:
-                    pass
 
 
 @borg.on(events.MessageEdited(pattern=r"\.savewelcome (.*)", outgoing=True))
@@ -42,3 +40,13 @@ async def _(event):
     input_str = event.pattern_match.group(1)
     borg.storage.WELCOME[event.chat_id] = input_str
     await event.edit("Welcome note saved. ")
+
+
+@borg.on(events.MessageEdited(pattern=r"\.clearwelcome", outgoing=True))
+@borg.on(events.NewMessage(pattern=r"\.clearwelcome", outgoing=True))
+async def _(event):
+    if event.fwd_from:
+        return
+    input_str = borg.storage.WELCOME[event.chat_id]
+    del borg.storage.WELCOME[event.chat_id]
+    await event.edit("Welcome note cleared. The previous welcome message was `{}`.".format(input_str))
