@@ -15,7 +15,6 @@ import requests
 def progress(current, total):
     logger.info("Downloaded {} of {}\nCompleted {}".format(current, total, (current / total) * 100))
 
-
 @borg.on(events.NewMessage(pattern=r"\.google search (.*)", outgoing=True))
 @borg.on(events.MessageEdited(pattern=r"\.google search (.*)", outgoing=True))
 async def _(event):
@@ -24,7 +23,7 @@ async def _(event):
     start = datetime.now()
     await event.edit("Processing ...")
     input_str = event.pattern_match.group(1) # + " -inurl:(htm|html|php|pls|txt) intitle:index.of \"last modified\" (mkv|mp4|avi|epub|pdf|mp3)"
-    search_results = search(input_str, num_results=Config.TG_GLOBAL_ALBUM_LIMIT)
+    search_results = search(input_str, num_results=Config.GOOGLE_SEARCH_COUNT_LIMIT)
     output_str = " "
     for text, url in search_results:
         output_str += " 👉🏻  [{}]({}) \n\n".format(text, url)
