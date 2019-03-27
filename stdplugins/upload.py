@@ -177,8 +177,7 @@ async def _(event):
         if os.path.exists(thumb_image_path):
             thumb = thumb_image_path
         else:
-            if metadata.has("duration"):
-                thumb = get_video_thumb(file_name, thumb_image_path)
+            thumb = get_video_thumb(file_name, thumb_image_path)
         start = datetime.now()
         metadata = extractMetadata(createParser(file_name))
         duration = 0
