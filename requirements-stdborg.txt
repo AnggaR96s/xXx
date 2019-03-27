@@ -7,6 +7,7 @@ gsearch
 gtts
 hachoir
 Pillow
+psycopg2
 mtranslate
 regex
 requests
