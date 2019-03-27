@@ -8,6 +8,7 @@ from telethon.tl import functions, types
 
 borg.storage.USER_AFK = {}
 borg.storage.afk_time = None
+borg.storage.last_afk_message = {}
 
 
 intervals = (
@@ -106,4 +107,6 @@ async def on_afk(event):
             else:
                 msg = await event.reply(f"I'm afk since {afk_since} and I will be back soon\n__Reason:__ {reason}")
             await asyncio.sleep(5)
-            await msg.delete()
+            if event.chat_id in borg.storage.last_afk_message:
+                await borg.storage.last_afk_message[event.chat_id].delete()
+            borg.storage.last_afk_message[event.chat_id] = msg
