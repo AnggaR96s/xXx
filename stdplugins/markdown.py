@@ -65,6 +65,12 @@ def parse_snip(m):
     return m.group(1), None
 
 
+def parse_strikethrough(m):
+    text = m.group(2)
+    text =  "\u0336".join(text) + "\u0336 "
+    return text, None
+
+
 PARSED_ENTITIES = (
     MessageEntityBold, MessageEntityItalic, MessageEntityCode,
     MessageEntityPre, MessageEntityTextUrl
@@ -79,7 +85,8 @@ MATCHERS = [
     (get_tag_parser('`', MessageEntityCode)),
     (re.compile(r'\+\+(.+?)\+\+'), parse_aesthetics),
     (re.compile(r'([^/\w]|^)(/?(r/\w+))'), parse_subreddit),
-    (re.compile(r'(!\w+)'), parse_snip)
+    (re.compile(r'(!\w+)'), parse_snip),
+    (re.compile(r"(?<!\w)(~{2})(?!~~)(.+?)(?<!~)\1(?!\w)"), parse_strikethrough)
 ]
 
 
