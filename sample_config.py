@@ -83,6 +83,10 @@ class Config(object):
     NC_LOG_P_M_S = bool(os.environ.get("NC_LOG_P_M_S", False))
     # send .get_id in any channel to forward all your NEW PMs to this group
     PM_LOGGR_BOT_API_ID = int(os.environ.get("PM_LOGGR_BOT_API_ID", "-100"))
+    # For Databases
+    # can be None in which case plugins requiring
+    # DataBase would not work
+    DB_URI = os.environ.get("DATABASE_URL", None)
 
 
 class Production(Config):

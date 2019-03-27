@@ -11,8 +11,8 @@ mtranslate
 regex
 requests
 speedtest-cli
+sqlalchemy
 telegraph
 urbandict
 wikipedia
 youtube-dl
-

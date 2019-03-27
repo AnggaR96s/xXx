@@ -26,13 +26,17 @@ else:
         sys.exit(1)
 
 
+if Config.DB_URI is None:
+    logging.warning("No DB_URI Found!")
+    sys.exit(1)
+
+
 if Config.HU_STRING_SESSION is not None:
     # for Running on Heroku
     session_name = str(Config.HU_STRING_SESSION)
     borg = Uniborg(
         StringSession(session_name),
         plugin_path="stdplugins/",
-        storage=lambda n: Storage(Path("data") / n),
         api_config=Config,
         api_id=Config.APP_ID,
         api_hash=Config.API_HASH
@@ -44,7 +48,6 @@ elif len(sys.argv) == 2:
     borg = Uniborg(
         session_name,
         plugin_path="stdplugins/",
-        storage=lambda n: Storage(Path("data") / n),
         connection_retries=None,
         api_config=Config,
         api_id=Config.APP_ID,
