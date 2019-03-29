@@ -16,7 +16,7 @@ from telethon.tl.types import DocumentAttributeVideo
 from telethon.errors import MessageNotModifiedError
 
 import time
-from uniborg.util import progress, humanbytes, TimeFormatter
+from uniborg.util import progress, humanbytes, time_formatter
 
 
 @borg.on(events.NewMessage(pattern=r"\.download ?(.*)", outgoing=True))
