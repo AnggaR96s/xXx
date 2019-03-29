@@ -1,5 +1,5 @@
-from sql_helpers import SESSION, BASE
 from sqlalchemy import Column, UnicodeText, LargeBinary, Numeric
+from sql_helpers import SESSION, BASE
 
 
 class Snips(BASE):
@@ -13,12 +13,8 @@ class Snips(BASE):
 
     def __init__(
         self,
-        snip,
-        reply,
-        snip_type,
-        media_id=None,
-        media_access_hash=None,
-        media_file_reference=None
+        snip, reply, snip_type,
+        media_id=None, media_access_hash=None, media_file_reference=None
     ):
         self.snip = snip
         self.reply = reply
@@ -58,7 +54,8 @@ def add_snip(keyword, reply, snip_type, media_id, media_access_hash, media_file_
         adder.media_access_hash = media_access_hash
         adder.media_file_reference = media_file_reference
     else:
-        adder = Snips(keyword, reply, snip_type, media_id, media_access_hash, media_file_reference)
+        adder = Snips(keyword, reply, snip_type, media_id,
+                      media_access_hash, media_file_reference)
     SESSION.add(adder)
     SESSION.commit()
 

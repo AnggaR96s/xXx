@@ -6,7 +6,10 @@ import re
 from telethon import events, custom
 
 
-@borg.on(events.NewMessage(pattern=r"\.ib (.[^ ]*) (.*)", outgoing=True))
+@borg.on(events.NewMessage(  # pylint:disable=E0602
+    pattern=r"\.ib (.[^ ]*) (.*)",
+    outgoing=True
+))
 async def _(event):
     # https://stackoverflow.com/a/35524254/4723940
     if event.fwd_from:
@@ -15,18 +18,28 @@ async def _(event):
     search_query = event.pattern_match.group(2)
     try:
         output_message = ""
-        bot_results = await borg.inline_query(bot_username, search_query)
+        bot_results = await borg.inline_query(  # pylint:disable=E0602
+            bot_username,
+            search_query
+        )
         i = 0
         for result in bot_results:
             output_message += "{} {} `{}`\n\n".format(
-                result.title, result.description, ".icb " + bot_username + " " + str(i + 1) + " " + search_query)
+                result.title,
+                result.description,
+                ".icb " + bot_username + " " + str(i + 1) + " " + search_query
+            )
             i = i + 1
         await event.edit(output_message)
     except Exception as e:
-        await event.edit("{} did not respond correctly, for **{}**!\n `{}`".format(bot_username, search_query, str(e)))
+        await event.edit("{} did not respond correctly, for **{}**!\n\
+            `{}`".format(bot_username, search_query, str(e)))
 
 
-@borg.on(events.NewMessage(pattern=r"\.icb (.[^ ]*) (.[^ ]*) (.*)", outgoing=True))
+@borg.on(events.NewMessage(  # pylint:disable=E0602
+    pattern=r"\.icb (.[^ ]*) (.[^ ]*) (.*)",
+    outgoing=True
+))
 async def _(event):
     if event.fwd_from:
         return
@@ -35,19 +48,22 @@ async def _(event):
     i_plus_oneth_result = event.pattern_match.group(2)
     search_query = event.pattern_match.group(3)
     try:
-        bot_results = await borg.inline_query(bot_username, search_query)
+        bot_results = await borg.inline_query(  # pylint:disable=E0602
+            bot_username,
+            search_query
+        )
         message = await bot_results[int(i_plus_oneth_result) - 1].click(event.chat_id, reply_to=event.reply_to_msg_id, hide_via=True)
     except Exception as e:
         await event.edit(str(e))
 
 
-if Config.TG_BOT_USER_NAME_BF_HER is not None and tgbot is not None:
-    @tgbot.on(events.InlineQuery)
+if Config.TG_BOT_USER_NAME_BF_HER is not None and tgbot is not None:  # pylint:disable=E0602
+    @tgbot.on(events.InlineQuery)  # pylint:disable=E0602
     async def inline_handler(event):
         builder = event.builder
         result = None
-        if event.query.user_id == borg.uid:
-            logger.info(event.stringify())
+        if event.query.user_id == borg.uid:  # pylint:disable=E0602
+            logger.info(event.stringify())  # pylint:disable=E0602
             query = event.text
             rev_text = query[::-1]
             if query.startswith("ping"):
@@ -101,12 +117,15 @@ All instaructions to run @UniBorg in your PC has been explained in https://githu
             )
         await event.answer([result] if result else None)
 
-
-    @tgbot.on(events.callbackquery.CallbackQuery(data=re.compile(b"helpme_next\((.+?)\)")))
+    @tgbot.on(events.callbackquery.CallbackQuery(  # pylint:disable=E0602
+        data=re.compile(b"helpme_next\((.+?)\)")
+    ))
     async def on_plug_in_callback_query_handler(event):
-        if event.query.user_id == borg.uid:
-            current_page_number = int(event.data_match.group(1).decode("UTF-8"))
-            buttons = paginate_help(current_page_number + 1, borg._plugins, "helpme")
+        if event.query.user_id == borg.uid:  # pylint:disable=E0602
+            current_page_number = int(
+                event.data_match.group(1).decode("UTF-8"))
+            buttons = paginate_help(
+                current_page_number + 1, borg._plugins, "helpme")
             # logger.info(event.stringify())
             # https://t.me/TelethonChat/115200
             await event.edit(buttons=buttons)
@@ -114,12 +133,18 @@ All instaructions to run @UniBorg in your PC has been explained in https://githu
             reply_pop_up_alert = "Please get your own @UniBorg, and don't edit my messages!"
             await event.answer(reply_pop_up_alert, cache_time=0, alert=True)
 
-
-    @tgbot.on(events.callbackquery.CallbackQuery(data=re.compile(b"helpme_prev\((.+?)\)")))
+    @tgbot.on(events.callbackquery.CallbackQuery(  # pylint:disable=E0602
+        data=re.compile(b"helpme_prev\((.+?)\)")
+    ))
     async def on_plug_in_callback_query_handler(event):
-        if event.query.user_id == borg.uid:
-            current_page_number = int(event.data_match.group(1).decode("UTF-8"))
-            buttons = paginate_help(current_page_number - 1, borg._plugins, "helpme")
+        if event.query.user_id == borg.uid:  # pylint:disable=E0602
+            current_page_number = int(
+                event.data_match.group(1).decode("UTF-8"))
+            buttons = paginate_help(
+                current_page_number - 1,
+                borg._plugins,  # pylint:disable=E0602
+                "helpme"
+            )
             # logger.info(event.stringify())
             # https://t.me/TelethonChat/115200
             await event.edit(buttons=buttons)
@@ -127,15 +152,17 @@ All instaructions to run @UniBorg in your PC has been explained in https://githu
             reply_pop_up_alert = "Please get your own @UniBorg, and don't edit my messages!"
             await event.answer(reply_pop_up_alert, cache_time=0, alert=True)
 
-
-    @tgbot.on(events.callbackquery.CallbackQuery(data=re.compile(b"ub_plugin_(.*)")))
+    @tgbot.on(events.callbackquery.CallbackQuery(  # pylint:disable=E0602
+        data=re.compile(b"ub_plugin_(.*)")
+    ))
     async def on_plug_in_callback_query_handler(event):
         plugin_name = event.data_match.group(1).decode("UTF-8")
-        help_string = borg._plugins[plugin_name].__doc__[0:125]
-        reply_pop_up_alert = help_string if help_string is not None else "No DOCSTRING has been setup for {} plugin".format(
-            plugin_name)
-        reply_pop_up_alert += "\n\n Use .unload {} to remove this plugin\n© @UniBorg".format(
-            plugin_name)
+        help_string = borg._plugins[plugin_name].__doc__[
+            0:125]  # pylint:disable=E0602
+        reply_pop_up_alert = help_string if help_string is not None else \
+            "No DOCSTRING has been setup for {} plugin".format(plugin_name)
+        reply_pop_up_alert += "\n\n Use .unload {} to remove this plugin\n\
+            © @UniBorg".format(plugin_name)
         await event.answer(reply_pop_up_alert, cache_time=0, alert=True)
 
 
@@ -157,8 +184,8 @@ def paginate_help(page_number, loaded_plugins, prefix):
     modulo_page = page_number % max_num_pages
     if len(pairs) > number_of_rows:
         pairs = pairs[modulo_page * number_of_rows:number_of_rows * (modulo_page + 1)] + \
-                [
-                    (custom.Button.inline("Previous", data="{}_prev({})".format(prefix, modulo_page)),
-                    custom.Button.inline("Next", data="{}_next({})".format(prefix, modulo_page)))
-                ]
+            [
+            (custom.Button.inline("Previous", data="{}_prev({})".format(prefix, modulo_page)),
+             custom.Button.inline("Next", data="{}_next({})".format(prefix, modulo_page)))
+        ]
     return pairs

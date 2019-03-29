@@ -4,7 +4,6 @@
 import asyncio
 import importlib.util
 import logging
-import os
 from pathlib import Path
 
 from telethon import TelegramClient
@@ -39,13 +38,14 @@ class Uniborg(TelegramClient):
             **kwargs
         }
 
+        self.tgbot = None
         if api_config.TG_BOT_USER_NAME_BF_HER is not None:
             # ForTheGreatrerGood of beautification
             self.tgbot = TelegramClient(
                 "TG_BOT_TOKEN",
                 api_id=api_config.APP_ID,
                 api_hash=api_config.API_HASH
-            ).start(bot_token=api_config.TG_BOT_TOKEN_BF_HER) if api_config.TG_BOT_TOKEN_BF_HER is not None else None
+            ).start(bot_token=api_config.TG_BOT_TOKEN_BF_HER)
 
         super().__init__(session, **kwargs)
 
@@ -62,8 +62,8 @@ class Uniborg(TelegramClient):
         inline_bot_plugin = Path(__file__).parent / "_inline_bot.py"
         self.load_plugin_from_file(inline_bot_plugin)
 
-        for p in Path().glob(f"{self._plugin_path}/*.py"):
-            self.load_plugin_from_file(p)
+        for a_plugin_path in Path().glob(f"{self._plugin_path}/*.py"):
+            self.load_plugin_from_file(a_plugin_path)
 
         LOAD = self.config.LOAD
         NO_LOAD = self.config.NO_LOAD

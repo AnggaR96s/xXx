@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 
-FILE_NAME = 'data.json'
+FILE_NAME = "data.json"
 
 
 class Storage:
@@ -25,8 +25,8 @@ class Storage:
         self._autosave = True
         self._guard = self._Guard(self)
         if (self._root / FILE_NAME).is_file():
-            with open(self._root / FILE_NAME) as fp:
-                self._data = json.load(fp)
+            with open(self._root / FILE_NAME) as file_pointer:
+                self._data = json.load(file_pointer)
         else:
             self._data = {}
 
@@ -49,5 +49,5 @@ class Storage:
     def _save(self):
         if not self._root.is_dir():
             self._root(parents=True, exist_ok=True)
-        with open(self._root / FILE_NAME, 'w') as fp:
-            json.dump(self._data, fp)
+        with open(self._root / FILE_NAME, 'w') as file_pointer:
+            json.dump(self._data, file_pointer)

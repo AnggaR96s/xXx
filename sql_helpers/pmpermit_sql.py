@@ -1,5 +1,5 @@
+from sqlalchemy import Column, String
 from sql_helpers import SESSION, BASE
-from sqlalchemy import Column, String, UnicodeText, Boolean, Integer, distinct, func
 
 
 class PMPermit(BASE):
