@@ -1,8 +1,8 @@
-from telethon import events, functions, __version__
 import sys
+from telethon import events, functions, __version__
 
 
-@borg.on(events.NewMessage(pattern=r"\.helpme", outgoing=True))
+@borg.on(events.NewMessage(pattern=r"\.helpme", outgoing=True))  # pylint:disable=E0602
 async def _(event):
     if event.fwd_from:
         return
@@ -14,10 +14,13 @@ UserBot Forked from https://github.com/expectocode/uniborg""".format(
         sys.version,
         __version__
     )
-    tgbotusername = Config.TG_BOT_USER_NAME_BF_HER
+    tgbotusername = Config.TG_BOT_USER_NAME_BF_HER  # pylint:disable=E0602
     if tgbotusername is not None:
-        results = await borg.inline_query(tgbotusername, help_string)
-        message = await results[0].click(
+        results = await borg.inline_query(  # pylint:disable=E0602
+            tgbotusername,
+            help_string
+        )
+        await results[0].click(
             event.chat_id,
             reply_to=event.reply_to_msg_id,
             hide_via=True
@@ -27,19 +30,19 @@ UserBot Forked from https://github.com/expectocode/uniborg""".format(
         await event.edit(help_string)
 
 
-@borg.on(events.NewMessage(pattern=r"\.dc", outgoing=True))
+@borg.on(events.NewMessage(pattern=r"\.dc", outgoing=True))  # pylint:disable=E0602
 async def _(event):
     if event.fwd_from:
         return
-    result = await borg(functions.help.GetNearestDcRequest())
+    result = await borg(functions.help.GetNearestDcRequest())  # pylint:disable=E0602
     await event.edit(result.stringify())
 
 
-@borg.on(events.NewMessage(pattern=r"\.config", outgoing=True))
+@borg.on(events.NewMessage(pattern=r"\.config", outgoing=True))  # pylint:disable=E0602
 async def _(event):
     if event.fwd_from:
         return
-    result = await borg(functions.help.GetConfigRequest())
+    result = await borg(functions.help.GetConfigRequest())  # pylint:disable=E0602
     result = result.stringify()
-    logger.info(result)
+    logger.info(result)  # pylint:disable=E0602
     await event.edit("""Telethon UserBot powered by @UniBorg""")
