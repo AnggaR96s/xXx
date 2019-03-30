@@ -105,7 +105,7 @@ URL: {}
 File Name: {}
 File Size: {}
 Downloaded: {}
-ETA: {}""".format(url, file_name, humanbytes(total_length), humanbytes(downloaded), TimeFormatter(estimated_total_time))
+ETA: {}""".format(url, file_name, humanbytes(total_length), humanbytes(downloaded), time_formatter(estimated_total_time))
                         if current_message != display_message:
                             await event.edit(current_message)
                             display_message = current_message
