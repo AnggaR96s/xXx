@@ -29,10 +29,10 @@ async def _(event):
             max_id=current_message_id,
             from_user=borg.me
         ):
-            logger.info(message.stringify())
             current_message = message.message
             if current_message.startswith("http"):
                 links.append(current_message)
+        logger.info(links)
         await event.edit(
             "Found {} links in {} messages. ".format(len(links), current_message_id - first_message_id)
         )
