@@ -15,6 +15,22 @@ from telethon import events
 thumb_image_path = Config.TMP_DOWNLOAD_DIRECTORY + "/thumb_image.jpg"
 
 
+def get_video_thumb(file, output=None, width=90):
+    output = file + ".jpg"
+    metadata = extractMetadata(createParser(file))
+    p = subprocess.Popen([
+        'ffmpeg', '-i', file,
+        '-ss', str(int((0, metadata.get('duration').seconds)[metadata.has('duration')] / 2)),
+        # '-filter:v', 'scale={}:-1'.format(width),
+        '-vframes', '1',
+        output,
+    ], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+    p.communicate()
+    if not p.returncode and os.path.lexists(file):
+        os.remove(file)
+        return output
+
+
 @borg.on(events.NewMessage(pattern=r"\.savethumbnail", outgoing=True))
 async def _(event):
     if event.fwd_from:
