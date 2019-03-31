@@ -5,11 +5,11 @@ Available Commands:
 .getthumbnail"""
 
 import os
+import subprocess
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
 from PIL import Image
 from telethon import events
-from stdplugins.upload import get_video_thumb
 
 
 thumb_image_path = Config.TMP_DOWNLOAD_DIRECTORY + "/thumb_image.jpg"
@@ -28,12 +28,9 @@ async def _(event):
             Config.TMP_DOWNLOAD_DIRECTORY
         )
         if downloaded_file_name.endswith(".mp4"):
-            downloaded_file_name_one = get_video_thumb(
-                downloaded_file_name,
-                downloaded_file_name + ".jpg"
+            downloaded_file_name = get_video_thumb(
+                downloaded_file_name
             )
-            os.remove(downloaded_file_name)
-            downloaded_file_name = downloaded_file_name_one
         metadata = extractMetadata(createParser(downloaded_file_name))
         height = 0
         if metadata.has("height"):
