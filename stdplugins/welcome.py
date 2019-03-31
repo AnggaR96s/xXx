@@ -3,14 +3,14 @@ Commands:
 .clearwelcome
 .savewelcome <Welcome Message>"""
 from telethon import events
-
-borg.storage.WELCOME = {}
-borg.storage.last_welcome = {}
+from sql_helpers.welcome_sql import get_current_welcome_settings, \
+    add_welcome_setting, rm_welcome_setting, update_previous_welcome
 
 
 @borg.on(events.ChatAction())
 async def welcome(event):
-    if event.chat_id in borg.storage.WELCOME:
+    cws = get_current_welcome_settings(event.chat_id)
+    if cws:
         # logger.info(event.stringify())
         """
         user_added=False,
@@ -19,17 +19,26 @@ async def welcome(event):
         user_kicked=False,
         """
         if event.user_joined:
-            if event.chat_id in borg.storage.last_welcome:
-                await borg.storage.last_welcome[event.chat_id].delete()
+            if cws.should_clean_welcome:
+                try:
+                    await borg.delete_messages(
+                        event.chat_id,
+                        cws.previous_welcome
+                    )
+                except Exception as e:
+                    logger.warn(str(e))
             try:
                 user_ids = event.action_message.action.users
             except AttributeError as e:
                 user_ids = [event.action_message.from_id]
             for user_id in user_ids:
-                current_saved_welcome_message = borg.storage.WELCOME[event.chat_id]
+                current_saved_welcome_message = cws.custom_welcome_message
                 user_obj = await borg.get_entity(user_id)
                 mention = "[{}](tg://user?id={})".format(user_obj.first_name, user_id)
-                borg.storage.last_welcome[event.chat_id] = await event.reply(current_saved_welcome_message.format(mention=mention))
+                current_message = await event.reply(
+                    current_saved_welcome_message.format(mention=mention)
+                )
+                update_previous_welcome(event.chat_id, current_message.id)
 
 
 @borg.on(events.MessageEdited(pattern=r"\.savewelcome (.*)", outgoing=True))
@@ -38,7 +47,7 @@ async def _(event):
     if event.fwd_from:
         return
     input_str = event.pattern_match.group(1)
-    borg.storage.WELCOME[event.chat_id] = input_str
+    add_welcome_setting(event.chat_id, input_str, True, 0)
     await event.edit("Welcome note saved. ")
 
 
@@ -47,6 +56,6 @@ async def _(event):
 async def _(event):
     if event.fwd_from:
         return
-    input_str = borg.storage.WELCOME[event.chat_id]
-    del borg.storage.WELCOME[event.chat_id]
-    await event.edit("Welcome note cleared. The previous welcome message was `{}`.".format(input_str))
+    cws = get_current_welcome_settings(event.chat_id)
+    rm_welcome_setting(event.chat_id)
+    await event.edit("Welcome note cleared. The previous welcome message was `{}`.".format(cws.custom_welcome_message))
