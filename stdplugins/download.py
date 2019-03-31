@@ -2,20 +2,14 @@
 Syntax:
 .download as reply to a Telegram media
 .download url | file.name to download files from a Public Link"""
-from telethon import events
+
 import aiohttp
 import asyncio
-import json
 import os
-import requests
-from datetime import datetime
-from hachoir.metadata import extractMetadata
-from hachoir.parser import createParser
-
-from telethon.tl.types import DocumentAttributeVideo
-from telethon.errors import MessageNotModifiedError
-
 import time
+from datetime import datetime
+from telethon import events
+from telethon.tl.types import DocumentAttributeVideo
 from uniborg.util import progress, humanbytes, time_formatter
 
 
@@ -30,17 +24,21 @@ async def _(event):
     if event.reply_to_msg_id:
         start = datetime.now()
         reply_message = await event.get_reply_message()
-        c_time = time.time()
-        downloaded_file_name = await borg.download_media(
-            reply_message,
-            Config.TMP_DOWNLOAD_DIRECTORY,
-            progress_callback=lambda d, t: asyncio.get_event_loop().create_task(
-                progress(d, t, event, c_time, "trying to download")
+        try:
+            c_time = time.time()
+            downloaded_file_name = await borg.download_media(
+                reply_message,
+                Config.TMP_DOWNLOAD_DIRECTORY,
+                progress_callback=lambda d, t: asyncio.get_event_loop().create_task(
+                    progress(d, t, event, c_time, "trying to download")
+                )
             )
-        )
-        end = datetime.now()
-        ms = (end - start).seconds
-        await event.edit("Downloaded to `{}` in {} seconds.".format(downloaded_file_name, ms))
+        except Exception as e:  # pylint:disable=C0103,W0703
+            await event.edit(str(e))
+        else:
+            end = datetime.now()
+            ms = (end - start).seconds
+            await event.edit("Downloaded to `{}` in {} seconds.".format(downloaded_file_name, ms))
     elif input_str:
         start = datetime.now()
         url = input_str
@@ -105,7 +103,13 @@ URL: {}
 File Name: {}
 File Size: {}
 Downloaded: {}
-ETA: {}""".format(url, file_name, humanbytes(total_length), humanbytes(downloaded), time_formatter(estimated_total_time))
+ETA: {}""".format(
+    url,
+    file_name,
+    humanbytes(total_length),
+    humanbytes(downloaded),
+    time_formatter(estimated_total_time)
+)
                         if current_message != display_message:
                             await event.edit(current_message)
                             display_message = current_message

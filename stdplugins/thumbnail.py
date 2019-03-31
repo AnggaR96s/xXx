@@ -3,12 +3,13 @@ Available Commands:
 .savethumbnail
 .clearthumbnail
 .getthumbnail"""
-from telethon import events
+
 import os
-import subprocess
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
 from PIL import Image
+from telethon import events
+from stdplugins.upload import get_video_thumb
 
 
 thumb_image_path = Config.TMP_DOWNLOAD_DIRECTORY + "/thumb_image.jpg"
@@ -27,7 +28,12 @@ async def _(event):
             Config.TMP_DOWNLOAD_DIRECTORY
         )
         if downloaded_file_name.endswith(".mp4"):
-            downloaded_file_name = get_video_thumb(downloaded_file_name)
+            downloaded_file_name_one = get_video_thumb(
+                downloaded_file_name,
+                downloaded_file_name + ".jpg"
+            )
+            os.remove(downloaded_file_name)
+            downloaded_file_name = downloaded_file_name_one
         metadata = extractMetadata(createParser(downloaded_file_name))
         height = 0
         if metadata.has("height"):
@@ -43,7 +49,10 @@ async def _(event):
         img.save(thumb_image_path, "JPEG")
         # https://pillow.readthedocs.io/en/3.1.x/reference/Image.html#create-thumbnails
         os.remove(downloaded_file_name)
-        await event.edit("Custom video / file thumbnail saved. This image will be used in the next upload.")
+        await event.edit(
+            "Custom video / file thumbnail saved. " + \
+            "This image will be used in the upload, till `.clearthumbnail`."
+        )
     else:
         await event.edit("Reply to a photo to save custom thumbnail")
 
@@ -55,22 +64,6 @@ async def _(event):
     if os.path.exists(thumb_image_path):
         os.remove(thumb_image_path)
     await event.edit("✅ Custom thumbnail cleared succesfully.")
-
-
-def get_video_thumb(file, output=None, width=90):
-    output = file + ".jpg"
-    metadata = extractMetadata(createParser(file))
-    p = subprocess.Popen([
-        'ffmpeg', '-i', file,
-        '-ss', str(int((0, metadata.get('duration').seconds)[metadata.has('duration')] / 2)),
-        # '-filter:v', 'scale={}:-1'.format(width),
-        '-vframes', '1',
-        output,
-    ], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
-    p.communicate()
-    if not p.returncode and os.path.lexists(file):
-        os.remove(file)
-        return output
 
 
 @borg.on(events.NewMessage(pattern=r"\.getthumbnail", outgoing=True))
