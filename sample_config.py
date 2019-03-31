@@ -88,7 +88,8 @@ class Config(object):
     # can be None in which case plugins requiring
     # DataBase would not work
     DB_URI = os.environ.get("DATABASE_URL", None)
-
+    # number of rows of buttons to be displayed in .helpme command
+    NO_OF_BUTTONS_DISPLAYED_IN_H_ME_CMD = int(os.environ.get("NO_OF_BUTTONS_DISPLAYED_IN_H_ME_CMD", 5))
 
 class Production(Config):
     LOGGER = False
