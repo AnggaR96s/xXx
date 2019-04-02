@@ -129,6 +129,10 @@
     }
   }],
   "buildpacks": [{
+    "url": "heroku/heroku-buildpack-chromedriver"
+  }, {
+    "url": "heroku/heroku-buildpack-google-chrome"
+  }, {
     "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest"
   }, {
     "url": "heroku/python"

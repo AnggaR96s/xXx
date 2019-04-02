@@ -11,6 +11,7 @@ psycopg2
 mtranslate
 regex
 requests
+selenium
 speedtest-cli
 sqlalchemy
 telegraph
