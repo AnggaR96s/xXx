@@ -1,6 +1,7 @@
 """Default Permission in Telegram 5.0.1
-Syntax: .lock <option>
-Available Options: msg, media, sticker, gif, gamee, ainline, gpoll, adduser, cpin, changeinfo, url, bots, forward"""
+Available Commands: .lock <option>, .unlock <option>, .dblocks
+API Options: msg, media, sticker, gif, gamee, ainline, gpoll, adduser, cpin, changeinfo
+DB Options: url, bots, forward"""
 import asyncio
 from telethon import events, functions, types
 from sql_helpers.locks_sql import update_lock, is_locked, get_locks
