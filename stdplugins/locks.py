@@ -2,7 +2,7 @@
 Available Commands: .lock <option>, .unlock <option>, .dblocks
 API Options: msg, media, sticker, gif, gamee, ainline, gpoll, adduser, cpin, changeinfo
 DB Options: url, bots, forward"""
-import asyncio
+
 from telethon import events, functions, types
 from sql_helpers.locks_sql import update_lock, is_locked, get_locks
 from uniborg.util import admin_cmd
@@ -50,7 +50,7 @@ async def _(event):
             cpin = True
         if "changeinfo" in input_str:
             changeinfo = True
-        banned_rights=types.ChatBannedRights(
+        banned_rights = types.ChatBannedRights(
             until_date=None,
             # view_messages=None,
             send_messages=msg,
@@ -130,7 +130,7 @@ async def check_incoming_messages(event):
         is_url = False
         if entities:
             for entity in entities:
-                if isinstance(entity, types.MessageEntityTextUrl) or isinstance(entity, types.MessageEntityUrl):
+                if isinstance(entity, (types.MessageEntityTextUrl, types.MessageEntityUrl)):
                     is_url = True
         if is_url:
             try:
@@ -140,3 +140,39 @@ async def check_incoming_messages(event):
                     "I don't seem to have ADMIN permission here. \n`{}`".format(str(e))
                 )
                 update_lock(peer_id, "url", False)
+
+
+@borg.on(events.ChatAction())  # pylint:disable=E0602
+async def _(event):
+    # check for "lock" "bots"
+    if is_locked(event.chat_id, "bots"):
+        # bots are limited Telegram accounts,
+        # and cannot join by themselves
+        if event.user_added:
+            users_added_by = event.action_message.from_id
+            is_ban_able = False
+            rights = types.ChatBannedRights(
+                until_date=None,
+                view_messages=True
+            )
+            added_users = event.action_message.action.users
+            for user_id in added_users:
+                user_obj = await borg.get_entity(user_id)
+                if user_obj.bot:
+                    is_ban_able = True
+                    try:
+                        await borg(functions.channels.EditBannedRequest(
+                            event.chat_id,
+                            user_obj,
+                            rights
+                        ))
+                    except Exception as e:
+                        await event.reply(
+                            "I don't seem to have ADMIN permission here. \n`{}`".format(str(e))
+                        )
+                        update_lock(event.chat_id, "bots", False)
+                        break
+            if is_ban_able:
+                ban_reason_msg = await event.reply(
+                    "!warn [user](tg://user?id={}) Please Do Not Add BOTs to this chat.".format(users_added_by)
+                )

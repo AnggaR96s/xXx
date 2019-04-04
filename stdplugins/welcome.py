@@ -2,9 +2,8 @@
 Commands:
 .clearwelcome
 .savewelcome <Welcome Message>"""
+
 from telethon import events
-from telethon.tl import types, functions
-from sql_helpers.locks_sql import update_lock, is_locked
 from sql_helpers.welcome_sql import get_current_welcome_settings, \
     add_welcome_setting, rm_welcome_setting, update_previous_welcome
 from uniborg.util import admin_cmd
@@ -40,39 +39,6 @@ async def _(event):
                     current_saved_welcome_message.format(mention=mention)
                 )
                 update_previous_welcome(event.chat_id, current_message.id)
-    # check for "lock" "bots"
-    if is_locked(event.chat_id, "bots"):
-        # bots are limited Telegram accounts,
-        # and cannot join by themselves
-        if event.user_added:
-            users_added_by = event.action_message.from_id
-            is_ban_able = False
-            rights = types.ChatBannedRights(
-                until_date=None,
-                view_messages=True
-            )
-            added_users = event.action_message.action.users
-            for user_id in added_users:
-                user_obj = await borg.get_entity(user_id)
-                if user_obj.bot:
-                    is_ban_able = True
-                    try:
-                        await borg(functions.channels.EditBannedRequest(
-                            event.chat_id,
-                            user_obj,
-                            rights
-                        ))
-                    except Exception as e:
-                        await event.reply(
-                            "I don't seem to have ADMIN permission here. \n`{}`".format(str(e))
-                        )
-                        update_lock(event.chat_id, "bots", False)
-                        break
-            if is_ban_able:
-                ban_reason_msg = await event.reply(
-                    "!warn [user](tg://user?id={}) Please Do Not Add BOTs to this chat.".format(users_added_by)
-                )
-
 
 
 @borg.on(admin_cmd(r"\.savewelcome (.*)"))  # pylint:disable=E0602
