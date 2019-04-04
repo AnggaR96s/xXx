@@ -7,6 +7,7 @@ Available Commands:
 .listfilters
 .clearfilter"""
 import asyncio
+import re
 from telethon import events, utils
 from telethon.tl import types
 from sql_helpers.filters_sql import get_filter, add_filter, remove_filter, get_all_filters
@@ -24,44 +25,46 @@ borg.storage.last_triggered_filters = {}  # pylint:disable=E0602
 @borg.on(events.NewMessage(incoming=True))
 async def on_snip(event):
     name = event.raw_text
-    snip = get_filter(event.chat_id, name)
-    if snip:
-        if event.chat_id in borg.storage.last_triggered_filters:
-            if name in borg.storage.last_triggered_filters[event.chat_id]:
-                # avoid userbot spam
-                # "I demand rights for us bots, we are equal to you humans." -Henri Koivuneva (t.me/UserbotTesting/2698)
-                return False
-        if snip.snip_type == TYPE_PHOTO:
-            media = types.InputPhoto(
-                int(snip.media_id),
-                int(snip.media_access_hash),
-                snip.media_file_reference
+    snips = get_all_filters(event.chat_id)
+    for snip in snips:
+        pattern = r"( |^|[^\w])" + re.escape(snip.keyword) + r"( |$|[^\w])"
+        if re.search(pattern, name, flags=re.IGNORECASE):
+            if event.chat_id in borg.storage.last_triggered_filters:
+                if name in borg.storage.last_triggered_filters[event.chat_id]:
+                    # avoid userbot spam
+                    # "I demand rights for us bots, we are equal to you humans." -Henri Koivuneva (t.me/UserbotTesting/2698)
+                    return False
+            if snip.snip_type == TYPE_PHOTO:
+                media = types.InputPhoto(
+                    int(snip.media_id),
+                    int(snip.media_access_hash),
+                    snip.media_file_reference
+                )
+            elif snip.snip_type == TYPE_DOCUMENT:
+                media = types.InputDocument(
+                    int(snip.media_id),
+                    int(snip.media_access_hash),
+                    snip.media_file_reference
+                )
+            else:
+                media = None
+            message_id = event.message.id
+            if event.reply_to_msg_id:
+                message_id = event.reply_to_msg_id
+            await borg.send_message(
+                event.chat_id,
+                snip.reply,
+                reply_to=message_id,
+                file=media
             )
-        elif snip.snip_type == TYPE_DOCUMENT:
-            media = types.InputDocument(
-                int(snip.media_id),
-                int(snip.media_access_hash),
-                snip.media_file_reference
-            )
-        else:
-            media = None
-        message_id = event.message.id
-        if event.reply_to_msg_id:
-            message_id = event.reply_to_msg_id
-        await borg.send_message(
-            event.chat_id,
-            snip.reply,
-            reply_to=message_id,
-            file=media
-        )
-        if event.chat_id not in borg.storage.last_triggered_filters:
-            borg.storage.last_triggered_filters[event.chat_id] = []
-        borg.storage.last_triggered_filters[event.chat_id].append(name)
-        await asyncio.sleep(DELETE_TIMEOUT)
-        borg.storage.last_triggered_filters[event.chat_id].remove(name)
+            if event.chat_id not in borg.storage.last_triggered_filters:
+                borg.storage.last_triggered_filters[event.chat_id] = []
+            borg.storage.last_triggered_filters[event.chat_id].append(name)
+            await asyncio.sleep(DELETE_TIMEOUT)
+            borg.storage.last_triggered_filters[event.chat_id].remove(name)
 
 
-@borg.on(events.NewMessage(pattern=r'\.savefilter (\S+)', outgoing=True))
+@borg.on(events.NewMessage(pattern=r'\.savefilter (.*)', outgoing=True))
 async def on_snip_save(event):
     name = event.pattern_match.group(1)
     msg = await event.get_reply_message()
@@ -108,7 +111,7 @@ async def on_snip_list(event):
         await event.edit(OUT_STR)
 
 
-@borg.on(events.NewMessage(pattern=r'\.clearfilter (\S+)', outgoing=True))
+@borg.on(events.NewMessage(pattern=r'\.clearfilter (.*)', outgoing=True))
 async def on_snip_delete(event):
     name = event.pattern_match.group(1)
     remove_filter(event.chat_id, name)
