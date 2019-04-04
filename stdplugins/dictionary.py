@@ -16,7 +16,7 @@ async def _(event):
     response = requests.get(input_url, headers=headers).json()
     pronounciation = response.get("p")
     meaning_dict = response.get("lwo")
-    caption_str = f"Meaning of __{input_str}__"
+    caption_str = f"Meaning of __{input_str}__\n"
     for current_meaning in meaning_dict:
         current_meaning_type = current_meaning.get("type")
         current_meaning_definition = current_meaning.get("definition")
