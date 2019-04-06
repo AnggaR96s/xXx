@@ -1,7 +1,7 @@
 """Default Permission in Telegram 5.0.1
 Available Commands: .lock <option>, .unlock <option>, .dblocks
 API Options: msg, media, sticker, gif, gamee, ainline, gpoll, adduser, cpin, changeinfo
-DB Options: url, bots, forward"""
+DB Options: url, bots, forward, commands"""
 
 from telethon import events, functions, types
 from sql_helpers.locks_sql import update_lock, is_locked, get_locks
@@ -14,7 +14,7 @@ async def _(event):
         return
     input_str = event.pattern_match.group(1)
     peer_id = event.chat_id
-    if input_str in (("url", "bots", "forward")):
+    if input_str in (("url", "bots", "forward", "commands")):
         update_lock(peer_id, input_str, True)
         await event.edit(
             "Locked {}".format(input_str)
@@ -85,7 +85,7 @@ async def _(event):
         return
     input_str = event.pattern_match.group(1)
     peer_id = event.chat_id
-    if input_str in (("url", "bots", "forward")):
+    if input_str in (("url", "bots", "forward", "commands")):
         update_lock(peer_id, input_str, False)
         await event.edit(
             "UnLocked {}".format(input_str)
@@ -109,6 +109,7 @@ async def _(event):
         res += "👉 `url`: `{}`\n".format(current_locks.url)
         res += "👉 `forward`: `{}`\n".format(current_locks.forward)
         res += "👉 `bots`: `{}`\n".format(current_locks.bots)
+        res += "👉 `commands`: `{}`\n".format(current_locks.commands)
     await event.edit(res)
 
 
@@ -140,6 +141,21 @@ async def check_incoming_messages(event):
                     "I don't seem to have ADMIN permission here. \n`{}`".format(str(e))
                 )
                 update_lock(peer_id, "url", False)
+    if is_locked(peer_id, "commands"):
+        entities = event.message.entities
+        is_command = False
+        if entities:
+            for entity in entities:
+                if isinstance(entity, types.MessageEntityBotCommand):
+                    is_command = True
+        if is_command:
+            try:
+                await event.delete()
+            except Exception as e:
+                await event.reply(
+                    "I don't seem to have ADMIN permission here. \n`{}`".format(str(e))
+                )
+                update_lock(peer_id, "commands", False)
 
 
 @borg.on(events.ChatAction())  # pylint:disable=E0602

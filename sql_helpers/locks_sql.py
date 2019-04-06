@@ -9,7 +9,6 @@ class Locks(BASE):
     url = Column(Boolean, default=False)
     bots = Column(Boolean, default=False)
     forward = Column(Boolean, default=False)
-    # alter table locks add column commands boolean;
     commands = Column(Boolean, default=False)
 
 
