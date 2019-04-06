@@ -31,13 +31,14 @@ async def set_not_afk(event):
             message_id = current_message.id
             # https://t.me/DeepLink/21
             chat_id, _ = resolve_id(chat_id)
-            recvd_messages += "👉 tg://openmessage?chat_id={}&message_id={} \n".format(chat_id, message_id)
+            recvd_messages += "👉 https://t.me/c/{}/{} \n\n".format(chat_id, message_id)
             # recvd_messages += "👉 tg://openmessage?user_id={}&chat_id={}&message_id={} \n".format(user_id, chat_id, message_id)
         try:
             if recvd_messages != "You received the following messages: \n":
                 await borg.send_message(  # pylint:disable=E0602
                     Config.PRIVATE_GROUP_BOT_API_ID,  # pylint:disable=E0602
-                    recvd_messages
+                    recvd_messages,
+                    link_preview=False
                 )
             await borg.send_message(  # pylint:disable=E0602
                 Config.PRIVATE_GROUP_BOT_API_ID,  # pylint:disable=E0602
