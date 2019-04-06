@@ -9,6 +9,8 @@ class Locks(BASE):
     url = Column(Boolean, default=False)
     bots = Column(Boolean, default=False)
     forward = Column(Boolean, default=False)
+    # alter table locks add column commands boolean;
+    commands = Column(Boolean, default=False)
 
 
     def __init__(self, chat_id):
@@ -16,6 +18,7 @@ class Locks(BASE):
         self.url = False
         self.bots = False
         self.forward = False
+        self.commands = False
 
 
 Locks.__table__.create(checkfirst=True)
@@ -42,6 +45,8 @@ def update_lock(chat_id, lock_type, locked):
         curr_perm.bots = locked
     elif lock_type == "forward":
         curr_perm.forward = locked
+    elif lock_type == "commands":
+        curr_perm.commands = locked
     SESSION.add(curr_perm)
     SESSION.commit()
 
@@ -57,6 +62,8 @@ def is_locked(chat_id, lock_type):
         return curr_perm.bots
     elif lock_type == "forward":
         return curr_perm.forward
+    elif lock_type == "commands":
+        return curr_perm.commands
 
 
 def get_locks(chat_id):
