@@ -66,7 +66,7 @@ def add_filter(chat_id, keyword, reply, snip_type, media_id, media_access_hash, 
 def remove_filter(chat_id, keyword):
     saved_filter = SESSION.query(Filters).get((str(chat_id), keyword))
     if saved_filter:
-        saved_filter.delete()
+        SESSION.delete(saved_filter)
         SESSION.commit()
 
 
