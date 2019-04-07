@@ -40,8 +40,7 @@ async def _(event):
         i = i + 1
     end = datetime.now()
     ms = (end - start).seconds
-    await event.edit("Scrapped {} for {} in {} seconds. " + \
-        "Obtained Results: \n {}".format(input_type, input_str, ms, output_str))
+    await event.edit("Scrapped {} for {} in {} seconds. Obtained Results: \n {}".format(input_type, input_str, ms, output_str))
 
 
 @borg.on(events.NewMessage(  # pylint:disable=E0602
