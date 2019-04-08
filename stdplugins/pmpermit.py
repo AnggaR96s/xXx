@@ -9,7 +9,10 @@ from telethon import events
 from telethon.tl import functions, types
 from sql_helpers.pmpermit_sql import is_approved, approve, disapprove, get_all_approved
 
+
 borg.storage.PM_WARNS = {}
+borg.storage.PREV_REPLY_MESSAGE = {}
+
 
 BAALAJI_TG_USER_BOT = "My Master hasn't approved you to PM."
 TG_COMPANION_USER_BOT = "Please wait for his response and don't spam his PM."
@@ -36,12 +39,15 @@ async def monito_p_m_s(event):
                 r = await event.reply(UNIBORG_USER_BOT_WARN_ZERO)
                 await asyncio.sleep(3)
                 await borg(functions.contacts.BlockRequest(chat.id))
-                await r.delete()
+                if chat.id in borg.storage.PREV_REPLY_MESSAGE:
+                    await borg.storage.PREV_REPLY_MESSAGE[chat.id].delete()
+                borg.storage.PREV_REPLY_MESSAGE[chat.id] = r
                 return
             r = await event.reply(UNIBORG_USER_BOT_NO_WARN)
             borg.storage.PM_WARNS[chat.id] += 1
-            await asyncio.sleep(3)
-            await r.delete()
+            if chat.id in borg.storage.PREV_REPLY_MESSAGE:
+                await borg.storage.PREV_REPLY_MESSAGE[chat.id].delete()
+            borg.storage.PREV_REPLY_MESSAGE[chat.id] = r
 
 
 @borg.on(events.NewMessage(pattern=r"\.approvepm ?(.*)", outgoing=True))
