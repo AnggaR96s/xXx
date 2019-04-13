@@ -132,7 +132,7 @@ async def on_afk(event):
         msg = None
         message_to_reply = f"**😄 I'm afk since {afk_since} " + \
             f"and I will be back soon 😄\n__Reason:__ {reason}**" \
-            if reason 
+            if reason \
             else f"**😄 I'm afk since {afk_since} and I will be back soon 😄**"
         msg = await event.reply(message_to_reply)
         await asyncio.sleep(5)
