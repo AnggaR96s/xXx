@@ -6,7 +6,7 @@ from telethon import events
 import asyncio
 
 
-@borg.on(events.NewMessage(pattern=r"\.typewriter (.*)", outgoing=True))
+@borg.on(events.NewMessage(pattern=r"\.type (.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
