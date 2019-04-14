@@ -1,7 +1,7 @@
 """Create Private Groups
 Available Commands:
 .create (b|g) GroupName"""
-from telethon import functions
+from telethon.tl import functions, types
 from uniborg import util
 
 
@@ -13,13 +13,18 @@ async def _(event):
     group_name = event.pattern_match.group(2)
     if type_of_group == "b":
         try:
-            await borg(functions.messages.CreateChatRequest(  # pylint:disable=E0602
-                users=["@GoogleIMGBot"],
+            result = await borg(functions.messages.CreateChatRequest(  # pylint:disable=E0602
+                users=["@BorgHelpBot"],
                 # Not enough users (to create a chat, for example)
                 # Telegram, no longer allows creating a chat with ourselves
                 title=group_name
             ))
             await event.edit("Group `{}` created successfully!".format(group_name))
+            created_chat_id = result.chats[0].id
+            await borg(functions.messages.DeleteChatUserRequest(
+                chat_id=created_chat_id,
+                user_id="@BorgHelpBot"
+            ))
         except Exception as e:  # pylint:disable=C0103,W0703
             await event.edit(str(e))
     elif type_of_group == "g":
