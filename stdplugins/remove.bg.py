@@ -24,7 +24,7 @@ from telethon import events
 from uniborg.util import progress
 
 
-@borg.on(events.NewMessage(pattern=r"\.remove\.bg ?(.*)", outgoing=True))
+@borg.on(events.NewMessage(pattern=r"\.rbg ?(.*)", outgoing=True))
 async def _(event):
     HELP_STR = "`.remove.bg` as reply to a media, or give a link as an argument to this command"
     if event.fwd_from:
@@ -61,7 +61,7 @@ async def _(event):
     contentType = output_file_name.headers.get("content-type")
     if "image" in contentType:
         with io.BytesIO(output_file_name.content) as remove_bg_image:
-            remove_bg_image.name = "@UniBorg_ReMove.png"
+            remove_bg_image.name = "@r4v4n4_ReMove.png"
             await borg.send_file(
                 event.chat_id,
                 remove_bg_image,

@@ -7,7 +7,7 @@ from telethon import events
 from uniborg.util import admin_cmd
 
 
-@borg.on(admin_cmd(r"\.screencapture (.*)"))
+@borg.on(admin_cmd(r"\.sc (.*)"))
 async def _(event):
     if event.fwd_from:
         return
@@ -29,7 +29,7 @@ async def _(event):
     contentType = response_api.headers['content-type']
     if "image" in contentType:
         with io.BytesIO(response_api.content) as screenshot_image:
-            screenshot_image.name = "screencapture.png"
+            screenshot_image.name = "@r4v4n4_screencapture.png"
             try:
                 await borg.send_file(
                     event.chat_id,

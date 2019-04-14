@@ -7,7 +7,7 @@ import io
 import speedtest
 
 
-@borg.on(events.NewMessage(pattern=r"\.speedtest ?(.*)", outgoing=True))
+@borg.on(events.NewMessage(pattern=r"\.speed ?(.*)", outgoing=True))
 async def _(event):
     if event.fwd_from:
         return
@@ -20,7 +20,7 @@ async def _(event):
         as_document = True
     elif input_str == "text":
         as_text = True
-    await event.edit("Calculating my internet speed. Please wait!")
+    await event.edit("Calculating my server speed. Please wait!")
     start = datetime.now()
     s = speedtest.Speedtest()
     s.get_best_server()
