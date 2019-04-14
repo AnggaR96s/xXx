@@ -31,7 +31,7 @@ async def _(event):
         try:
             await borg(functions.channels.CreateChannelRequest(  # pylint:disable=E0602
                 title=group_name,
-                about="This is a Test from @UniBorg",
+                about="This is a Test from @r4v4n4",
                 megagroup=True
             ))
             await event.edit("Group `{}` created successfully!".format(group_name))
@@ -41,7 +41,7 @@ async def _(event):
         try:
             await borg(functions.channels.CreateChannelRequest(  # pylint:disable=E0602
                 title=group_name,
-                about="This is a Test from @UniBorg",
+                about="This is a Test from @r4v4n4",
                 megagroup=False
             ))
             await event.edit("Channel `{}` created successfully!".format(group_name))
