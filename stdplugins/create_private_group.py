@@ -5,7 +5,7 @@ from telethon import functions
 from uniborg import util
 
 
-@borg.on(util.admin_cmd(r"\.create (b|g) (.*)"))  # pylint:disable=E0602
+@borg.on(util.admin_cmd(r"\.create (b|g|c) (.*)"))  # pylint:disable=E0602
 async def _(event):
     if event.fwd_from:
         return
@@ -30,6 +30,16 @@ async def _(event):
                 megagroup=True
             ))
             await event.edit("Group `{}` created successfully!".format(group_name))
+        except Exception as e:  # pylint:disable=C0103,W0703
+            await event.edit(str(e))
+    elif type_of_group == "c":
+        try:
+            await borg(functions.channels.CreateChannelRequest(  # pylint:disable=E0602
+                title=group_name,
+                about="This is a Test from @UniBorg",
+                megagroup=False
+            ))
+            await event.edit("Channel `{}` created successfully!".format(group_name))
         except Exception as e:  # pylint:disable=C0103,W0703
             await event.edit(str(e))
     else:
