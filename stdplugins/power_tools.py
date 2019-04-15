@@ -16,6 +16,10 @@ async def _(event):
     if event.fwd_from:
         return
     await asyncio.sleep(2)
+    await event.edit("Restarting [░░░] ...\n`.ping` me or `.helpme` to check if I am online"
+    await asyncio.sleep(2)
+    await event.edit("Restarting [█░░] ...\n`.ping` me or `.helpme` to check if I am online"
+    await asyncio.sleep(2)
     await event.edit("Restarting [██░] ...\n`.ping` me or `.helpme` to check if I am online")
     await asyncio.sleep(2)
     await event.edit("Restarting [███]...\n`.ping` me or `.helpme` to check if I am online")
