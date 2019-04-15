@@ -11,7 +11,7 @@ async def _(event):
 	if event.fwd_from:
 		return
 	deq = deque(list("PARAM"))
-	for _ in range(43):
+	for _ in range(31):
 		await asyncio.sleep(0.1)
 		await event.edit("".join(deq))
 		deq.rotate(1)
