@@ -1,5 +1,6 @@
 """Get Telegram Profile Picture and other information
 Syntax: .whois @username"""
+import html
 from telethon import events
 from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import MessageEntityMentionName
@@ -44,13 +45,15 @@ async def _(event):
                 return None
     logger.info(replied_user)
     user_id = replied_user.user.id
-    first_name = replied_user.user.first_name
+    # some people have weird HTML in their names
+    first_name = html.escape(replied_user.user.first_name)
+    # https://stackoverflow.com/a/5072031/4723940
     # some Deleted Accounts do not have first_name
     if first_name is not None:
         # some weird people (like me) have more than 4096 characters in their names
         first_name = first_name.replace("\u2060", "")
     # inspired by https://telegram.dog/afsaI181
-    user_bio = replied_user.about
+    user_bio = html.escape(replied_user.about)
     common_chats = replied_user.common_chats_count
     try:
         dc_id, location = get_input_location(replied_user.profile_photo)
