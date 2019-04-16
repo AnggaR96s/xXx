@@ -8,7 +8,7 @@ from sql_helpers.locks_sql import update_lock, is_locked, get_locks
 from uniborg.util import admin_cmd
 
 
-@borg.on(admin_cmd(r"\.lock( (?P<target>\S+)|$)"))
+@borg.on(admin_cmd("lock( (?P<target>\S+)|$)"))
 async def _(event):
      # Space weirdness in regex required because argument is optional and other
      # commands start with ".lock"
@@ -82,7 +82,7 @@ async def _(event):
             )
 
 
-@borg.on(admin_cmd(r"\.unlock ?(.*)"))
+@borg.on(admin_cmd("unlock ?(.*)"))
 async def _(event):
     if event.fwd_from:
         return
@@ -99,7 +99,7 @@ async def _(event):
         )
 
 
-@borg.on(admin_cmd(r"\.locks"))
+@borg.on(admin_cmd("curenabledlocks"))
 async def _(event):
     if event.fwd_from:
         return

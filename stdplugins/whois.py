@@ -4,9 +4,10 @@ from telethon import events
 from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import MessageEntityMentionName
 from telethon.utils import get_input_location
+from uniborg.util import admin_cmd
 
 
-@borg.on(events.NewMessage(pattern="\.whois ?(.*)", outgoing=True))
+@borg.on(admin_cmd("whois ?(.*)"))
 async def _(event):
     if event.fwd_from:
         return

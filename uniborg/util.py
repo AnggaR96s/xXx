@@ -14,7 +14,7 @@ def admin_cmd(pattern):
     """
     TODO: wrapper for the custom plugins in stdplugins
     """
-    return events.NewMessage(outgoing=True, pattern=re.compile(pattern))
+    return events.NewMessage(outgoing=True, pattern=re.compile("^\." + pattern))
 
 
 async def is_read(borg, entity, message, is_out=None):
