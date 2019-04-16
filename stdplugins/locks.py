@@ -136,6 +136,10 @@ async def _(event):
 @borg.on(events.MessageEdited())  # pylint:disable=E0602
 @borg.on(events.NewMessage())  # pylint:disable=E0602
 async def check_incoming_messages(event):
+    chat = await event.get_chat()
+    if not event.is_private and (chat.admin_rights or chat.creator):
+        # locks should not be affected for admins of the group
+        return False
     peer_id = event.chat_id
     if is_locked(peer_id, "forward"):
         if event.fwd_from:
@@ -180,6 +184,10 @@ async def check_incoming_messages(event):
 
 @borg.on(events.ChatAction())  # pylint:disable=E0602
 async def _(event):
+    chat = await event.get_chat()
+    if not event.is_private and (chat.admin_rights or chat.creator):
+        # locks should not be affected for admins of the group
+        return False
     # check for "lock" "bots"
     if is_locked(event.chat_id, "bots"):
         # bots are limited Telegram accounts,
@@ -208,7 +216,7 @@ async def _(event):
                         )
                         update_lock(event.chat_id, "bots", False)
                         break
-            if is_ban_able:
+            if Config.G_BAN_LOGGER_GROUP != -100123456789 and is_ban_able:
                 ban_reason_msg = await event.reply(
                     "!warn [user](tg://user?id={}) Please Do Not Add BOTs to this chat.".format(users_added_by)
                 )
