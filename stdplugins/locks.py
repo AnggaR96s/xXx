@@ -136,6 +136,10 @@ async def _(event):
 @borg.on(events.MessageEdited())  # pylint:disable=E0602
 @borg.on(events.NewMessage())  # pylint:disable=E0602
 async def check_incoming_messages(event):
+    chat = await event.get_chat()
+    if not event.is_private and (chat.admin_rights or chat.creator):
+        # locks should not be affected for admins of the group
+        return False
     peer_id = event.chat_id
     if is_locked(peer_id, "forward"):
         if event.fwd_from:
