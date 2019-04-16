@@ -61,6 +61,9 @@ async def approve_p_m(event):
             if not is_approved(chat.id):
                 if chat.id in borg.storage.PM_WARNS:
                     del borg.storage.PM_WARNS[chat.id]
+                if chat.id in borg.storage.PREV_REPLY_MESSAGE:
+                    await borg.storage.PREV_REPLY_MESSAGE[chat.id].delete()
+                    del borg.storage.PREV_REPLY_MESSAGE[chat.id]
                 approve(chat.id, reason)
                 await event.edit("Private Message Accepted")
                 await asyncio.sleep(3)
