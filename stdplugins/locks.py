@@ -136,8 +136,11 @@ async def _(event):
 @borg.on(events.MessageEdited())  # pylint:disable=E0602
 @borg.on(events.NewMessage())  # pylint:disable=E0602
 async def check_incoming_messages(event):
-    chat = await event.get_chat()
-    if not event.is_private and (chat.admin_rights or chat.creator):
+    result = await borg(functions.channels.GetParticipantRequest(
+        channel=event.chat_id,
+        user_id=event.message.from_id
+    ))
+    if not event.is_private and isinstance(result.participant, (types.ChannelParticipantCreator, types.ChannelParticipantAdmin)):
         # locks should not be affected for admins of the group
         return False
     peer_id = event.chat_id
@@ -184,8 +187,11 @@ async def check_incoming_messages(event):
 
 @borg.on(events.ChatAction())  # pylint:disable=E0602
 async def _(event):
-    chat = await event.get_chat()
-    if not event.is_private and (chat.admin_rights or chat.creator):
+    result = await borg(functions.channels.GetParticipantRequest(
+        channel=event.chat_id,
+        user_id=event.action_message.from_id
+    ))
+    if not event.is_private and not isinstance(result.participant, (types.ChannelParticipantCreator, types.ChannelParticipantAdmin)):
         # locks should not be affected for admins of the group
         return False
     # check for "lock" "bots"
