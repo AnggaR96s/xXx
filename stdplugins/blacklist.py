@@ -10,14 +10,17 @@ import asyncio
 import re
 import sql_helpers.blacklist_sql as sql
 from telethon import events, utils
-from telethon.tl import types
+from telethon.tl import types, functions
 from uniborg.util import admin_cmd
 
 
 @borg.on(events.NewMessage(incoming=True))
 async def on_new_message(event):
-    chat = await event.get_chat()
-    if not event.is_private and (chat.admin_rights or chat.creator):
+    result = await borg(functions.channels.GetParticipantRequest(
+        channel=event.chat_id,
+        user_id=event.message.from_id
+    ))
+    if not event.is_private and isinstance(result.participant, (types.ChannelParticipantAdmin, types.ChannelParticipantCreator)):
         # blacklist should not be affected for admins of the group
         return False
     name = event.raw_text
