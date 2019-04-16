@@ -17,7 +17,7 @@ from uniborg.util import admin_cmd
 @borg.on(events.NewMessage(incoming=True))
 async def on_new_message(event):
     chat = await event.get_chat()
-    if chat.admin_rights or chat.creator:
+    if not event.is_private and (chat.admin_rights or chat.creator):
         # blacklist should not be affected for admins of the group
         return False
     name = event.raw_text

@@ -59,7 +59,7 @@ async def set_not_afk(event):
             )
 
 
-@borg.on(events.NewMessage(pattern=r"\.afk ?(.*)", outgoing=True))  # pylint:disable=E0602
+@borg.on(events.NewMessage(pattern=r"\.afk ?((.|\n)*)", outgoing=True))  # pylint:disable=E0602
 async def _(event):
     if event.fwd_from:
         return
