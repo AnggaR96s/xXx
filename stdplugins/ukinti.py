@@ -22,9 +22,6 @@ async def _(event):
     else:
         if event.is_private:
             return False
-        chat = await event.get_chat()
-        if not chat.admin_rights or not chat.creator:
-            return False
         await event.edit("Searching Participant Lists.")
         p = 0
         async for i in borg.iter_participants(event.chat_id, filter=ChannelParticipantsKicked, aggressive=True):
@@ -49,9 +46,6 @@ async def _(event):
     if event.fwd_from:
         return
     if event.is_private:
-        return False
-    chat = await event.get_chat()
-    if not chat.admin_rights or not chat.creator:
         return False
     input_str = event.pattern_match.group(1)
     p = 0
