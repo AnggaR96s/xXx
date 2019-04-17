@@ -5,9 +5,10 @@ from telethon import events
 from datetime import datetime
 import io
 import speedtest
+from uniborg.util import admin_cmd
 
 
-@borg.on(events.NewMessage(pattern=r"\.speed ?(.*)", outgoing=True))
+@borg.on(admin_cmd("speedtest ?(.*)"))
 async def _(event):
     if event.fwd_from:
         return
@@ -20,7 +21,7 @@ async def _(event):
         as_document = True
     elif input_str == "text":
         as_text = True
-    await event.edit("Calculating my server speed. Please wait!")
+    await event.edit("Calculating my internet speed. Please wait!")
     start = datetime.now()
     s = speedtest.Speedtest()
     s.get_best_server()
