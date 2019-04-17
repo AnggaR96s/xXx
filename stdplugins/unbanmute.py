@@ -50,6 +50,9 @@ async def _(event):
     # commands start with ".unban"
     if event.fwd_from:
         return
+    chat = await event.get_chat()
+    if not chat.admin_rights.ban_users:
+        return False
     start = datetime.now()
     to_ban_id = None
     rights = None

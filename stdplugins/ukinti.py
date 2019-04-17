@@ -20,6 +20,11 @@ async def _(event):
     if input_str:
         logger.info("TODO: Not yet Implemented")
     else:
+        if event.is_private:
+            return False
+        chat = await event.get_chat()
+        if not chat.admin_rights or not chat.creator:
+            return False
         await event.edit("Searching Participant Lists.")
         p = 0
         async for i in borg.iter_participants(event.chat_id, filter=ChannelParticipantsKicked, aggressive=True):
