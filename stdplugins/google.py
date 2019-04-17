@@ -17,7 +17,7 @@ def progress(current, total):
     logger.info("Downloaded {} of {}\nCompleted {}".format(current, total, (current / total) * 100))
 
 
-@borg.on(admin_cmd("google search (.*)"))
+@borg.on(admin_cmd("gs (.*)"))
 async def _(event):
     if event.fwd_from:
         return
@@ -35,7 +35,7 @@ async def _(event):
     await event.edit("Google: {}\n{}".format(input_str, output_str), link_preview=False)
 
 
-@borg.on(admin_cmd("google image (.*)"))
+@borg.on(admin_cmd("gi (.*)"))
 async def _(event):
     if event.fwd_from:
         return
@@ -71,7 +71,7 @@ async def _(event):
     await event.delete()
 
 
-@borg.on(admin_cmd("google reverse search"))
+@borg.on(admin_cmd("grs"))
 async def _(event):
     if event.fwd_from:
         return
