@@ -19,10 +19,11 @@ else:
         from config import Development as Config
 
 
-def admin_cmd(pattern=None, **args):
+def admin_cmd(pattern=None, allow_sudo=False, **args):
     if pattern is not None:
         args["pattern"] = re.compile(Config.COMMAND_HAND_LER + pattern)
-    args["from_users"] = list(Config.SUDO_USERS)
+    if allow_sudo:
+        args["from_users"] = list(Config.SUDO_USERS)
     return events.NewMessage(**args)
 
 
