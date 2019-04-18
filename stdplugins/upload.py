@@ -165,7 +165,7 @@ def get_video_thumb(file, output=None, width=90):
 async def _(event):
     if event.fwd_from:
         return
-    mone = await event.edit("Processing ...")
+    mone = await event.reply("Processing ...")
     input_str = event.pattern_match.group(1)
     thumb = None
     file_name = input_str
