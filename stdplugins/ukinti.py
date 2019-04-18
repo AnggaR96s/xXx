@@ -20,8 +20,6 @@ async def _(event):
     if input_str:
         logger.info("TODO: Not yet Implemented")
     else:
-        if event.is_private:
-            return False
         await event.edit("Searching Participant Lists.")
         p = 0
         async for i in borg.iter_participants(event.chat_id, filter=ChannelParticipantsKicked, aggressive=True):
@@ -31,6 +29,8 @@ async def _(event):
             )
             try:
                 await borg(functions.channels.EditBannedRequest(event.chat_id, i, rights))
+            except UserNotParticipantError as ex:
+                pass
             except FloodWaitError as ex:
                 logger.warn("sleeping for {} seconds".format(ex.seconds))
                 sleep(ex.seconds)
@@ -45,8 +45,6 @@ async def _(event):
 async def _(event):
     if event.fwd_from:
         return
-    if event.is_private:
-        return False
     input_str = event.pattern_match.group(1)
     p = 0
     c = 0
@@ -79,7 +77,7 @@ async def _(event):
                     break
                 except:
                     e.append("ERROR")
-        if isinstance(i.status, UserStatusEmpty):
+        if type(i.status) is UserStatusEmpty:
             y = y + 1
             if input_str == "y":
                 try:
@@ -90,7 +88,7 @@ async def _(event):
                     break
                 except:
                     e.append("ERROR")
-        if isinstance(i.status, UserStatusLastMonth):
+        if type(i.status) is UserStatusLastMonth:
             m = m + 1
             if input_str == "m":
                 try:
@@ -101,7 +99,7 @@ async def _(event):
                     break
                 except:
                     e.append("ERROR")
-        if isinstance(i.status, UserStatusLastWeek):
+        if type(i.status) is UserStatusLastWeek:
             w = w + 1
             if input_str == "w":
                 try:
@@ -112,7 +110,7 @@ async def _(event):
                     break
                 except:
                     e.append("ERROR")
-        if isinstance(i.status, UserStatusOffline):
+        if type(i.status) is UserStatusOffline:
             o = o + 1
             if input_str == "o":
                 try:
@@ -123,7 +121,7 @@ async def _(event):
                     break
                 except:
                     e.append("ERROR")
-        if isinstance(i.status, UserStatusOnline):
+        if type(i.status) is UserStatusOnline:
             q = q + 1
             if input_str == "q":
                 try:
@@ -134,7 +132,7 @@ async def _(event):
                     break
                 except:
                     e.append("ERROR")
-        if isinstance(i.status, UserStatusRecently):
+        if type(i.status) is UserStatusRecently:
             r = r + 1
             if input_str == "r":
                 try:
