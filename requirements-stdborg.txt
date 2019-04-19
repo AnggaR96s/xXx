@@ -17,3 +17,5 @@ telegraph
 urbandict
 wikipedia
 youtube-dl
+psutil
+py-cpuinfo
