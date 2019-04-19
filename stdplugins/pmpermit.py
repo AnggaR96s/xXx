@@ -51,7 +51,7 @@ async def monito_p_m_s(event):
             borg.storage.PREV_REPLY_MESSAGE[chat.id] = r
 
 
-@borg.on(admin_cmd("approvepm ?(.*)"))
+@borg.on(admin_cmd("apm ?(.*)"))
 async def approve_p_m(event):
     if event.fwd_from:
         return
@@ -71,7 +71,7 @@ async def approve_p_m(event):
                 await event.delete()
 
 
-@borg.on(admin_cmd("blockpm ?(.*)"))
+@borg.on(admin_cmd("bpm ?(.*)"))
 async def approve_p_m(event):
     if event.fwd_from:
         return
@@ -86,7 +86,7 @@ async def approve_p_m(event):
                 await borg(functions.contacts.BlockRequest(chat.id))
 
 
-@borg.on(admin_cmd("list approved pms"))
+@borg.on(admin_cmd("lap"))
 async def approve_p_m(event):
     if event.fwd_from:
         return
