@@ -99,7 +99,7 @@ async def _(event):
         )
 
 
-@borg.on(admin_cmd("curenabledlocks"))
+@borg.on(admin_cmd("lks"))
 async def _(event):
     if event.fwd_from:
         return
