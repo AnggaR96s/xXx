@@ -86,7 +86,7 @@ async def approve_p_m(event):
                 await borg(functions.contacts.BlockRequest(chat.id))
 
 
-@borg.on(admin_cmd("lap"))
+@borg.on(admin_cmd("lpm"))
 async def approve_p_m(event):
     if event.fwd_from:
         return
