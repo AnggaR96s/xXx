@@ -37,7 +37,7 @@ async def _(event):
                     return None
         else:
             try:
-                user_object = await borg.get_entity(input_str)
+                user_object = await borg.get_entity(int(input_str))
                 user_id = user_object.id
                 replied_user = await borg(GetFullUserRequest(user_id))
             except Exception as e:
