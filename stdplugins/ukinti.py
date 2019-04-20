@@ -47,11 +47,12 @@ async def _(event):
         return
     if event.is_private:
         return False
-    chat = await event.get_chat()
-    if not (chat.admin_rights or chat.creator):
-        await event.edit("`You aren't an admin here!`")
-        return False
     input_str = event.pattern_match.group(1)
+    if input_str:
+        chat = await event.get_chat()
+        if not (chat.admin_rights or chat.creator):
+            await event.edit("`You aren't an admin here!`")
+            return False
     p = 0
     b = 0
     c = 0

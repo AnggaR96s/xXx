@@ -1,6 +1,5 @@
 """Download Files to your local server
 Syntax:
-.fast download
 .download
 .download url | file.name to download files from a Public Link"""
 
