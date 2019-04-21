@@ -24,7 +24,7 @@ async def _(event):
         os.makedirs(Config.TMP_DOWNLOAD_DIRECTORY)
     required_file_name = None
     start = datetime.now()
-    if event.reply_to_msg_id:
+    if event.reply_to_msg_id and not input_str:
         reply_message = await event.get_reply_message()
         try:
             c_time = time.time()
@@ -69,7 +69,7 @@ async def _(event):
             # logger.info(resp.status)
             if resp.status == 200:
                 step_one_response_json = await resp.json()
-                # logger.info(step_one_response_json)
+                logger.info(step_one_response_json)
                 if step_one_response_json["status"] == "success":
                     await mone.edit("Received Upload URL from MirrorAce. ...")
                     start = datetime.now()
@@ -91,6 +91,17 @@ async def _(event):
                     # step two: setup
                     mirrors = default_mirrors
                     chunk_size = int(max_chunk_size)
+                    step_two_params = {
+                        "api_key": Config.MIRROR_ACE_API_KEY,
+                        "api_token": Config.MIRROR_ACE_API_TOKEN,
+                        "cTracker": cTracker,
+                        "upload_key": upload_key,
+                        "mirrors[]": mirrors,
+                        # //these required vars will be added by buildMultiPartRequest function
+                        # //'files' => $file,
+                        # //'mirrors[1]' => 1,
+                        # //'mirrors[2]' => 2,
+                    }
 
                     # //range vars //for multi chunk upload
                     response = False
@@ -104,35 +115,22 @@ async def _(event):
                             # chunk = f_handle.read(chunk_size)
                             if not chunk:
                                 break
-
-                            step_two_params = {
-                                "api_key": Config.MIRROR_ACE_API_KEY,
-                                "api_token": Config.MIRROR_ACE_API_TOKEN,
-                                "cTracker": cTracker,
-                                "upload_key": upload_key,
-                                # "mirrors": allowed_mirrors,
-                                # //these required vars will be added by buildMultiPartRequest function
-                                # //'files' => $file,
-                                # //'mirrors[1]' => 1,
-                                # //'mirrors[2]' => 2,
+                            headers = {
+                                "Content-Range": str(len(chunk)),
+                                "Content-Length": str(len(step_two_params) + len(chunk)),
+                                # "Content-Type": "multipart/form-data"
                             }
-
-                            w = 0
-                            for mirror in mirrors:
-                                if w >= 25:
-                                    break
-                                step_two_params["mirrors[]"] = mirror
-                                w = w + 1
-                            w = None
 
                             # https://github.com/aio-libs/aiohttp/issues/3571#issuecomment-456528924
                             response = requests.post(
                                 step_two_upload_url,
                                 files=[("files", (file_name, chunk))],
-                                data=step_two_params
+                                data=step_two_params,
+                                # headers=headers
                             )
-                            # logger.info(response.json())
+                            logger.info(response.content)
 
+                    logger.info(response)
                     final_response = response.json()
                     if final_response["status"] == "success":
                         end = datetime.now()
@@ -140,11 +138,10 @@ async def _(event):
                         final_url = final_response["result"]["url"]
                         await mone.edit(f"Added to {final_url} in {ms} seconds")
                     else:
-                        await mone.edit(f"MirrorAce returned {final_response.status} => {final_response.result}")
+                        await mone.edit(f"MirrorAce returned {final_response['status']} => {final_response['result']}")
                 else:
-                    await mone.edit(f"MirrorAce returned {step_one_response_json.status} => {step_one_response_json.result}")
+                    await mone.edit(f"MirrorAce returned {step_one_response_json['status']} => {step_one_response_json['result']}, after STEP TWO")
             else:
-                await mone.edit(f"MirrorAce returned {resp.status} => {resp.result}")
-
+                await mone.edit(f"MirrorAce returned {resp['status']} => {resp['result']}, after STEP ONE")
     else:
         await mone.edit("File Not found in local server. Give me a file path :((")
