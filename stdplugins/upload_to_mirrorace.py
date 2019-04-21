@@ -5,6 +5,7 @@ Syntax:
 import aiohttp
 import asyncio
 import os
+import requests
 import time
 from datetime import datetime
 from uniborg.util import admin_cmd, progress
@@ -49,7 +50,7 @@ async def _(event):
         else:
             await mone.edit("File Not found in local server. Give me a file path :((")
             return False
-    logger.info(required_file_name)
+    # logger.info(required_file_name)
     if required_file_name:
         # required_file_name will have the full path
         file_name = os.path.basename(required_file_name)
@@ -62,11 +63,13 @@ async def _(event):
         }
         async with aiohttp.ClientSession() as session:
             resp = await session.post(step_one_url, data=step_one_auth_params)
-            print(resp.status)
+            # logger.info(resp.status)
             if resp.status == 200:
                 step_one_response_json = await resp.json()
-                print(step_one_response_json)
+                # logger.info(step_one_response_json)
                 if step_one_response_json["status"] == "success":
+                    await mone.edit("Received Upload URL from MirrorAce. ...")
+                    start = datetime.now()
                     # /* STEP 2: Upload file */
                     # step one: response vars
                     step_two_upload_url = step_one_response_json["result"]["server_file"]
@@ -85,14 +88,9 @@ async def _(event):
                     # step two: setup
                     mirrors = default_mirrors
                     chunk_size = int(max_chunk_size)
-                    chunks = (file_size // chunk_size) + \
-                        (file_size % chunk_size)
 
                     # //range vars //for multi chunk upload
-                    last_range = False
                     response = False
-                    i = 0
-                    while_error = False
 
                     with open(required_file_name, "rb") as f_handle:
                         # start chunk upload
@@ -103,23 +101,6 @@ async def _(event):
                             # chunk = f_handle.read(chunk_size)
                             if not chunk:
                                 break
-                            range_start = 0
-                            range_end = min(chunk_size, file_size - 1)
-
-                            if last_range:
-                                range_start = last_range + 1
-                                range_end = min(
-                                    range_start + chunk_size, file_size - 1)
-                            last_range = range_end
-
-                            allowed_mirrors = {}
-                            w = 0
-                            for mirror in mirrors:
-                                if w >= 25:
-                                    break
-                                allowed_mirrors["mirrors[]"] = mirror
-                                w = w + 1
-                            w = None
 
                             step_two_params = {
                                 "api_key": Config.MIRROR_ACE_API_KEY,
@@ -133,29 +114,34 @@ async def _(event):
                                 # //'mirrors[2]' => 2,
                             }
 
-                            range_value = range_start - range_end / file_size
-                            ra_nge = f"bytes {range_value}"
+                            w = 0
+                            for mirror in mirrors:
+                                if w >= 25:
+                                    break
+                                step_two_params["mirrors[]"] = mirror
+                                w = w + 1
+                            w = None
 
-                            my_boundary = "some-de-limited-boundary"
+                            # https://github.com/aio-libs/aiohttp/issues/3571#issuecomment-456528924
+                            response = requests.post(
+                                step_two_upload_url,
+                                files=[("files", (file_name, chunk))],
+                                data=step_two_params
+                            )
+                            # logger.info(response.json())
 
-                            with aiohttp.MultipartWriter("mixed") as mpwriter:
-                                with aiohttp.MultipartWriter("related") as subwriter:
-                                    for k, v in step_two_params.items():
-                                        part = subwriter.append(v)
-                                        part.set_content_disposition("form-data", name=k)
-                                    for k, v in allowed_mirrors.items():
-                                        part = subwriter.append(v)
-                                        part.set_content_disposition("form-data", name=k)
-                                mpwriter.append(subwriter)
-                                with aiohttp.MultipartWriter("related") as subwriter:
-                                    subwriter.append(chunk, {
-                                                     "name": "files",
-                                                     "filename": file_name,
-                                                     "Content-Type": "multipart/form-data"
-                                                     })
-                                mpwriter.append(subwriter)
-                            logger.info(mpwriter)
-                            response = await session.post(step_two_upload_url,  data=mpwriter)
-                            logger.info(await response.json())
+                    final_response = response.json()
+                    if final_response["status"] == "success":
+                        end = datetime.now()
+                        ms = (end - start).seconds
+                        final_url = final_response["result"]["url"]
+                        await mone.edit(f"Added to {final_url} in {ms} seconds")
+                    else:
+                        await mone.edit(f"MirrorAce returned {final_response.status} => {final_response.result}")
+                else:
+                    await mone.edit(f"MirrorAce returned {step_one_response_json.status} => {step_one_response_json.result}")
+            else:
+                await mone.edit(f"MirrorAce returned {resp.status} => {resp.result}")
 
-                    logger.info(await response.json())
+    else:
+        await mone.edit("File Not found in local server. Give me a file path :((")
