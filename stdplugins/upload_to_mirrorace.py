@@ -16,6 +16,9 @@ async def _(event):
     if event.fwd_from:
         return
     mone = await event.reply("Processing ...")
+    if Config.MIRROR_ACE_API_KEY is None or Config.MIRROR_ACE_API_TOKEN is None:
+        await mone.edit("This module requires API key from https://ouo.io/My1jdU. Aborting!")
+        return False
     input_str = event.pattern_match.group(1)
     if not os.path.isdir(Config.TMP_DOWNLOAD_DIRECTORY):
         os.makedirs(Config.TMP_DOWNLOAD_DIRECTORY)
