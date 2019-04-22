@@ -35,8 +35,8 @@ async def _(event):
                 response_api["wind"]["speed"],
                 response_api["clouds"]["all"],
                 # response_api["main"]["pressure"],
-                time.strftime("%d-%m %H:%M", time.localtime(response_api["sys"]["sunrise"])),
-                time.strftime("%d-%m %H:%M", time.localtime(response_api["sys"]["sunset"]))
+                time.strftime("%d-%m, %H:%M", time.localtime(response_api["sys"]["sunrise"])),
+                time.strftime("%d-%m, %H:%M", time.localtime(response_api["sys"]["sunset"]))
             )
         )
     else:
