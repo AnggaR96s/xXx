@@ -21,7 +21,7 @@ async def _(event):
     **Min**: {}°С
     **Max**: {}°С
 **Humidity**: {}%
-**wind**: {}m/s
+**Wind**: {}m/s
 **Clouds**: {}hpa
 **Sunrise**: {} 
 **Sunset**: {} """.format(
