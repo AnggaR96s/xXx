@@ -18,8 +18,8 @@ async def _(event):
         await event.edit(
             """{}
 **Temperature**: {}°С
-    __minimium__: {}°С
-    __maximum__ : {}°С
+    **min**: {}°С
+    **max** : {}°С
 **Humidity**: {}%
 **wind**: {}m/s
 clouds: {}hpa
