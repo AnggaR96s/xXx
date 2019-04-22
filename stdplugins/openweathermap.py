@@ -22,7 +22,7 @@ async def _(event):
     **max**: {}°С
 **Humidity**: {}%
 **wind**: {}m/s
-**clouds**: {}hpa
+**Clouds**: {}hpa
 **Sunrise**: {} UTC
 **Sunset**: {} UTC""".format(
                 input_str,
@@ -33,8 +33,8 @@ async def _(event):
                 response_api["wind"]["speed"],
                 response_api["clouds"]["all"],
                 # response_api["main"]["pressure"],
-                time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(response_api["sys"]["sunrise"])),
-                time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(response_api["sys"]["sunset"]))
+                time.strftime("%d-%m-%Y %H:%M:%S", time.localtime(response_api["sys"]["sunrise"])),
+                time.strftime("%d-%m-%Y %H:%M:%S", time.localtime(response_api["sys"]["sunset"]))
             )
         )
     else:
