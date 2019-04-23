@@ -64,9 +64,9 @@ async def _(event):
     reply_msg_id = event.reply_to_msg_id
     if reply_msg_id:
         r_mesg = await event.get_reply_message()
-        to_ban_id = r_mesg.sender_id
+        to_ban_id = r_mesg.from_id
     elif input_str and "all" not in input_str:
-        to_ban_id = input_str
+        to_ban_id = int(input_str)
     else:
         return False
     try:
