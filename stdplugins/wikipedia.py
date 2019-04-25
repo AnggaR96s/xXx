@@ -14,10 +14,5 @@ async def _(event):
         return
     await event.edit("Processing ...")
     input_str = event.pattern_match.group(1)
-    result = ""
-    results = wikipedia.search(input_str)
-    for s in results:
-        page = wikipedia.page(s)
-        url = page.url
-        result += f"> [{s}]({url}) \n"
-    await event.edit("WikiPedia **Search**: {} \n\n **Result**: \n\n{}".format(input_str, result))
+    result = wikipedia.summary(input_str)
+    await event.edit("**Search**: {} \n\n **Result**: \n\n {}".format(input_str, result))
