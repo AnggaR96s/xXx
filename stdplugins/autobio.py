@@ -18,7 +18,7 @@ async def _(event):
         return
     while True:
         DMY = time.strftime("%d.%m.%Y")
-        HM = time.strftime("%H:%M:%S")
+        HM = time.strftime("%H:%M")
         bio = f"Today {DMY} | अयमात्मा ब्रह्म | Now {HM}"
         logger.info(bio)
         try:
