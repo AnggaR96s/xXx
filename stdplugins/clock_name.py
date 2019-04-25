@@ -18,7 +18,7 @@ async def _(event):
         return
     while True:
         DMY = time.strftime("%d.%m.%Y")
-        HM = time.strftime("%H:%M:%S")
+        HM = time.strftime("%H:%M")
         name = f"⌚️ {HM}"
         logger.info(name)
         try:
