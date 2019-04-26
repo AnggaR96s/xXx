@@ -26,6 +26,8 @@ def admin_cmd(pattern=None, allow_sudo=False, **args):
         args["from_users"] = list(Config.SUDO_USERS)
     else:
         args["outgoing"] = True
+    args["blacklist_chats"] = True
+    args["chats"] = list(Config.UB_BLACK_LIST_CHAT)
     return events.NewMessage(**args)
 
 
