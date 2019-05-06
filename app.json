@@ -142,6 +142,10 @@
       "description": "set blacklist_chats where you do not want userbot features",
       "value": "-1001220993104 -1001365798550 -1001158304289",
       "required": false
+    },
+    "TZ": {
+      "description": "set your default time zone for time related features to work correctly. Value should match the string here: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones",
+      "required": false
     }
   },
   "addons": [{
