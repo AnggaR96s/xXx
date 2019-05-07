@@ -5,7 +5,7 @@ import random, re
 from uniborg.util import admin_cmd
 
 
-@borg.on(admin_cmd("coinflip ?(.*)"))
+@borg.on(admin_cmd("cf ?(.*)"))
 async def _(event):
     if event.fwd_from:
         return
