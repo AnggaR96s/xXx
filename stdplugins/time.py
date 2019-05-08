@@ -11,11 +11,11 @@ from uniborg.util import admin_cmd
 FONT_FILE_TO_USE = "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf"
 
 
-@borg.on(admin_cmd("gtime ?(.*)"))  # pylint:disable=E0602
+@borg.on(admin_cmd("time ?(.*)"))  # pylint:disable=E0602
 async def _(event):
     if event.fwd_from:
         return
-    current_time = datetime.now().strftime("⚡USERBOT TIMEZONE⚡ \nOWNER: @R4V4N4 \nTime: %H:%M:%S \nDate: %d.%m.%y")
+    current_time = datetime.now().strftime("\nTime: %H:%M:%S \nDate: %d.%m.%y")
     start = datetime.now()
     input_str = event.pattern_match.group(1)
     reply_msg_id = event.message.id
@@ -36,7 +36,7 @@ async def _(event):
     await borg.send_file(  # pylint:disable=E0602
         event.chat_id,
         required_file_name,
-        caption="TimeDate: Powered by @R4V4N4",
+        caption="TimeDate: Powered by me",
         # Courtesy: @ManueI15
         reply_to=reply_msg_id
     )
