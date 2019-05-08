@@ -99,7 +99,7 @@ async def on_regex(event):
     m, s = doit(chat_id, event.pattern_match, await event.get_reply_message())
 
     if m is not None:
-        s = f"{HEADER}{s}"
+        s = f"{HEADER}{`s`}"
         out = await borg.send_message(
             await event.get_input_chat(), s, reply_to=m.id
         )
