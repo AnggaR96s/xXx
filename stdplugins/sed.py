@@ -5,7 +5,7 @@ import regex
 from telethon import events, utils
 from telethon.tl import types, functions
 
-HEADER = "\n"
+HEADER = "Did you mean? \n\n"
 KNOWN_RE_BOTS = re.compile(
     r'(regex|moku|BananaButler_|rgx|l4mR|kochu)bot',
     flags=re.IGNORECASE
