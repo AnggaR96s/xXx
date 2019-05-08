@@ -72,7 +72,7 @@ if Config.TG_BOT_USER_NAME_BF_HER is not None and tgbot is not None:
                     "© @UniBorg",
                     text="{}\nCurrently Loaded Plugins: {}".format(
                         query, len(borg._plugins)),
-                    buttons=buttons,
+                   # buttons=buttons,
                     link_preview=False
                 )
             else:
