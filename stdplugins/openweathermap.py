@@ -23,8 +23,8 @@ async def _(event):
 **Humidity:** `{}%`
 **Wind:** `{}m/s`
 **Clouds:** `{}hpa`
-**Sunrise:** `{}`
-**Sunset:** `{}`""".format(
+**Sunrise:** `{} {}`
+**Sunset:** `{} {}`""".format(
                 input_str,
                 response_api["main"]["temp"],
                 response_api["main"]["temp_min"],
