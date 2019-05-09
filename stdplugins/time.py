@@ -31,7 +31,7 @@ async def _(event):
     img = Image.new("RGB", (350, 150), color=(-0, -0, -0))
     fnt = ImageFont.truetype(FONT_FILE_TO_USE, 30)
     drawn_text = ImageDraw.Draw(img)
-    drawn_text.text((10, 10), current_time, font=fnt, fill=(255, 255, 0))
+    drawn_text.text((10, 10), current_time, font=fnt, fill=(255, 255, 255))
     img.save(required_file_name)
     await borg.send_file(  # pylint:disable=E0602
         event.chat_id,
