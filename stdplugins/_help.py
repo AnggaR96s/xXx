@@ -3,10 +3,15 @@ from telethon import events, functions, __version__
 from uniborg.util import admin_cmd
 
 
-@borg.on(admin_cmd(pattern="helpme", allow_sudo=True))  # pylint:disable=E0602
+@borg.on(admin_cmd(pattern="helpme ?(.*)", allow_sudo=True))  # pylint:disable=E0602
 async def _(event):
     if event.fwd_from:
         return
+    splugin_name = event.pattern_match.group(1)
+    if splugin_name in borg._plugins:
+        s_help_string = borg._plugins[splugin_name].__doc__
+    else:
+        s_help_string = "Module Not Loaded"
     help_string = """@UniBorg
 Python {}
 Telethon {}
@@ -28,7 +33,7 @@ UserBot Forked from https://github.com/expectocode/uniborg""".format(
         )
         await event.delete()
     else:
-        await event.reply(help_string)
+        await event.reply(help_string + "\n\n" + s_help_string)
         await event.delete()
 
 
