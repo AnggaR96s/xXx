@@ -17,14 +17,14 @@ async def _(event):
     if response_api["cod"] == 200:
         await event.edit(
             """{}
-**Temperature**: {}°С
-    __minimium__: {}°С
-    __maximum__ : {}°С
-**Humidity**: {}%
-**wind**: {}m/s
-clouds: {}hpa
-**Sunrise**: {} {}
-**Sunset**: {} {}""".format(
+**Temperature:** `{}°С`
+**Min. Temp.:** `{}°С`
+**Max. Temp.:** `{}°С`
+**Humidity:** `{}%`
+**Wind:** `{}m/s`
+**Clouds:** `{}hpa`
+**Sunrise:** `{} {}`
+**Sunset:** `{} {}`""".format(
                 input_str,
                 response_api["main"]["temp"],
                 response_api["main"]["temp_min"],
@@ -33,9 +33,9 @@ clouds: {}hpa
                 response_api["wind"]["speed"],
                 response_api["clouds"]["all"],
                 # response_api["main"]["pressure"],
-                time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(response_api["sys"]["sunrise"])),
+                time.strftime("%d-%m %H:%M:%S", time.localtime(response_api["sys"]["sunrise"])),
                 response_api["sys"]["country"],
-                time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(response_api["sys"]["sunset"])),
+                time.strftime("%d-%m %H:%M:%S", time.localtime(response_api["sys"]["sunset"])),
                 response_api["sys"]["country"]
             )
         )
