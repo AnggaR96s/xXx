@@ -95,8 +95,8 @@ class Config(object):
     SUDO_USERS = set(int(x) for x in os.environ.get("SUDO_USERS", "").split())
     # mirror ace plugin to upload local files to any of the available
     # 25 mirrors provided by the API.
-    MIRROR_ACE_API_KEY = os.environ.get("MIRROR_ACE_API_KEY", None)
-    MIRROR_ACE_API_TOKEN = os.environ.get("MIRROR_ACE_API_TOKEN", None)
+    VERY_STREAM_LOGIN = os.environ.get("VERY_STREAM_LOGIN", None)
+    VERY_STREAM_KEY = os.environ.get("VERY_STREAM_KEY", None)
 
 
 class Production(Config):

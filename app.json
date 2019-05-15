@@ -130,12 +130,12 @@
       "value": "7351948",
       "required": false
     },
-    "MIRROR_ACE_API_KEY": {
-      "description": "Get your API key from https://ouo.io/My1jdU",
+    "VERY_STREAM_LOGIN": {
+      "description": "Get your API key from https://verystream.com",
       "required": false
     },
-    "MIRROR_ACE_API_TOKEN": {
-      "description": "Get your API key from https://ouo.io/My1jdU",
+    "VERY_STREAM_KEY": {
+      "description": "Get your API key from https://verystream.com",
       "required": false
     },
     "UB_BLACK_LIST_CHAT": {
