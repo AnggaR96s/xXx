@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 # (c) Shrimadhav U K
 from math import ceil
+import asyncio
+import json
 import re
 from telethon import events, custom
 from uniborg.util import admin_cmd, humanbytes
@@ -63,18 +65,17 @@ if Config.TG_BOT_USER_NAME_BF_HER is not None and tgbot is not None:
         builder = event.builder
         result = None
         query = event.text
-        if event.query.user_id == borg.uid:  # pylint:disable=E0602
+        if event.query.user_id == borg.uid and query.startswith("@UniBorg"):
             rev_text = query[::-1]
-            if query.startswith("@UniBorg"):
-                buttons = paginate_help(0, borg._plugins, "helpme")
-                result = builder.article(
-                    "© @UniBorg",
-                    text="{}\nCurrently Loaded Plugins: {}".format(
-                        query, len(borg._plugins)),
-                    buttons=buttons,
-                    link_preview=False
-                )
-        if query.startswith("ytdl"):
+            buttons = paginate_help(0, borg._plugins, "helpme")
+            result = builder.article(
+                "© @UniBorg",
+                text="{}\nCurrently Loaded Plugins: {}".format(
+                    query, len(borg._plugins)),
+                buttons=buttons,
+                link_preview=False
+            )
+        elif query.startswith("ytdl"):
             # input format should be ytdl URL
             p = re.compile("ytdl (.*)")
             r = p.search(query)
@@ -119,6 +120,9 @@ if Config.TG_BOT_USER_NAME_BF_HER is not None and tgbot is not None:
                         json.dump(response_json, outfile, ensure_ascii=False)
                     # logger.info(response_json)
                     inline_keyboard = []
+                    duration = None
+                    if "duration" in response_json:
+                        duration = response_json["duration"]
                     if "formats" in response_json:
                         for formats in response_json["formats"]:
                             format_id = formats.get("format_id")
@@ -154,10 +158,10 @@ if Config.TG_BOT_USER_NAME_BF_HER is not None and tgbot is not None:
                             cb_string_128 = "ytdl|{}|{}|{}".format("audio", "128k", "mp3")
                             cb_string = "ytdl|{}|{}|{}".format("audio", "320k", "mp3")
                             inline_keyboard.append([
-                                pyrogram.InlineKeyboardButton(
+                                custom.Button.inline(
                                     "MP3 " + "(" + "64 kbps" + ")", data=cb_string_64
                                 ),
-                                pyrogram.InlineKeyboardButton(
+                                custom.Button.inline(
                                     "MP3 " + "(" + "128 kbps" + ")", data=cb_string_128
                                 )
                             ])
