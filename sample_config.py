@@ -93,10 +93,6 @@ class Config(object):
     # WARNING: be careful who you grant access to your bot.
     # malicious users could do ".exec rm -rf /*"
     SUDO_USERS = set(int(x) for x in os.environ.get("SUDO_USERS", "").split())
-    # mirror ace plugin to upload local files to any of the available
-    # 25 mirrors provided by the API.
-    VERY_STREAM_LOGIN = os.environ.get("VERY_STREAM_LOGIN", None)
-    VERY_STREAM_KEY = os.environ.get("VERY_STREAM_KEY", None)
 
 
 class Production(Config):
