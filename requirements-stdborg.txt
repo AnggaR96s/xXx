@@ -2,13 +2,13 @@ aiohttp
 beautifulsoup4
 cfscrape
 cryptg
+googletrans
 google_images_download
 gsearch
 gtts
 hachoir
 Pillow
 psycopg2
-mtranslate
 regex
 requests
 speedtest-cli
@@ -17,5 +17,4 @@ telegraph
 urbandict
 wikipedia
 youtube-dl
-psutil
-py-cpuinfo
+git+https://github.com/ahupp/python-magic
