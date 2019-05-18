@@ -11,4 +11,4 @@ async def _(event):
     await event.edit("+ing!")
     end = datetime.now()
     ms = (end - start).microseconds / 1000
-    await event.edit("🕉 ¯\_(ツ)_/¯ 🕉\n`{}ms`".format(ms))
+    await event.edit("¯\_(ツ)_/¯\n`{}ms`".format(ms))
