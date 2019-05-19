@@ -106,5 +106,5 @@ async def on_regex(event):
         last_msgs[chat_id].appendleft(out)
     elif s is not None:
         await event.edit(s)
-        await event.delete(s)
+        await event.delete()
     raise events.StopPropagation
