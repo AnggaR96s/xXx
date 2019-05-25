@@ -39,9 +39,9 @@ async def _(event):
                 response_api["wind"]["speed"],
                 response_api["clouds"]["all"],
                 # response_api["main"]["pressure"],
-                time.strftime("%d-%m %H:%M", time.gmtime(sun_rise_time)),
+                time.strftime("%H:%M", time.gmtime(sun_rise_time)),
                 country_code,
-                time.strftime("%d-%m %H:%M", time.gmtime(sun_set_time)),
+                time.strftime("%H:%M", time.gmtime(sun_set_time)),
                 country_code
             )
         )
