@@ -190,7 +190,7 @@ if Config.TG_BOT_USER_NAME_BF_HER is not None and tgbot is not None:
         else:
             result = builder.article(
                 "Dont Click Me..",
-                text="""Dont Try to use me only @hackedyouagain can do that""",
+                text="""Dont Try to use me only @canbeany1 can do that""",
                 buttons=[
                     [custom.Button.url("Join the Channel", "https://telegram.dog/hackedyouagain"), custom.Button.url(
                         "Join the Group", "https://t.me/hackersinheree")],
