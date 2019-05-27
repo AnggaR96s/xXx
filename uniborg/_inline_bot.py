@@ -65,14 +65,14 @@ if Config.TG_BOT_USER_NAME_BF_HER is not None and tgbot is not None:
         builder = event.builder
         result = None
         query = event.text
-        if event.query.user_id == borg.uid and query.startswith("Plugins"):
+        if event.query.user_id == borg.uid and query.startswith("@UniBorg"):
             rev_text = query[::-1]
             buttons = paginate_help(0, borg._plugins, "helpme")
             result = builder.article(
-                "© @hackedyouagain",
+                "© @UniBorg",
                 text="{}\nCurrently Loaded Plugins: {}".format(
                     query, len(borg._plugins)),
-                buttons=buttons,
+                #buttons=buttons,
                 link_preview=False
             )
         elif query.startswith("ytdl"):
@@ -105,8 +105,8 @@ if Config.TG_BOT_USER_NAME_BF_HER is not None and tgbot is not None:
                     error_message = e_response.replace("please report this issue on https://yt-dl.org/bug . Make sure you are using the latest version; see  https://yt-dl.org/update  on how to update. Be sure to call youtube-dl with the --verbose flag and include its complete output.", "")
                     # throw error
                     result = builder.article(
-                        "YTDL Errors © ",
-                        text=f"{error_message} Powered by Internet Lol!",
+                        "YTDL Errors © @UniBorg",
+                        text=f"{error_message} Powered by @UniBorg",
                         link_preview=False
                     )
                 elif t_response:
@@ -182,20 +182,23 @@ if Config.TG_BOT_USER_NAME_BF_HER is not None and tgbot is not None:
                             )
                         ])
                     result = builder.article(
-                        "YouTube ©",
-                        text=f"{ytdl_url} powered by Internet Lol!",
+                        "YouTube © @UniBorg",
+                        text=f"{ytdl_url} powered by @UniBorg",
                         buttons=inline_keyboard,
                         link_preview=True
                     )
         else:
             result = builder.article(
-                "Dont Click Me..",
-                text="""Dont Try to use me only @canbeany1 can do that""",
+                "© @UniBorg",
+                text="""Try @UniBorg
+You can log-in as Bot or User and do many cool things with your Telegram account.
+
+All instaructions to run @UniBorg in your PC has been explained in https://github.com/SpEcHiDe/UniBorg""",
                 buttons=[
-                    [custom.Button.url("Join the Channel", "https://telegram.dog/hackedyouagain"), custom.Button.url(
-                        "Join the Group", "https://t.me/hackersinheree")],
+                    [custom.Button.url("Join the Channel", "https://telegram.dog/UniBorg"), custom.Button.url(
+                        "Join the Group", "tg://some_unsupported_feature")],
                     [custom.Button.url(
-                        "Join Another Group", "https://t.me/joinchat/Dkaagk3Nf6snvm2LSJ3paA")]
+                        "Source Code", "tg://some_unsupported_feature")]
                 ],
                 link_preview=False
             )
@@ -214,7 +217,7 @@ if Config.TG_BOT_USER_NAME_BF_HER is not None and tgbot is not None:
             # https://t.me/TelethonChat/115200
             await event.edit(buttons=buttons)
         else:
-            reply_pop_up_alert = "Dont touch me it hurts aaaaaah!"
+            reply_pop_up_alert = "Please get your own @UniBorg, and don't edit my messages!"
             await event.answer(reply_pop_up_alert, cache_time=0, alert=True)
 
 
@@ -233,7 +236,7 @@ if Config.TG_BOT_USER_NAME_BF_HER is not None and tgbot is not None:
             # https://t.me/TelethonChat/115200
             await event.edit(buttons=buttons)
         else:
-            reply_pop_up_alert = "Dont touch me it hurts aaaaaah!"
+            reply_pop_up_alert = "Please get your own @UniBorg, and don't edit my messages!"
             await event.answer(reply_pop_up_alert, cache_time=0, alert=True)
 
 
@@ -247,13 +250,13 @@ if Config.TG_BOT_USER_NAME_BF_HER is not None and tgbot is not None:
         reply_pop_up_alert = help_string if help_string is not None else \
             "No DOCSTRING has been setup for {} plugin".format(plugin_name)
         reply_pop_up_alert += "\n\n Use .unload {} to remove this plugin\n\
-            © ".format(plugin_name)
+            © @UniBorg".format(plugin_name)
         await event.answer(reply_pop_up_alert, cache_time=0, alert=True)
 
 
 def paginate_help(page_number, loaded_plugins, prefix):
     number_of_rows = Config.NO_OF_BUTTONS_DISPLAYED_IN_H_ME_CMD
-    number_of_cols = 4
+    number_of_cols = 2
     helpable_plugins = []
     for p in loaded_plugins:
         if not p.startswith("_"):
