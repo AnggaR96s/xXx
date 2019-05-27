@@ -1,2 +1,7 @@
 telethon
+hastebin.py
+async_generator
+pybase64
+zalgo_text
+pyfiglet 
 -r ./requirements-stdborg.txt
