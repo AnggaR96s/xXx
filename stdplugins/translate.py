@@ -1,7 +1,7 @@
 """ Google Translate
 Available Commands:
 .tr LanguageCode as reply to a message
-.tr LangaugeCode | text to sepak"""
+.tr LangaugeCode | text to translate"""
 
 import emoji
 from googletrans import Translator
@@ -27,11 +27,14 @@ async def _(event):
     translator = Translator()
     try:
         translated = translator.translate(text, dest=lan)
+        after_tr_text = translated.text
+        # TODO: emojify the :
+        # either here, or before translation
         output_str = """**TRANSLATED** from {} to {}
 {}""".format(
             translated.src,
             lan,
-            translated.text
+            after_tr_text
         )
         await event.edit(output_str)
     except Exception as exc:
