@@ -2,8 +2,9 @@
 Available Commands:
 .tr LanguageCode as reply to a message
 .tr LangaugeCode | text to sepak"""
+
+from googletrans import Translator
 from telethon import events
-from mtranslate import translate
 from uniborg.util import admin_cmd
 
 
@@ -15,7 +16,7 @@ async def _(event):
     if event.reply_to_msg_id:
         previous_message = await event.get_reply_message()
         text = previous_message.message
-        lan = input_str or "hi"
+        lan = input_str or "ml"
     elif "|" in input_str:
         lan, text = input_str.split("|")
     else:
@@ -23,16 +24,14 @@ async def _(event):
         return
     text = text.strip()
     lan = lan.strip()
+    translator = Translator()
     try:
-        translated_text = translate(text, lan)
-        output_str = """**SOURCE**
-{}
-
-**TRANSLATED** to {}
+        translated = translator.translate(text, dest=lan)
+        output_str = """**TRANSLATED** from {} to {}
 {}""".format(
-            text,
+            translated.src,
             lan,
-            translated_text
+            translated.text
         )
         await event.edit(output_str)
     except Exception as exc:
