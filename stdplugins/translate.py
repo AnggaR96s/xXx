@@ -3,8 +3,8 @@ Available Commands:
 .tr LanguageCode as reply to a message
 .tr LangaugeCode | text to sepak"""
 
+import emoji
 from googletrans import Translator
-from telethon import events
 from uniborg.util import admin_cmd
 
 
@@ -22,7 +22,7 @@ async def _(event):
     else:
         await event.edit("`.tr LanguageCode` as reply to a message")
         return
-    text = text.strip()
+    text = emoji.demojize(text.strip())
     lan = lan.strip()
     translator = Translator()
     try:
