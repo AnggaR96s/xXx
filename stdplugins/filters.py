@@ -14,7 +14,7 @@ from sql_helpers.filters_sql import get_filter, add_filter, remove_filter, get_a
 from uniborg.util import admin_cmd
 
 
-DELETE_TIMEOUT = 0
+DELETE_TIMEOUT = 10
 TYPE_TEXT = 0
 TYPE_PHOTO = 1
 TYPE_DOCUMENT = 2
