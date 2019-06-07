@@ -11,12 +11,12 @@ async def _(event):
     if splugin_name in borg._plugins:
         s_help_string = borg._plugins[splugin_name].__doc__
     else:
-        s_help_string = "Hamra Fork: https://github.com/parambika/UniBorg"
+        s_help_string = "My Fork: https://github.com/parambika/UniBorg"
     help_string = """@UniBorg
 Python {}
 Telethon {}
 
-UserBot Forked from https://github.com/SpEcHiDe/UniBorg""".format(
+Forked from https://github.com/SpEcHiDe/UniBorg""".format(
         sys.version,
         __version__
     )
