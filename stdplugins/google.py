@@ -35,38 +35,6 @@ async def _(event):
     await asyncio.sleep(5)
     await event.edit("Google: {}\n{}".format(input_str, output_str), link_preview=False)
 
-@borg.on(admin_cmd("img (.*)"))
-async def _(event):
-    """ For .img command, search and return images matching the query. """
-    if not event.text[0].isalpha() and event.text[0] not in ("/", "#", "@", "!"):
-        await event.edit("Processing...")
-        query = event.pattern_match.group(1)
-        lim = lim.replace(r"lim=\d+", query)
-        try:
-            lim = lim[0]
-            lim = lim.replace("lim=", "")
-            query = query.replace("lim=" + lim[0], "")
-        except IndexError:
-            lim = 2
-        response = google_images_download.googleimagesdownload()
-
-        # creating list of arguments
-        arguments = {
-            "keywords": query,
-            "limit": lim,
-            "format": "jpg",
-            "no_directory": "no_directory"
-        }
-
-        # passing the arguments to the function
-        paths = response.download(arguments)
-        lst = paths[0][query]
-        await event.client.send_file(await event.client.get_input_entity(event.chat_id), lst)
-        os.remove(lst[0])
-        os.remove(lst[1])
-        os.rmdir(os.path.dirname(os.path.abspath(lst[0])))
-        await event.delete()
-
 @borg.on(admin_cmd("gi (.*)"))
 async def _(event):
     if event.fwd_from:
@@ -89,7 +57,7 @@ async def _(event):
     #lst = paths[input_str]
     await borg.send_file(
         event.chat_id,
-        lst,
+        #lst,
         caption=input_str,
         reply_to=event.message.id,
         progress_callback=progress
