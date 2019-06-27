@@ -41,6 +41,7 @@ async def _(event):
     if not event.text[0].isalpha() and event.text[0] not in ("/", "#", "@", "!"):
         await event.edit("Processing...")
         query = event.pattern_match.group(1)
+        lim = lim.replace(r"lim=\d+", query)
         try:
             lim = lim[0]
             lim = lim.replace("lim=", "")
@@ -85,7 +86,7 @@ async def _(event):
         "output_directory": Config.TMP_DOWNLOAD_DIRECTORY
     }
     paths = response.download(arguments)
-    lst = paths[input_str]
+    #lst = paths[input_str]
     await borg.send_file(
         event.chat_id,
         lst,
