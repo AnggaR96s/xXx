@@ -55,9 +55,10 @@ async def _(event):
     }
     paths = response.download(arguments)
     #lst = paths[input_str]
+    lst = paths(input_str)
     await borg.send_file(
         event.chat_id,
-        #lst,
+        lst,
         caption=input_str,
         reply_to=event.message.id,
         progress_callback=progress
