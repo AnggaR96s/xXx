@@ -146,6 +146,14 @@
     "VERY_STREAM_KEY": {
       "description": "Get your API key from https://verystream.com",
       "required": false
+    },
+    "MIRROR_ACE_API_KEY": {
+      "description": "Get your API key.",
+      "required": false
+    },
+    "MIRROR_ACE_API_TOKEN": {
+      "description": "Get your API token.",
+      "required": false
     }
   },
   "addons": [{
