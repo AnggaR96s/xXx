@@ -1,3 +1,4 @@
+"""Torrentz"""
 import cfscrape  # https://github.com/Anorov/cloudflare-scrape
 import os
 import requests

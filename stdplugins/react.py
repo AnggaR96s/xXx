@@ -1,6 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # (c) @INF1N17Y
+"""Reactions
+.r happy
+.r thinking
+.r waving
+.r wtf
+.r love
+.r confused
+.r dead
+.r sad
+.r dog"""
 
 from telethon import events
 import random

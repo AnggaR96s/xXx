@@ -5,7 +5,8 @@
 Available Commands:
 .savefilter
 .listfilters
-.clearfilter"""
+.clearfilter
+.clearallfilters"""
 import asyncio
 import re
 from telethon import events, utils

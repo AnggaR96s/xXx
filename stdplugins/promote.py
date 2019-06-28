@@ -1,4 +1,4 @@
-"""Reply to a user to .promote them in the current chat"""
+"""Reply to a user to .promote or .prank them in the current chat"""
 from telethon import events
 import asyncio
 from datetime import datetime
@@ -38,7 +38,7 @@ async def _(event):
         await event.edit("Successfully Promoted")
 
 
-@borg.on(admin_cmd("prankpromote ?(.*)"))
+@borg.on(admin_cmd("prank ?(.*)"))
 async def _(event):
     if event.fwd_from:
         return

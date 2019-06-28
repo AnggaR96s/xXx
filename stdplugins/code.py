@@ -1,6 +1,6 @@
-# For @UniBorg
-# (c) <GNU/std::sakty_]> a.k.a. @sunda001
-
+""" For @UniBorg
+ (c) <GNU/std::sakty_]> a.k.a. @sunda001
+.code python |;| print("@MenteriPerhubungan")"""
 
 from telethon import events
 import asyncio

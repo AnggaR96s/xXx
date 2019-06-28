@@ -1,4 +1,5 @@
-# (c) @UniBorg
+"""(c) @UniBorg
+.clock"""
 # Original written by @UniBorg edit by @INF1N17Y
 
 from telethon import events

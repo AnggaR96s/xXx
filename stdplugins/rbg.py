@@ -13,8 +13,8 @@
 # GNU General Public License for more details.
 #
 """Remove.BG Plugin for @UniBorg
-Syntax: .remove.bg https://link.to/image.extension
-Syntax: .remove.bg as reply to a media"""
+Syntax: .rbg https://link.to/image.extension
+Syntax: .rbg as reply to a media"""
 import asyncio
 from datetime import datetime
 import io

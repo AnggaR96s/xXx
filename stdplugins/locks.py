@@ -1,5 +1,5 @@
 """Default Permission in Telegram 5.0.1
-Available Commands: .lock <option>, .unlock <option>, .locks
+Available Commands: .lock <option>, .unlock <option>, .lks
 API Options: msg, media, sticker, gif, gamee, ainline, gpoll, adduser, cpin, changeinfo
 DB Options: url, bots, forward, commands"""
 

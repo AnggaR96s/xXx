@@ -1,3 +1,6 @@
+"""Sed
+s/origin/replace"""
+
 from collections import defaultdict, deque
 import re
 

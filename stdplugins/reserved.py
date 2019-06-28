@@ -1,5 +1,7 @@
 # For @UniBorg
 # (c) Shrimadhav U K
+"""My Reserved Username
+Syntax -res"""
 
 from telethon import events, functions, types
 import asyncio

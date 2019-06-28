@@ -1,4 +1,5 @@
-""".admin Plugin for @UniBorg"""
+"""Alive Plugin for @UniBorg
+.alive"""
 import asyncio
 from telethon import events
 from telethon.tl.types import ChannelParticipantsAdmins

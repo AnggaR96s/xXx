@@ -1,7 +1,7 @@
 # For @UniBorg
 # (c) Shrimadhav U K
 """Auto Profile Updation Commands
-.autopp"""
+.autobio"""
 import asyncio
 import time
 from telethon.tl import functions

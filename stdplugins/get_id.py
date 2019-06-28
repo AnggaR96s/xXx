@@ -1,5 +1,5 @@
 """Get ID of any Telegram media, or any user
-Syntax: .get_id"""
+Syntax: .id"""
 from telethon import events
 from telethon.utils import pack_bot_file_id
 from uniborg.util import admin_cmd

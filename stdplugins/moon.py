@@ -1,5 +1,5 @@
-# (c) @UniBorg
-
+"""Moon (c) @UniBorg
+.moon"""
 from telethon import events
 import asyncio
 from collections import deque

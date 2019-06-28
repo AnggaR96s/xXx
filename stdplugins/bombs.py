@@ -1,4 +1,7 @@
 # BY @STARKTM1
+"""Bombs plugins
+.bombs"""
+
 from telethon import events
 import asyncio
 import os

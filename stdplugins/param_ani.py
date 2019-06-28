@@ -1,6 +1,6 @@
 # (c) @UniBorg
 # Original written by @UniBorg edit by @INF1N17Y
-
+"""Syntax .param"""
 from telethon import events
 import asyncio
 from collections import deque

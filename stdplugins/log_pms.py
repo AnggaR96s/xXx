@@ -1,5 +1,6 @@
 """Log PMs
-Check https://t.me/tgbeta/3505"""
+Check https://t.me/tgbeta/3505
+Syntax .nolog"""
 import asyncio
 from telethon import events
 from telethon.tl import functions, types

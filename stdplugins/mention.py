@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+"""# -*- coding: utf-8 -*-
 # (c) Shrimadhav U K && @INF1N17Y
+.mention"""
 
 from telethon import events
 from telethon.tl.functions.users import GetFullUserRequest

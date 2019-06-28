@@ -1,6 +1,6 @@
 """Optical Character Recognition by OCR.Space
 Syntax: .ocr <LangCode>
-Available Languages: .ocrlanguages"""
+Available Languages: .ocrlang"""
 from telethon import events
 import json
 import os
@@ -64,7 +64,7 @@ def progress(current, total):
         current, total, (current / total) * 100))
 
 
-@borg.on(admin_cmd("ocrlanguages"))
+@borg.on(admin_cmd("ocrlang"))
 async def get_ocr_languages(event):
     if event.fwd_from:
         return

@@ -1,9 +1,9 @@
 """Emoji
 Available Commands:
-.emoji shrug
-.emoji apple
-.emoji :/
-.emoji -_-"""
+.e s
+.e apple
+.e :/
+. -_-"""
 from telethon import events
 import asyncio
 from uniborg.util import admin_cmd
