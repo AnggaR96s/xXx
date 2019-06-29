@@ -48,7 +48,7 @@ async def _(event):
     arguments = {
         "keywords": input_str,
         "limit": Config.TG_GLOBAL_ALBUM_LIMIT,
-        "format": "png",
+        "format": "jpg",
         "delay": 1,
         "safe_search": True,
         "output_directory": Config.TMP_DOWNLOAD_DIRECTORY
