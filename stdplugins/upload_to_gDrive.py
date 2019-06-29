@@ -1,6 +1,6 @@
 """Upload local Files to gDrive
 Syntax:
-.ugdrive"""
+.gd"""
 
 # The entire code given below is verbatim copied from
 # https://github.com/cyberboysumanjay/Gdrivedownloader/blob/master/gdrive_upload.py
@@ -35,7 +35,7 @@ OAUTH_SCOPE = "https://www.googleapis.com/auth/drive.file"
 REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob"
 
 
-@borg.on(admin_cmd(pattern="ugdrive ?(.*)", allow_sudo=True))
+@borg.on(admin_cmd(pattern="gd ?(.*)", allow_sudo=True))
 async def _(event):
     if event.fwd_from:
         return
