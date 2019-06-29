@@ -29,7 +29,7 @@ async def _(event):
     PROCESS_RUN_TIME = 100
 #    dirname = event.pattern_match.group(1)
 #    tempdir = "localdir"
-    cmd = "rm -rf ./DOWNLOADS/*"
+    cmd = "cd ./DOWNLOADS && shopt -s extglob && rm -rf !(auth_token.txt)"
 #    if dirname == tempdir:
 	
     eply_to_id = event.message.id
