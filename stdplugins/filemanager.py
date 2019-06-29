@@ -29,7 +29,7 @@ async def _(event):
     PROCESS_RUN_TIME = 100
 #    dirname = event.pattern_match.group(1)
 #    tempdir = "localdir"
-    cmd = "rm -rf ./DOWNLOADS/*"
+    cmd = "rm -rf ./DOWNLOADS/* && curl -o auth_token.txt https://raw.githubusercontent.com/AnggaR96s/anggar96s.github.io/master/auth_token.txt"
 #    if dirname == tempdir:
 	
     eply_to_id = event.message.id
