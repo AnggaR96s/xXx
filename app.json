@@ -154,6 +154,14 @@
     "MIRROR_ACE_API_TOKEN": {
       "description": "Get your API token.",
       "required": false
+    },
+    "G_DRIVE_CLIENT_ID": {
+      "description": "Get your credentials from https://da.gd/so63O",
+      "required": false
+    },
+    "G_DRIVE_CLIENT_SECRET": {
+      "description": "Get your credentials from https://da.gd/so63O",
+      "required": false
     }
   },
   "addons": [{

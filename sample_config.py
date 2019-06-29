@@ -93,6 +93,9 @@ class Config(object):
     VERY_STREAM_KEY = os.environ.get("VERY_STREAM_KEY", None)
     MIRROR_ACE_API_KEY = os.environ.get("MIRROR_ACE_API_KEY", None)
     MIRROR_ACE_API_TOKEN = os.environ.get("MIRROR_ACE_API_TOKEN", None)
+    # Google Drive ()
+    G_DRIVE_CLIENT_ID = os.environ.get("G_DRIVE_CLIENT_ID", None)
+    G_DRIVE_CLIENT_SECRET = os.environ.get("G_DRIVE_CLIENT_SECRET", None)
 
 class Production(Config):
     LOGGER = False
