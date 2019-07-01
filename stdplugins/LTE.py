@@ -1,14 +1,8 @@
-"""Emoji
+"""LTE
 
 Available Commands:
 
-.emoji shrug
-
-.emoji apple
-
-.emoji :/
-
-.emoji -_-"""
+.lte"""
 
 from telethon import events
 
@@ -32,13 +26,13 @@ async def _(event):
 
     input_str = event.pattern_match.group(1)
 
-    if input_str == "jio":
+    if input_str == "lte":
 
         await event.edit(input_str)
 
         animation_chars = [
         
-            "`Connecting To Jio Network...`",
+            "`Connecting To LTE Network...`",
             "`█ ▇ ▆ ▅ ▄ ▂ ▁`",
             "`▒ ▇ ▆ ▅ ▄ ▂ ▁`",
             "`▒ ▒ ▆ ▅ ▄ ▂ ▁`",
@@ -56,7 +50,7 @@ async def _(event):
             "`▁ ▂ ▄ ▅ ▆ ▒ ▒`",
             "`▁ ▂ ▄ ▅ ▆ ▇ ▒`",
             "`▁ ▂ ▄ ▅ ▆ ▇ █`",
-            "**Jio Network Boosted....**"
+            "**LTE Network Boosted....**"
 
  ]
 
