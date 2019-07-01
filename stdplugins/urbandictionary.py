@@ -2,13 +2,13 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """Urban Dictionary
-Syntax: .ud Query"""
+Syntax: .urban Query"""
 from telethon import events
 import urbandict
 from uniborg.util import admin_cmd
 
 
-@borg.on(admin_cmd("ud (.*)"))
+@borg.on(admin_cmd("urban (.*)"))
 async def _(event):
     if event.fwd_from:
         return
