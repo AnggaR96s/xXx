@@ -162,6 +162,11 @@
     "G_DRIVE_CLIENT_SECRET": {
       "description": "Get your credentials from https://da.gd/so63O",
       "required": false
+    },
+    "TMP_TOKEN_DIRECTORY": {
+      "description": "This is required for the plugins involving the file system.",
+      "value": "./TOKEN/",
+      "required": false
     }
   },
   "addons": [{
