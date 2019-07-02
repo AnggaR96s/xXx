@@ -25,7 +25,7 @@ import httplib2
 
 
 # Path to token json file, it should be in same directory as script
-G_DRIVE_TOKEN_FILE = Config.TMP_DOWNLOAD_DIRECTORY + "/auth_token.txt"
+G_DRIVE_TOKEN_FILE = Config.TMP_TOKEN_DIRECTORY + "/auth_token.txt"
 # Copy your credentials from the APIs Console
 CLIENT_ID = Config.G_DRIVE_CLIENT_ID
 CLIENT_SECRET = Config.G_DRIVE_CLIENT_SECRET
