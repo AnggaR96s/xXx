@@ -96,6 +96,7 @@ class Config(object):
     # Google Drive ()
     G_DRIVE_CLIENT_ID = os.environ.get("G_DRIVE_CLIENT_ID", None)
     G_DRIVE_CLIENT_SECRET = os.environ.get("G_DRIVE_CLIENT_SECRET", None)
+    TMP_TOKEN_DIRECTORY = os.environ.get("TMP_TOKEN_DIRECTORY", "./TOKEN/")
 
 class Production(Config):
     LOGGER = False
