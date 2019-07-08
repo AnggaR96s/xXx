@@ -33,6 +33,8 @@ CLIENT_SECRET = Config.G_DRIVE_CLIENT_SECRET
 OAUTH_SCOPE = "https://www.googleapis.com/auth/drive.file"
 # Redirect URI for installed apps, can be left as is
 REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob"
+# global variable to set Folder ID to upload to
+G_DRIVE_F_PARENT_ID = None
 
 
 @borg.on(admin_cmd(pattern="gd ?(.*)", allow_sudo=True))
@@ -101,6 +103,30 @@ async def _(event):
         await mone.edit("File Not found in local server. Give me a file path :((")
 
 
+@borg.on(admin_cmd(pattern="gdrivesp https?://drive\.google\.com/drive/u/\d/folders/([-\w]{25,})", allow_sudo=True))
+async def _(event):
+    if event.fwd_from:
+        return
+    mone = await event.reply("Processing ...")
+    input_str = event.pattern_match.group(1)
+    if input_str:
+        G_DRIVE_F_PARENT_ID = input_str
+        await mone.edit("Custom Folder ID set successfully. The next uploads will upload to {G_DRIVE_F_PARENT_ID} till `.gdriveclear`")
+        await event.delete()
+    else:
+        await mone.edit("Send `.gdrivesp https://drive.google.com/drive/u/X/folders/Y` to set the folder to upload new files to")
+
+
+@borg.on(admin_cmd(pattern="gdriveclear", allow_sudo=True))
+async def _(event):
+    if event.fwd_from:
+        return
+    mone = await event.reply("Processing ...")
+    G_DRIVE_F_PARENT_ID = None
+    await mone.edit("Custom Folder ID cleared successfully.")
+    await event.delete()
+
+
 # Get mime type and name of given file
 def file_ops(file_path):
     mime_type = guess_type(file_path)[0]
@@ -154,6 +180,8 @@ def upload_file(http, file_path, file_name, mime_type):
         "description": "backup",
         "mimeType": mime_type,
     }
+    if G_DRIVE_F_PARENT_ID is not None:
+        body["parents"] = [{"id": G_DRIVE_F_PARENT_ID}]
     # Permissions body description: anyone who has link can upload
     # Other permissions can be found at https://developers.google.com/drive/v2/reference/permissions
     permissions = {
