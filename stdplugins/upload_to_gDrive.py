@@ -79,11 +79,12 @@ async def _(event):
             return False
     # logger.info(required_file_name)
     if required_file_name:
+        #
+        if Config.G_DRIVE_AUTH_TOKEN_DATA is not None:
+            with open(G_DRIVE_TOKEN_FILE, "w") as t_file:
+                t_file.write(Config.G_DRIVE_AUTH_TOKEN_DATA)
         # Check if token file exists, if not create it by requesting authorization code
-        try:
-            with open(G_DRIVE_TOKEN_FILE) as f:
-                pass
-        except IOError:
+        if not os.path.isfile(G_DRIVE_TOKEN_FILE):
             storage = await create_token_file(G_DRIVE_TOKEN_FILE, event)
             http = authorize(G_DRIVE_TOKEN_FILE, storage)
         # Authorize, get file parameters, upload file and print out result URL for download
