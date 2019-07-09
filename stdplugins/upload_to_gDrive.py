@@ -1,6 +1,8 @@
 """Upload local Files to gDrive
 Syntax:
-.gd"""
+.gd
+.gfold
+.gclear"""
 
 # The entire code given below is verbatim copied from
 # https://github.com/cyberboysumanjay/Gdrivedownloader/blob/master/gdrive_upload.py
@@ -103,7 +105,7 @@ async def _(event):
         await mone.edit("File Not found in local server. Give me a file path :((")
 
 
-@borg.on(admin_cmd(pattern="gdrivesp https?://drive\.google\.com/drive/u/\d/folders/([-\w]{25,})", allow_sudo=True))
+@borg.on(admin_cmd(pattern="gfold https?://drive\.google\.com/drive/u/\d/folders/([-\w]{25,})", allow_sudo=True))
 async def _(event):
     if event.fwd_from:
         return
@@ -114,10 +116,10 @@ async def _(event):
         await mone.edit("Custom Folder ID set successfully. The next uploads will upload to {G_DRIVE_F_PARENT_ID} till `.gdriveclear`")
         await event.delete()
     else:
-        await mone.edit("Send `.gdrivesp https://drive.google.com/drive/u/X/folders/Y` to set the folder to upload new files to")
+        await mone.edit("Send `.gfold https://drive.google.com/drive/u/X/folders/Y` to set the folder to upload new files to")
 
 
-@borg.on(admin_cmd(pattern="gdriveclear", allow_sudo=True))
+@borg.on(admin_cmd(pattern="gclear", allow_sudo=True))
 async def _(event):
     if event.fwd_from:
         return
