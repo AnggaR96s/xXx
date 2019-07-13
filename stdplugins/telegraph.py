@@ -4,6 +4,7 @@ Available Commands:
 .telegraph text as reply to a large text"""
 from telethon import events
 import os
+from PIL import Image
 from datetime import datetime
 from telegraph import Telegraph, upload_file, exceptions
 from uniborg.util import admin_cmd
@@ -36,6 +37,8 @@ async def _(event):
             end = datetime.now()
             ms = (end - start).seconds
             await event.edit("Downloaded to {} in {} seconds.".format(downloaded_file_name, ms))
+            if downloaded_file_name.endswith((".webp")):
+                resize_image(downloaded_file_name)
             try:
                 start = datetime.now()
                 media_urls = upload_file(downloaded_file_name)
@@ -46,7 +49,7 @@ async def _(event):
                 end = datetime.now()
                 ms_two = (end - start).seconds
                 os.remove(downloaded_file_name)
-                await event.edit("Uploaded to https://telegra.ph/{} in {} seconds.".format(media_urls[0], (ms + ms_two)), link_preview=True)
+                await event.edit("Uploaded to https://telegra.ph{} in {} seconds.".format(media_urls[0], (ms + ms_two)), link_preview=True)
         elif input_str == "text":
             user_object = await borg.get_entity(r_message.from_id)
             title_of_page = user_object.first_name # + " " + user_object.last_name
@@ -77,3 +80,9 @@ async def _(event):
             await event.edit("Pasted to https://telegra.ph/{} in {} seconds.".format(response["path"], ms), link_preview=True)
     else:
         await event.edit("Reply to a message to get a permanent telegra.ph link. (Inspired by @ControllerBot)")
+
+
+def resize_image(image):
+    im = Image.open(image)
+    im.save(image, "PNG")
+
