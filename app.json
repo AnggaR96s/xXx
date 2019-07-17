@@ -167,6 +167,10 @@
       "description": "This is required for the plugins involving the file system.",
       "value": "./TOKEN/",
       "required": false
+    },
+    "TELE_GRAM_2FA_CODE": {
+      "description": "Your Telegram 2FA code as a string",
+      "required": false
     }
   },
   "addons": [{
