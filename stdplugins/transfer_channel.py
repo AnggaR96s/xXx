@@ -22,6 +22,6 @@ async def _(event):
         await borg(functions.channels.EditCreatorRequest(channel=current_channel, user_id=user_name, password=my_srp_password))
     except Exception as e:
         await event.edit(str(e))
-    finally:
+    else:
         await event.edit("Transferred 🌚")
 
