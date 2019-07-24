@@ -167,10 +167,10 @@ async def _(event):
             await event.reply("This sticker is not part of a pack")
             return
         is_a_s = is_it_animated_sticker(reply_message)
-        file_ext_ns_ion = ".webp"
+        file_ext_ns_ion = "webp"
         file_caption = "https://t.me/RoseSupport/33801"
         if is_a_s:
-            file_ext_ns_ion = ".tgs"
+            file_ext_ns_ion = "tgs"
             file_caption = "Forward the ZIP file to @AnimatedStickersRoBot to get lottIE JSON containing the vector information."
         sticker_set = await borg(GetStickerSetRequest(sticker_attrib.stickerset))
         pack_file = os.path.join(Config.TMP_DOWNLOAD_DIRECTORY, sticker_set.set.short_name, "pack.txt")
