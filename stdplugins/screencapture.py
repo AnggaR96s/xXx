@@ -19,17 +19,17 @@ async def _(event):
     await event.edit("Processing ...")
     start = datetime.now()
     try:
-        options = webdriver.ChromeOptions()
-        options.add_argument('--ignore-certificate-errors')
-        options.add_argument("--test-type")
-        options.add_argument("--headless")
-        options.add_argument("--window-size=1920x1080")
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument('--ignore-certificate-errors')
+        chrome_options.add_argument("--test-type")
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--window-size=1920x1080")
         # https://stackoverflow.com/a/53073789/4723940
         chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument('--disable-dev-shm-usage')
-        options.binary_location = Config.GOOGLE_CHROME_BIN
+        chrome_options.binary_location = Config.GOOGLE_CHROME_BIN
         await event.edit("Starting Google Chrome BIN")
-        driver = webdriver.Chrome(chrome_options=options)
+        driver = webdriver.Chrome(chrome_options=chrome_options)
         input_str = event.pattern_match.group(1)
         driver.get(input_str)
         await event.edit("Opening web-page")
@@ -37,6 +37,9 @@ async def _(event):
         # saves screenshot of entire page
         driver.close()
         await event.edit("Stopping Google Chrome BIN")
+        message_id = event.message.id
+        if event.reply_to_msg_id:
+            message_id = event.reply_to_msg_id
         with io.BytesIO(im_png) as out_file:
             out_file.name = "@UniBorg.ScreenCapture.PNG"
             await borg.send_file(
@@ -44,7 +47,7 @@ async def _(event):
                 out_file,
                 caption=input_str,
                 force_document=True,
-                reply_to=event.message.reply_to_msg_id,
+                reply_to=message_id,
                 allow_cache=False,
                 silent=True
             )
