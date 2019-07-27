@@ -24,6 +24,9 @@ async def _(event):
         options.add_argument("--test-type")
         options.add_argument("--headless")
         options.add_argument("--window-size=1920x1080")
+        # https://stackoverflow.com/a/53073789/4723940
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--disable-dev-shm-usage')
         options.binary_location = Config.GOOGLE_CHROME_BIN
         await event.edit("Starting Google Chrome BIN")
         driver = webdriver.Chrome(chrome_options=options)
