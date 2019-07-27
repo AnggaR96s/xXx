@@ -18,6 +18,9 @@ auth_url = r["auth_url"]
 async def _(event):
     if event.fwd_from:
         return
+    if Config.PRIVATE_GROUP_BOT_API_ID is None:
+        await event.edit("Please set the required environment variable `PRIVATE_GROUP_BOT_API_ID` for this plugin to work")
+        return
     if not os.path.isdir(Config.TMP_DOWNLOAD_DIRECTORY):
         os.makedirs(Config.TMP_DOWNLOAD_DIRECTORY)
     await borg.send_message(
@@ -85,4 +88,3 @@ async def _(event):
 def resize_image(image):
     im = Image.open(image)
     im.save(image, "PNG")
-

@@ -46,7 +46,10 @@ async def _(event):
     mone = await event.reply("Processing ...")
     if CLIENT_ID is None or CLIENT_SECRET is None:
         await mone.edit("This module requires credentials from https://da.gd/so63O. Aborting!")
-        return False
+        return
+    if Config.PRIVATE_GROUP_BOT_API_ID is None:
+        await event.edit("Please set the required environment variable `PRIVATE_GROUP_BOT_API_ID` for this plugin to work")
+        return
     input_str = event.pattern_match.group(1)
     if not os.path.isdir(Config.TMP_DOWNLOAD_DIRECTORY):
         os.makedirs(Config.TMP_DOWNLOAD_DIRECTORY)
