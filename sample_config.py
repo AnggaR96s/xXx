@@ -111,6 +111,10 @@ class Config(object):
     # rapidleech plugins
     OPEN_LOAD_LOGIN = os.environ.get("OPEN_LOAD_LOGIN", "0")
     OPEN_LOAD_KEY = os.environ.get("OPEN_LOAD_KEY", "0")
+    # Google Chrome Selenium Stuff
+    # taken from https://github.com/jaskaranSM/UniBorg/blob/9072e3580cc6c98d46f30e41edbe73ffc9d850d3/sample_config.py#L104-L106
+    GOOGLE_CHROME_DRIVER = os.environ.get("GOOGLE_CHROME_DRIVER", None)
+    GOOGLE_CHROME_BIN = os.environ.get("GOOGLE_CHROME_BIN", None)
 
 
 class Production(Config):

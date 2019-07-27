@@ -33,10 +33,6 @@
       "description": "Get your own APPID from https://api.openweathermap.org/data/2.5/weather",
       "required": false
     },
-    "SCREEN_SHOT_LAYER_ACCESS_KEY": {
-      "description": "Get your own ACCESS_KEY from http://api.screenshotlayer.com/api/capture",
-      "required": false
-    },
     "PRIVATE_GROUP_BOT_API_ID": {
       "description": "Send .get_id in any group to fill this value.",
       "value": "-100",
@@ -181,6 +177,12 @@
   }],
   "buildpacks": [{
     "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest"
+  }, {
+    "url": "https://github.com/opendoor-labs/heroku-buildpack-p7zip"
+  }, {
+    "url": "https://github.com/heroku/heroku-buildpack-google-chrome"
+  }, {
+    "url": "https://github.com/heroku/heroku-buildpack-chromedriver"
   }, {
     "url": "heroku/python"
   }]

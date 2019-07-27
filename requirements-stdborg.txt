@@ -15,6 +15,7 @@ psycopg2
 python-magic
 regex
 requests
+selenium
 speedtest-cli
 sqlalchemy
 telegraph
