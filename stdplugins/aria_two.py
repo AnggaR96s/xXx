@@ -1,12 +1,12 @@
 """
 A Torrent Client Plugin Based On Aria2 for Userbot
 
-cmds: Magnet link : .magnet magnetLink
+cmds: Magnet link : .mag magnetLink
       Torrent file from local: .tor file_path
-      Show Downloads: .show
-      Remove All Downloads: .ariaRM
-      Resume All Downloads: .ariaResume
-      Pause All Downloads:  .ariaP
+      Show Downloads: .arias
+      Remove All Downloads: .ariac
+      Resume All Downloads: .ariar
+      Pause All Downloads:  .ariap
 
 By:- @Zero_cool7870
 
@@ -33,7 +33,7 @@ aria2 = aria2p.API(
 )
 
 
-@borg.on(admin_cmd("addmagnet"))
+@borg.on(admin_cmd("mag"))
 async def magnet_download(event):
     if event.fwd_from:
         return
@@ -52,7 +52,7 @@ async def magnet_download(event):
     await m.delete()
 
 
-@borg.on(admin_cmd("addtorrent"))
+@borg.on(admin_cmd("tor"))
 async def torrent_download(event):
     if event.fwd_from:
         return
@@ -72,7 +72,7 @@ async def torrent_download(event):
     await m.delete()
 
 
-@borg.on(admin_cmd("ariaRM"))
+@borg.on(admin_cmd("ariac"))
 async def remove_all(event):
     if event.fwd_from:
         return
@@ -82,7 +82,7 @@ async def remove_all(event):
     await event.edit("`Removed All Downloads.`")
 
 
-@borg.on(admin_cmd("ariaP"))
+@borg.on(admin_cmd("ariap"))
 async def pause_all(event):
     if event.fwd_from:
         return
@@ -91,7 +91,7 @@ async def pause_all(event):
     await event.edit("Output: " + str(paused))
 
 
-@borg.on(admin_cmd("ariaResume"))
+@borg.on(admin_cmd("ariar"))
 async def resume_all(event):
     if event.fwd_from:
         return
@@ -99,7 +99,7 @@ async def resume_all(event):
     await event.edit("Output: " + str(resumed))
 
 
-@borg.on(admin_cmd("showariastatus"))
+@borg.on(admin_cmd("arias"))
 async def show_all(event):
     if event.fwd_from:
         return
