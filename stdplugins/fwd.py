@@ -11,9 +11,9 @@ async def _(event):
         return
     if Config.PRIVATE_CHANNEL_BOT_API_ID is None:
         await event.edit("Please set the required environment variable `PRIVATE_CHANNEL_BOT_API_ID` for this plugin to work")
-        return False
+        return
     try:
-        e = await borg.get_entity(int(Config.PRIVATE_CHANNEL_BOT_API_ID))
+        e = await borg.get_entity(Config.PRIVATE_CHANNEL_BOT_API_ID)
     except Exception as e:
         await event.edit(str(e))
     else:

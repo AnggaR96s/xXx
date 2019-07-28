@@ -1,7 +1,7 @@
 """ Google Text to Speech
 Available Commands:
-.tts LanguageCode as reply to a message
-.tts LangaugeCode | text to speak"""
+.tt LanguageCode as reply to a message
+.tt LangaugeCode | text to speak"""
 
 import asyncio
 import os
@@ -11,7 +11,7 @@ from gtts import gTTS
 from uniborg.util import admin_cmd
 
 
-@borg.on(admin_cmd("tts (.*)"))
+@borg.on(admin_cmd("tt (.*)"))
 async def _(event):
     if event.fwd_from:
         return

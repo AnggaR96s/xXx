@@ -64,6 +64,9 @@ async def set_not_afk(event):
 async def _(event):
     if event.fwd_from:
         return
+    if Config.PRIVATE_GROUP_BOT_API_ID is None:
+        await event.edit("Please set the required environment variable `PRIVATE_GROUP_BOT_API_ID` for this plugin to work")
+        return
     reason = event.pattern_match.group(1)
     if not borg.storage.USER_AFK:  # pylint:disable=E0602
         last_seen_status = await borg(  # pylint:disable=E0602
@@ -139,7 +142,7 @@ async def on_afk(event):
                 afk_since = f"`{int(seconds)}s` **ago**"
         msg = None
         message_to_reply = f"I'm afk since {afk_since} " + \
-            f"and I will be back soon\n**Reason:** {reason}" \
+            f"and I will be back soon\n__Reason:__ {reason}" \
             if reason \
             else f"I'm afk since {afk_since} and I will be back soon."
         msg = await event.reply(message_to_reply)

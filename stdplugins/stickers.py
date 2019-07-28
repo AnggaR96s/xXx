@@ -124,8 +124,9 @@ async def _(event):
     if not rep_msg.document:
         await event.edit("Reply to any sticker to get it's pack info.")
         return
-    stickerset_attr = rep_msg.document.attributes[1]
-    if not isinstance(stickerset_attr, DocumentAttributeSticker):
+    stickerset_attr_s = rep_msg.document.attributes
+    stickerset_attr = find_instance(stickerset_attr_s, DocumentAttributeSticker)
+    if not stickerset_attr.stickerset:
         await event.edit("sticker does not belong to a pack.")
         return
     get_stickerset = await borg(
@@ -165,6 +166,12 @@ async def _(event):
         if not sticker_attrib.stickerset:
             await event.reply("This sticker is not part of a pack")
             return
+        is_a_s = is_it_animated_sticker(reply_message)
+        file_ext_ns_ion = "webp"
+        file_caption = "https://t.me/RoseSupport/33801"
+        if is_a_s:
+            file_ext_ns_ion = "tgs"
+            file_caption = "Forward the ZIP file to @AnimatedStickersRoBot to get lottIE JSON containing the vector information."
         sticker_set = await borg(GetStickerSetRequest(sticker_attrib.stickerset))
         pack_file = os.path.join(Config.TMP_DOWNLOAD_DIRECTORY, sticker_set.set.short_name, "pack.txt")
         if os.path.isfile(pack_file):
@@ -183,7 +190,7 @@ async def _(event):
                 f.write(f"{{'image_file': '{file}','emojis':{emojis[sticker.id]}}},")
         pending_tasks = [
             asyncio.ensure_future(
-                download(document, emojis, Config.TMP_DOWNLOAD_DIRECTORY + sticker_set.set.short_name, f"{i:03d}.webp")
+                download(document, emojis, Config.TMP_DOWNLOAD_DIRECTORY + sticker_set.set.short_name, f"{i:03d}.{file_ext_ns_ion}")
             ) for i, document in enumerate(sticker_set.documents)
         ]
         await event.edit(f"Downloading {sticker_set.set.count} sticker(s) to .{Config.TMP_DOWNLOAD_DIRECTORY}{sticker_set.set.short_name}...")
@@ -207,7 +214,7 @@ async def _(event):
         await borg.send_file(
             event.chat_id,
             directory_name + ".zip",
-            # caption=caption_rts,
+            caption=file_caption,
             force_document=True,
             allow_cache=False,
             reply_to=event.message.id,
@@ -226,6 +233,17 @@ async def _(event):
 
 
 # Helpers
+
+def is_it_animated_sticker(message):
+    if message.media and message.media.document:
+        mime_type = message.media.document.mime_type
+        if "tgsticker" in mime_type:
+            return True
+        else:
+            return False
+    else:
+        return False
+
 
 def is_message_image(message):
     if message.media:

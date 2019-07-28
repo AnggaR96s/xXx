@@ -1,4 +1,4 @@
-"""Reply to a user to .promote or .prank them in the current chat"""
+"""Reply to a user to .prm or .prank them in the current chat"""
 from telethon import events
 import asyncio
 from datetime import datetime
@@ -7,7 +7,7 @@ from telethon.tl.types import ChatAdminRights
 from uniborg.util import admin_cmd
 
 
-@borg.on(admin_cmd("promote ?(.*)"))
+@borg.on(admin_cmd("prm ?(.*)"))
 async def _(event):
     if event.fwd_from:
         return

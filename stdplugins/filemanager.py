@@ -3,7 +3,7 @@ Syntax:
 .rmdl (remove file on download)
 .lslocal
 .lsroot
-.lssaved """
+.lssaved"""
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -19,6 +19,8 @@ if not os.path.isdir("./SAVED"):
      os.makedirs("./SAVED")
 if not os.path.isdir(Config.TMP_DOWNLOAD_DIRECTORY):
      os.makedirs(Config.TMP_DOWNLOAD_DIRECTORY)
+if not os.path.isdir(Config.TMP_TOKEN_DIRECTORY):
+     os.makedirs(Config.TMP_TOKEN_DIRECTORY)
 
 
 @borg.on(events.NewMessage(pattern=r"\.rmdl", outgoing=True))

@@ -1,5 +1,5 @@
 """Execute GNU/Linux commands inside Telegram
-Syntax: .exec Code"""
+Syntax: .cmd Code"""
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -12,7 +12,7 @@ import time
 from uniborg.util import admin_cmd
 
 
-@borg.on(admin_cmd("exec ?(.*)"))
+@borg.on(admin_cmd("cmd ?(.*)"))
 async def _(event):
     if event.fwd_from:
         return
@@ -44,3 +44,4 @@ async def _(event):
         await event.edit(f"{OUTPUT}`{stderr.decode()}`")
         return
     await event.edit(f"{OUTPUT}`{stdout.decode()}`")
+

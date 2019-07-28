@@ -5,6 +5,9 @@ Syntax: .eval PythonCode"""
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 from telethon import events, sync, errors, functions, types
 import inspect
+import traceback
+import asyncio
+import sys
 import io
 from uniborg.util import admin_cmd
 

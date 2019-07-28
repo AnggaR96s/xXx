@@ -33,10 +33,6 @@
       "description": "Get your own APPID from https://api.openweathermap.org/data/2.5/weather",
       "required": false
     },
-    "SCREEN_SHOT_LAYER_ACCESS_KEY": {
-      "description": "Get your own ACCESS_KEY from http://api.screenshotlayer.com/api/capture",
-      "required": false
-    },
     "PRIVATE_GROUP_BOT_API_ID": {
       "description": "Send .get_id in any group to fill this value.",
       "value": "-100",
@@ -162,6 +158,15 @@
     "G_DRIVE_CLIENT_SECRET": {
       "description": "Get your credentials from https://da.gd/so63O",
       "required": false
+    },
+    "TMP_TOKEN_DIRECTORY": {
+      "description": "This is required for the plugins involving the file system.",
+      "value": "./TOKEN/",
+      "required": false
+    },
+    "TELE_GRAM_2FA_CODE": {
+      "description": "Your Telegram 2FA code as a string",
+      "required": false
     }
   },
   "addons": [{
@@ -173,6 +178,14 @@
   "buildpacks": [{
     "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest"
   }, {
+    "url": "https://github.com/opendoor-labs/heroku-buildpack-p7zip"
+  }, {
+    "url": "https://github.com/heroku/heroku-buildpack-google-chrome"
+  }, {
+    "url": "https://github.com/heroku/heroku-buildpack-chromedriver"
+  }, {
+    "url": "https://github.com/amivin/aria2-heroku"
+    }, {
     "url": "heroku/python"
   }]
 }
