@@ -98,6 +98,8 @@ class Config(object):
     G_DRIVE_CLIENT_SECRET = os.environ.get("G_DRIVE_CLIENT_SECRET", None)
     TMP_TOKEN_DIRECTORY = os.environ.get("TMP_TOKEN_DIRECTORY", "./TOKEN/")
     G_DRIVE_AUTH_TOKEN_DATA = os.environ.get("G_DRIVE_AUTH_TOKEN_DATA", None)
+    #
+    TELE_GRAM_2FA_CODE = os.environ.get("TELE_GRAM_2FA_CODE", None)
 
 
 class Production(Config):

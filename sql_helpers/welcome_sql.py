@@ -42,7 +42,7 @@ def add_welcome_setting(
     custom_welcome_message,
     should_clean_welcome,
     previous_welcome,
-    media_file_id
+    media_file_id=None
 ):
     # adder = SESSION.query(Welcome).get(chat_id)
     adder = Welcome(
