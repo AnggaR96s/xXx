@@ -10,16 +10,46 @@ from hachoir.parser import createParser
 from uniborg.util import admin_cmd, progress
 
 
-logger.info(Config.FF_MPEG_DOWN_LOAD_MEDIA_PATH)
-# https://t.me/RoseSupport/33801
+FF_MPEG_DOWN_LOAD_MEDIA_PATH = "uniborg.media.ffmpeg"
 
 
-@borg.on(admin_cmd("trim"))
-async def magnet_download(event):
+@borg.on(admin_cmd("ffmpegsave"))
+async def ff_mpeg_trim_cmd(event):
     if event.fwd_from:
         return
-    if not os.path.exists(Config.FF_MPEG_DOWN_LOAD_MEDIA_PATH):
-        await event.edit(f"a media file needs to be downloaded, and saved to the following path: `{Config.FF_MPEG_DOWN_LOAD_MEDIA_PATH}`")
+    if not os.path.exists(FF_MPEG_DOWN_LOAD_MEDIA_PATH):
+        if not os.path.isdir(Config.TMP_DOWNLOAD_DIRECTORY):
+            os.makedirs(Config.TMP_DOWNLOAD_DIRECTORY)
+        if event.reply_to_msg_id:
+            start = datetime.now()
+            reply_message = await event.get_reply_message()
+            try:
+                c_time = time.time()
+                downloaded_file_name = await borg.download_media(
+                    reply_message,
+                    FF_MPEG_DOWN_LOAD_MEDIA_PATH,
+                    progress_callback=lambda d, t: asyncio.get_event_loop().create_task(
+                        progress(d, t, event, c_time, "trying to download")
+                    )
+                )
+            except Exception as e:  # pylint:disable=C0103,W0703
+                await event.edit(str(e))
+            else:
+                end = datetime.now()
+                ms = (end - start).seconds
+                await mone.edit("Downloaded to `{}` in {} seconds.".format(downloaded_file_name, ms))
+        else:
+            await event.edit("Reply to a Telegram media file")
+    else:
+        await event.edit("a media file already exists in path. Please remove the media and try again!")
+
+
+@borg.on(admin_cmd("ffmpegtrim"))
+async def ff_mpeg_trim_cmd(event):
+    if event.fwd_from:
+        return
+    if not os.path.exists(FF_MPEG_DOWN_LOAD_MEDIA_PATH):
+        await event.edit(f"a media file needs to be downloaded, and saved to the following path: `{FF_MPEG_DOWN_LOAD_MEDIA_PATH}`")
         return
     current_message_text = event.raw_text
     cmt = current_message_text.split(" ")
@@ -29,7 +59,7 @@ async def magnet_download(event):
         # output should be video
         cmd, start_time, end_time = cmt
         o = await cult_small_video(
-            Config.FF_MPEG_DOWN_LOAD_MEDIA_PATH,
+            FF_MPEG_DOWN_LOAD_MEDIA_PATH,
             Config.TMP_DOWNLOAD_DIRECTORY,
             start_time,
             end_time
@@ -56,7 +86,7 @@ async def magnet_download(event):
         # output should be image
         cmd, start_time = cmt
         o = await take_screen_shot(
-            Config.FF_MPEG_DOWN_LOAD_MEDIA_PATH,
+            FF_MPEG_DOWN_LOAD_MEDIA_PATH,
             Config.TMP_DOWNLOAD_DIRECTORY,
             start_time
         )
@@ -114,6 +144,8 @@ async def take_screen_shot(video_file, output_directory, ttl):
     if os.path.lexists(out_put_file_name):
         return out_put_file_name
     else:
+        logger.info(e_response)
+        logger.info(t_response)
         return None
 
 # https://github.com/Nekmo/telegram-upload/blob/master/telegram_upload/video.py#L26
@@ -149,4 +181,6 @@ async def cult_small_video(video_file, output_directory, start_time, end_time):
     if os.path.lexists(out_put_file_name):
         return out_put_file_name
     else:
+        logger.info(e_response)
+        logger.info(t_response)
         return None
