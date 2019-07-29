@@ -1,8 +1,6 @@
 """Upload local Files to gDrive
 Syntax:
-.gd
-.gfold
-.gclear"""
+.ugdrive"""
 
 # The entire code given below is verbatim copied from
 # https://github.com/cyberboysumanjay/Gdrivedownloader/blob/master/gdrive_upload.py
@@ -108,7 +106,7 @@ async def _(event):
         await mone.edit("File Not found in local server. Give me a file path :((")
 
 
-@borg.on(admin_cmd(pattern="gfold https?://drive\.google\.com/drive/u/\d/folders/([-\w]{25,})", allow_sudo=True))
+@borg.on(admin_cmd(pattern="gsp https?://drive\.google\.com/drive/u/\d/folders/([-\w]{25,})", allow_sudo=True))
 async def _(event):
     if event.fwd_from:
         return
@@ -119,10 +117,10 @@ async def _(event):
         await mone.edit("Custom Folder ID set successfully. The next uploads will upload to {G_DRIVE_F_PARENT_ID} till `.gdriveclear`")
         await event.delete()
     else:
-        await mone.edit("Send `.gfold https://drive.google.com/drive/u/X/folders/Y` to set the folder to upload new files to")
+        await mone.edit("Send `.gdrivesp https://drive.google.com/drive/u/X/folders/Y` to set the folder to upload new files to")
 
 
-@borg.on(admin_cmd(pattern="gclear", allow_sudo=True))
+@borg.on(admin_cmd(pattern="gcl", allow_sudo=True))
 async def _(event):
     if event.fwd_from:
         return
@@ -182,7 +180,7 @@ def upload_file(http, file_path, file_name, mime_type):
     media_body = MediaFileUpload(file_path, mimetype=mime_type, resumable=True)
     body = {
         "title": file_name,
-        "description": "backup",
+        "description": "Uploaded by Telegram UniBorg",
         "mimeType": mime_type,
     }
     if G_DRIVE_F_PARENT_ID is not None:
