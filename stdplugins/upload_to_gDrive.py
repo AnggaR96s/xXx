@@ -1,6 +1,8 @@
 """Upload local Files to gDrive
 Syntax:
-.ugdrive"""
+.gd
+.gsp
+.gcl"""
 
 # The entire code given below is verbatim copied from
 # https://github.com/cyberboysumanjay/Gdrivedownloader/blob/master/gdrive_upload.py
@@ -114,10 +116,10 @@ async def _(event):
     input_str = event.pattern_match.group(1)
     if input_str:
         G_DRIVE_F_PARENT_ID = input_str
-        await mone.edit("Custom Folder ID set successfully. The next uploads will upload to {G_DRIVE_F_PARENT_ID} till `.gdriveclear`")
+        await mone.edit("Custom Folder ID set successfully. The next uploads will upload to {G_DRIVE_F_PARENT_ID} till `.gcl`")
         await event.delete()
     else:
-        await mone.edit("Send `.gdrivesp https://drive.google.com/drive/u/X/folders/Y` to set the folder to upload new files to")
+        await mone.edit("Send `.gsp https://drive.google.com/drive/u/X/folders/Y` to set the folder to upload new files to")
 
 
 @borg.on(admin_cmd(pattern="gcl", allow_sudo=True))
