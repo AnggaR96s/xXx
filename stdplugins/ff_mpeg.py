@@ -37,11 +37,11 @@ async def ff_mpeg_trim_cmd(event):
             else:
                 end = datetime.now()
                 ms = (end - start).seconds
-                await mone.edit("Downloaded to `{}` in {} seconds.".format(downloaded_file_name, ms))
+                await event.edit("Downloaded to `{}` in {} seconds.".format(downloaded_file_name, ms))
         else:
             await event.edit("Reply to a Telegram media file")
     else:
-        await event.edit("a media file already exists in path. Please remove the media and try again!")
+        await event.edit(f"a media file already exists in path. Please remove the media and try again!\n`.exec rm {FF_MPEG_DOWN_LOAD_MEDIA_PATH}`")
 
 
 @borg.on(admin_cmd("ffmpegtrim"))
