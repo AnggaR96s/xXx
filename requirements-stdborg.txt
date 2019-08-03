@@ -13,6 +13,7 @@ hachoir
 Pillow
 
 psycopg2
+pySmartDL
 python-magic
 regex
 requests
