@@ -41,74 +41,74 @@ async def _(event):
     input_str = event.pattern_match.group(1)
     if input_str:
         sticker_emoji = input_str
-    if not is_message_image(reply_message):
-        await event.edit("Invalid message type")
-        return
+
     me = borg.me
     userid = event.from_id
     packname = f"@MenteriPerhubungan's Pack"
     packshortname = f"MenteriPerhubungan_{userid}"  # format: Uni_Borg_userid
 
+    is_a_s = is_it_animated_sticker(reply_message)
+    file_ext_ns_ion = "@UniBorg_Sticker.png"
+    file = await borg.download_file(reply_message.media)
+    uploaded_sticker = None
+    if is_a_s:
+        file_ext_ns_ion = "AnimatedSticker.tgs"
+        uploaded_sticker = await borg.upload_file(file, file_name=file_ext_ns_ion)
+        packname = f"{userid}'s @AnimatedStickersGroup"
+        packshortname = f"Uni_Borg_{userid}_as"  # format: Uni_Borg_userid
+    elif not is_message_image(reply_message):
+        await event.edit("Invalid message type")
+        return
+    else:
+        with BytesIO(file) as mem_file, BytesIO() as sticker:
+            resize_image(mem_file, sticker)
+            sticker.seek(0)
+            uploaded_sticker = await borg.upload_file(sticker, file_name=file_ext_ns_ion)
+
     await event.edit("Processing this sticker. Please Wait!")
+    print(uploaded_sticker)
 
     async with borg.conversation("@Stickers") as bot_conv:
         now = datetime.datetime.now()
         dt = now + datetime.timedelta(minutes=1)
-        file = await borg.download_file(reply_message.media)
-        with BytesIO(file) as mem_file, BytesIO() as sticker:
-            resize_image(mem_file, sticker)
-            sticker.seek(0)
-            uploaded_sticker = await borg.upload_file(sticker, file_name="@UniBorg_Sticker.png")
-            if not await stickerset_exists(bot_conv, packshortname):
-                await silently_send_message(bot_conv, "/cancel")
-                response = await silently_send_message(bot_conv, "/newpack")
-                if response.text != "Yay! A new stickers pack. How are we going to call it? Please choose a name for your pack.":
-                    await event.edit(f"**FAILED**! @Stickers replied: {response.text}")
-                    return
-                response = await silently_send_message(bot_conv, packname)
-                if not response.text.startswith("Alright!"):
-                    await event.edit(f"**FAILED**! @Stickers replied: {response.text}")
-                    return
-                await bot_conv.send_file(
-                    InputMediaUploadedDocument(
-                        file=uploaded_sticker,
-                        mime_type='image/png',
-                        attributes=[
-                            DocumentAttributeFilename(
-                                "@UniBorg_Sticker.png"
-                            )
-                        ]
-                    ),
-                    force_document=True
-                )
-                await bot_conv.get_response()
-                await silently_send_message(bot_conv, sticker_emoji)
-                await silently_send_message(bot_conv, "/publish")
-                await silently_send_message(bot_conv, "/skip")
-                response = await silently_send_message(bot_conv, packshortname)
-                if response.text == "Sorry, this short name is already taken.":
-                    await event.edit(f"**FAILED**! @Stickers replied: {response.text}")
-                    return
+        if not await stickerset_exists(bot_conv, packshortname):
+            await silently_send_message(bot_conv, "/cancel")
+            if is_a_s:
+                response = await silently_send_message(bot_conv, "/newanimated")
             else:
-                await silently_send_message(bot_conv, "/cancel")
-                await silently_send_message(bot_conv, "/addsticker")
-                await silently_send_message(bot_conv, packshortname)
-                await bot_conv.send_file(
-                    InputMediaUploadedDocument(
-                        file=uploaded_sticker,
-                        mime_type='image/png',
-                        attributes=[
-                            DocumentAttributeFilename(
-                                "@UniBorg_Sticker.png"
-                            )
-                        ]
-                    ),
-                    force_document=True
-                )
-                response = await bot_conv.get_response()
-                await silently_send_message(bot_conv, response)
-                await silently_send_message(bot_conv, sticker_emoji)
-                await silently_send_message(bot_conv, "/done")
+                response = await silently_send_message(bot_conv, "/newpack")
+            if "Yay!" not in response.text:
+                await event.edit(f"**FAILED**! @Stickers replied: {response.text}")
+                return
+            response = await silently_send_message(bot_conv, packname)
+            if not response.text.startswith("Alright!"):
+                await event.edit(f"**FAILED**! @Stickers replied: {response.text}")
+                return
+            w = await bot_conv.send_file(
+                file=uploaded_sticker,
+                force_document=True
+            )
+            print(w)
+            await bot_conv.get_response()
+            await silently_send_message(bot_conv, sticker_emoji)
+            await silently_send_message(bot_conv, "/publish")
+            await silently_send_message(bot_conv, "/skip")
+            response = await silently_send_message(bot_conv, packshortname)
+            if response.text == "Sorry, this short name is already taken.":
+                await event.edit(f"**FAILED**! @Stickers replied: {response.text}")
+                return
+        else:
+            await silently_send_message(bot_conv, "/cancel")
+            await silently_send_message(bot_conv, "/addsticker")
+            await silently_send_message(bot_conv, packshortname)
+            await bot_conv.send_file(
+                file=uploaded_sticker,
+                force_document=True
+            )
+            response = await bot_conv.get_response()
+            await silently_send_message(bot_conv, response)
+            await silently_send_message(bot_conv, sticker_emoji)
+            await silently_send_message(bot_conv, "/done")
 
     await event.edit(f"sticker added! Your pack can be found [here](t.me/addstickers/{packshortname})")
 
