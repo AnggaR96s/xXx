@@ -26,10 +26,10 @@ async def _(event):
     process = await asyncio.create_subprocess_shell(
         cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
     )
-    OUTPUT = f"**QUERY:**\n__Command:__\n`{cmd}` \n__PID:__\n`{process.pid}`\n\n**Output:**\n"
     stdout, stderr = await process.communicate()
-    if len(stdout) > Config.MAX_MESSAGE_SIZE_LIMIT:
-        with io.BytesIO(str.encode(stdout)) as out_file:
+    OUTPUT = f"**QUERY:**\n__Command:__\n`{cmd}` \n__PID:__\n`{process.pid}`\n\n**stderr:** \n`{stderr.decode()}`\n**Output:**\n`{stdout.decode()}`"
+    if len(OUTPUT) > Config.MAX_MESSAGE_SIZE_LIMIT:
+        with io.BytesIO(str.encode(OUTPUT)) as out_file:
             out_file.name = "exec.text"
             await borg.send_file(
                 event.chat_id,
@@ -40,8 +40,4 @@ async def _(event):
                 reply_to=reply_to_id
             )
             await event.delete()
-    if stderr.decode():
-        await event.edit(f"{OUTPUT}`{stderr.decode()}`")
-        return
-    await event.edit(f"{OUTPUT}`{stdout.decode()}`")
-
+    await event.edit(OUTPUT)
