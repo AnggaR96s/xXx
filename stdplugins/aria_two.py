@@ -29,6 +29,7 @@ async def aria_start(event):
         stderr=asyncio.subprocess.PIPE
     )
     stdout, stderr = await process.communicate()
+    global aria2
     aria2 = aria2p.API(
         aria2p.Client(
             host="http://localhost",
@@ -36,16 +37,7 @@ async def aria_start(event):
             secret=""
         )
     )
-    e = stderr.decode()
-    if not e:
-        e = "No Error"
-    o = stdout.decode()
-    if not o:
-        o = "**Tip**: \n`If you want to see the results of your code, I suggest printing them to stdout.`"
-    else:
-        _o = o.split("\n")
-        o = "`".join(_o)
-    OUTPUT = f"**ARIA TWO C:**\n__PID:__\n`{process.pid}`\n\n**stderr:** \n`{e}`\n**Output:**\n{o}"
+    OUTPUT = f"**ARIA TWO C:**\n__PID:__\n`{process.pid}`\n\n**ARIA TWO STARTED**"
     await event.edit(OUTPUT)
 
 
