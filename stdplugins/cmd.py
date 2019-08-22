@@ -35,7 +35,7 @@ async def _(event):
         o = "**Tip**: \n`If you want to see the results of your code, I suggest printing them to stdout.`"
     else:
         _o = o.split("\n")
-        o = "`".join(_o)
+        o = "`\n".join(_o)
     OUTPUT = f"**QUERY:**\n__Command:__\n`{cmd}` \n__PID:__\n`{process.pid}`\n\n**stderr:** \n`{e}`\n**Output:**\n{o}"
     if len(OUTPUT) > Config.MAX_MESSAGE_SIZE_LIMIT:
         with io.BytesIO(str.encode(OUTPUT)) as out_file:
