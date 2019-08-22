@@ -16,7 +16,8 @@ from uniborg.util import admin_cmd
 
 
 EDIT_SLEEP_TIME_OUT = 15
-aria2_daemon_start_cmd = "aria2c --enable-rpc --rpc-listen-all=false --rpc-listen-port 6800  --max-connection-per-server=10 --rpc-max-request-size=1024M --seed-time=99999 --seed-ratio=100.0 --min-split-size=10M --follow-torrent=mem --split=10 --daemon=true"
+ARIA2_STARTED_PORT = 6800
+aria2_daemon_start_cmd = f"aria2c --enable-rpc --rpc-listen-all=false --rpc-listen-port {ARIA2_STARTED_PORT} --max-connection-per-server=10 --rpc-max-request-size=1024M --seed-time=0.01 --seed-ratio=100.0 --min-split-size=10M --follow-torrent=mem --split=10 --daemon=true"
 aria2_is_running = False
 aria2 = None
 
@@ -33,7 +34,7 @@ async def aria_start(event):
     aria2 = aria2p.API(
         aria2p.Client(
             host="http://localhost",
-            port=6800,
+            port=ARIA2_STARTED_PORT,
             secret=""
         )
     )
@@ -186,7 +187,12 @@ async def check_progress_for_dl(gid, event):
         complete = file.is_complete
         try:
             if not file.error_message:
-                msg = f"Downloading File: `{file.name}`\nSpeed: {file.download_speed_string()}\nProgress: {file.progress_string()}\nTotal Size: {file.total_length_string()}\nStatus: {file.status}\nETA: {file.eta_string()}"
+                msg = f"\nDownloading File: `{file.name}`"
+                msg += f"\nSpeed: {file.download_speed_string()} 🔽 / {file.upload_speed_string()} 🔼"
+                msg += f"\nProgress: {file.progress_string()}"
+                msg += f"\nTotal Size: {file.total_length_string()}"
+                msg += f"\nStatus: {file.status}"
+                msg += f"\nETA: {file.eta_string()}"
                 if msg != previous_message:
                     await event.edit(msg)
                     previous_message = msg
