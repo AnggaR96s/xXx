@@ -13,7 +13,6 @@ import asyncio
 import os
 import time
 from datetime import datetime
-from re import sub
 from telethon import events
 from uniborg.util import admin_cmd, progress
 from mimetypes import guess_type
@@ -164,6 +163,34 @@ async def _(event):
         await mone.edit(f"directory {input_str} does not seem to exist")
 
 
+@borg.on(admin_cmd(pattern="drive search ?(.*)", allow_sudo=True))
+async def _(event):
+    if event.fwd_from:
+        return
+    mone = await event.reply("Processing ...")
+    if CLIENT_ID is None or CLIENT_SECRET is None:
+        await mone.edit("This module requires credentials from https://da.gd/so63O. Aborting!")
+        return
+    if Config.PRIVATE_GROUP_BOT_API_ID is None:
+        await event.edit("Please set the required environment variable `PRIVATE_GROUP_BOT_API_ID` for this plugin to work")
+        return
+    input_str = event.pattern_match.group(1).strip()
+    # TODO: remove redundant code
+    #
+    if Config.G_DRIVE_AUTH_TOKEN_DATA is not None:
+        with open(G_DRIVE_TOKEN_FILE, "w") as t_file:
+            t_file.write(Config.G_DRIVE_AUTH_TOKEN_DATA)
+    # Check if token file exists, if not create it by requesting authorization code
+    storage = None
+    if not os.path.isfile(G_DRIVE_TOKEN_FILE):
+        storage = await create_token_file(G_DRIVE_TOKEN_FILE, event)
+    http = authorize(G_DRIVE_TOKEN_FILE, storage)
+    # Authorize, get file parameters, upload file and print out result URL for download
+    await mone.edit(f"searching for {input_str} in your gDrive ...")
+    gsearch_results = await gdrive_search(http, input_str)
+    await mone.edit(gsearch_results, link_preview=False, parse_mode="html")
+
+
 # Get mime type and name of given file
 def file_ops(file_path):
     mime_type = guess_type(file_path)[0]
@@ -298,3 +325,30 @@ async def DoTeskWithDir(http, input_directory, event, parent_id):
     return r_p_id
 
 
+async def gdrive_search(http, search_query):
+    query = "'{}' in parents and (title contains '{}')".format(G_DRIVE_F_PARENT_ID, search_query)
+    drive_service = build("drive", "v2", http=http, cache_discovery=False)
+    page_token = None
+    msg = f"<b>G-Drive Search Query</b>: <code>{search_query}</code>\n\n<b>Results</b>\n"
+    while True:
+        try:
+            response = drive_service.files().list(
+                q=query,
+                spaces="drive",
+                fields="nextPageToken, items(id, title, mimeType)",
+                pageToken=page_token
+            ).execute()
+            for file in response.get("items",[]):
+                file_title = file.get("title")
+                file_id = file.get("id")
+                if file.get("mimeType") == "application/vnd.google-apps.folder":
+                    msg += f"🗃️ <a href='https://drive.google.com/drive/folders/{file_id}'>{file_title}</a>"
+                else:
+                    msg += f"👉 <a href='https://drive.google.com/uc?id={file_id}&export=download'>{file_title}</a>"
+            page_token = response.get("nextPageToken", None)
+            if page_token is None:
+                break
+        except Exception as e:
+            msg += str(e)
+            break
+    return msg
