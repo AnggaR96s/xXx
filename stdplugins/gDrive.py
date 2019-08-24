@@ -13,16 +13,16 @@ import asyncio
 import os
 import time
 from datetime import datetime
+from re import sub
 from telethon import events
 from uniborg.util import admin_cmd, progress
-#
+from mimetypes import guess_type
 from apiclient.discovery import build
 from apiclient.http import MediaFileUpload
 from apiclient.errors import ResumableUploadError
 from oauth2client.client import OAuth2WebServerFlow
 from oauth2client.file import Storage
 from oauth2client import file, client, tools
-from mimetypes import guess_type
 import httplib2
 
 
@@ -91,16 +91,17 @@ async def _(event):
             with open(G_DRIVE_TOKEN_FILE, "w") as t_file:
                 t_file.write(Config.G_DRIVE_AUTH_TOKEN_DATA)
         # Check if token file exists, if not create it by requesting authorization code
+        storage = None
         if not os.path.isfile(G_DRIVE_TOKEN_FILE):
             storage = await create_token_file(G_DRIVE_TOKEN_FILE, event)
-            http = authorize(G_DRIVE_TOKEN_FILE, storage)
+        http = authorize(G_DRIVE_TOKEN_FILE, storage)
         # Authorize, get file parameters, upload file and print out result URL for download
-        http = authorize(G_DRIVE_TOKEN_FILE, None)
+        # http = authorize(G_DRIVE_TOKEN_FILE, None)
         file_name, mime_type = file_ops(required_file_name)
         # required_file_name will have the full path
         # Sometimes API fails to retrieve starting URI, we wrap it.
         try:
-            g_drive_link = upload_file(http, required_file_name, file_name, mime_type)
+            g_drive_link = await upload_file(http, required_file_name, file_name, mime_type, mone, G_DRIVE_F_PARENT_ID)
             await mone.edit(f"Here is your Google Drive link: {g_drive_link}")
         except Exception as e:
             await mone.edit(f"Exception occurred while uploading to gDrive {e}")
@@ -175,18 +176,18 @@ def authorize(token_file, storage):
     return http
 
 
-def upload_file(http, file_path, file_name, mime_type):
+async def upload_file(http, file_path, file_name, mime_type, event, parent_id):
     # Create Google Drive service instance
-    drive_service = build("drive", "v2", http=http)
+    drive_service = build("drive", "v2", http=http, cache_discovery=False)
     # File body description
     media_body = MediaFileUpload(file_path, mimetype=mime_type, resumable=True)
     body = {
         "title": file_name,
-        "description": "Uploaded by Telegram UniBorg",
+        "description": "Uploaded using @UniBorg gDrive v2",
         "mimeType": mime_type,
     }
-    if G_DRIVE_F_PARENT_ID is not None:
-        body["parents"] = [{"id": G_DRIVE_F_PARENT_ID}]
+    if parent_id is not None:
+        body["parents"] = [{"id": parent_id}]
     # Permissions body description: anyone who has link can upload
     # Other permissions can be found at https://developers.google.com/drive/v2/reference/permissions
     permissions = {
@@ -196,10 +197,31 @@ def upload_file(http, file_path, file_name, mime_type):
         "withLink": True
     }
     # Insert a file
-    file = drive_service.files().insert(body=body, media_body=media_body).execute()
+    file = drive_service.files().insert(body=body, media_body=media_body)
+    response = None
+    display_message = ""
+    while response is None:
+        status, response = file.next_chunk()
+        await asyncio.sleep(1)
+        if status:
+            percentage = int(status.progress() * 100)
+            progress_str = "[{0}{1}]\nProgress: {2}%\n".format(
+                "".join(["█" for i in range(math.floor(percentage / 5))]),
+                "".join(["░" for i in range(20 - math.floor(percentage / 5))]),
+                round(percentage, 2)
+            )
+            current_message = f"uploading to gDrive\nFile Name: {file_name}\n{progress_str}"
+            if display_message != current_message:
+                try:
+                    await event.edit(current_message)
+                    display_message = current_message
+                except Exception as e:
+                    logger.info(str(e))
+                    pass
+    file_id = response.get("id")
     # Insert new permissions
-    drive_service.permissions().insert(fileId=file["id"], body=permissions).execute()
+    drive_service.permissions().insert(fileId=file_id, body=permissions).execute()
     # Define file instance and get url for download
-    file = drive_service.files().get(fileId=file["id"]).execute()
+    file = drive_service.files().get(fileId=file_id).execute()
     download_url = file.get("webContentLink")
     return download_url
