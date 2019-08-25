@@ -7,7 +7,7 @@ from uniborg.util import admin_cmd, humanbytes
 
 
 @borg.on(admin_cmd(  # pylint:disable=E0602
-    "torrentz (torrentz2\.eu|idop\.se) (.*)"
+    pattern="torrentz (torrentz2\.eu|idop\.se) (.*)"
 ))
 async def _(event):
     if event.fwd_from:

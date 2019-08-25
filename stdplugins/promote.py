@@ -7,7 +7,7 @@ from telethon.tl.types import ChatAdminRights
 from uniborg.util import admin_cmd
 
 
-@borg.on(admin_cmd("prm ?(.*)"))
+@borg.on(admin_cmd(pattern="promote ?(.*)"))
 async def _(event):
     if event.fwd_from:
         return
@@ -38,7 +38,7 @@ async def _(event):
         await event.edit("Successfully Promoted")
 
 
-@borg.on(admin_cmd("prank ?(.*)"))
+@borg.on(admin_cmd(pattern"prank ?(.*)"))
 async def _(event):
     if event.fwd_from:
         return

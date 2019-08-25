@@ -5,7 +5,7 @@ import random, re
 from uniborg.util import admin_cmd
 
 
-@borg.on(admin_cmd("cf ?(.*)"))
+@borg.on(admin_cmd(pattern="cf ?(.*)"))
 async def _(event):
     if event.fwd_from:
         return

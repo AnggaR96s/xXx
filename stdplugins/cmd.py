@@ -12,7 +12,7 @@ import time
 from uniborg.util import admin_cmd
 
 
-@borg.on(admin_cmd("cmd ?(.*)"))
+@borg.on(admin_cmd(pattern="cmd ?(.*)"))
 async def _(event):
     if event.fwd_from:
         return
