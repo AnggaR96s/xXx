@@ -43,7 +43,6 @@ class Config(object):
     if G_BAN_LOGGER_GROUP:
         G_BAN_LOGGER_GROUP = int(G_BAN_LOGGER_GROUP)
     # TG API limit. An album can have atmost 10 media!
-    GOOGLE_SEARCH_COUNT_LIMIT = int(os.environ.get("GOOGLE_SEARCH_COUNT_LIMIT", 9))
     TG_GLOBAL_ALBUM_LIMIT = int(os.environ.get("TG_GLOBAL_ALBUM_LIMIT", 9))
     # Telegram BOT Token from @BotFather
     TG_BOT_TOKEN_BF_HER = os.environ.get("TG_BOT_TOKEN_BF_HER", None)

@@ -7,7 +7,6 @@ cryptg
 emoji
 googletrans
 google_images_download
-gsearch
 gtts
 hachoir
 Pillow
