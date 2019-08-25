@@ -28,7 +28,6 @@ else:
 
 if Config.DB_URI is None:
     logging.warning("No DB_URI Found!")
-    sys.exit(1)
 
 
 if len(Config.SUDO_USERS) >= 0:
