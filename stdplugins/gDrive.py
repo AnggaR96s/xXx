@@ -156,7 +156,9 @@ async def _(event):
             storage = await create_token_file(G_DRIVE_TOKEN_FILE, event)
         http = authorize(G_DRIVE_TOKEN_FILE, storage)
         # Authorize, get file parameters, upload file and print out result URL for download
-        dir_id = await DoTeskWithDir(http, input_str, mone, G_DRIVE_F_PARENT_ID)
+        # first, create a sub-directory
+        dir_id = await create_directory(http, os.path.basename(os.path.abspath(input_str)), G_DRIVE_F_PARENT_ID)
+        await DoTeskWithDir(http, input_str, mone, dir_id)
         dir_link = "https://drive.google.com/folderview?id={}".format(dir_id)
         await mone.edit(f"[Here is your Google Drive link]({dir_link})")
     else:
