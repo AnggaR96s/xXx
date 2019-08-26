@@ -45,7 +45,7 @@ async def _(event):
                 out_file,
                 force_document=True,
                 allow_cache=False,
-                caption=OUTPUT,
+                caption=cmd,
                 reply_to=reply_to_id
             )
             await event.delete()
