@@ -87,7 +87,7 @@ class Uniborg(TelegramClient):
 
 
     def load_plugin(self, shortname):
-        self.load_plugin_from_file(f"{self._plugin_path}/{shortname}.py")
+        self.load_plugin_from_file(f"{self.n_plugin_path}/{shortname}.py")
 
     def load_plugin_from_file(self, path):
         path = Path(path)
