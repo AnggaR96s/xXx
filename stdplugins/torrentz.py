@@ -21,7 +21,7 @@ async def _(event):
         search_results = search_torrentz_eu(input_str)
     elif input_type == "idop.se":
         search_results = search_idop_se(input_str)
-    logger.info(search_results)  # pylint:disable=E0602
+    # logger.info(search_results)  # pylint:disable=E0602
     output_str = ""
     i = 0
     for result in search_results:
