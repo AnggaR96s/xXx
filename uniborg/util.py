@@ -31,9 +31,12 @@ def admin_cmd(**args):
         else:
             args["pattern"] = re.compile(Config.COMMAND_HAND_LER + pattern)
 
+    args["outgoing"] = True
     # should this command be available for other users?
     if allow_sudo:
         args["from_users"] = list(Config.SUDO_USERS)
+        # Mutually exclusive with outgoing (can only set one of either).
+        args["incoming"] = True
         del args["allow_sudo"]
 
     # error handling condition check
