@@ -16,20 +16,38 @@ from uniborg.util import admin_cmd
 
 
 EDIT_SLEEP_TIME_OUT = 15
+# The port that RPC will listen on
 ARIA2_STARTED_PORT = 6800
-aria2_daemon_start_cmd = f"aria2c --enable-rpc --rpc-listen-all=false --rpc-listen-port {ARIA2_STARTED_PORT} --max-connection-per-server=10 --rpc-max-request-size=1024M --seed-time=0.01 --seed-ratio=100.0 --min-split-size=10M --follow-torrent=mem --split=10 --daemon=true"
-aria2_is_running = False
 aria2 = None
 
 
 @borg.on(admin_cmd(pattern="ariastart"))
 async def aria_start(event):
-    process = await asyncio.create_subprocess_shell(
-        aria2_daemon_start_cmd,
+    aria2_daemon_start_cmd = []
+    # start the daemon, aria2c command
+    aria2_daemon_start_cmd.append("aria2c")
+    aria2_daemon_start_cmd.append("--allow-overwrite=true")
+    aria2_daemon_start_cmd.append("--daemon=true")
+    aria2_daemon_start_cmd.append(f"--dir={Config.TMP_DOWNLOAD_DIRECTORY}")
+    aria2_daemon_start_cmd.append("--enable-rpc")
+    aria2_daemon_start_cmd.append("--follow-torrent=mem")
+    aria2_daemon_start_cmd.append("--max-connection-per-server=10")
+    aria2_daemon_start_cmd.append("--min-split-size=10M")
+    aria2_daemon_start_cmd.append("--rpc-listen-all=false")
+    aria2_daemon_start_cmd.append(f"--rpc-listen-port={ARIA2_STARTED_PORT}")
+    aria2_daemon_start_cmd.append("--rpc-max-request-size=1024M")
+    aria2_daemon_start_cmd.append("--seed-ratio=100.0")
+    aria2_daemon_start_cmd.append("--seed-time=1")
+    aria2_daemon_start_cmd.append("--split=10")
+    #
+    process = await asyncio.create_subprocess_exec(
+        *aria2_daemon_start_cmd,
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE
     )
     stdout, stderr = await process.communicate()
+    logger.info(stdout)
+    logger.info(stderr)
     global aria2
     aria2 = aria2p.API(
         aria2p.Client(
@@ -86,8 +104,8 @@ async def torrent_download(event):
             options=None,
             position=None
         )
-    except:
-        await event.edit("`Torrent File Not Found...`")
+    except Exception as e:
+        await event.edit(str(e))
         return
     gid = download.gid
     await check_progress_for_dl(gid, event)
