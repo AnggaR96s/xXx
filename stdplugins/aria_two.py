@@ -28,7 +28,9 @@ async def aria_start(event):
     aria2_daemon_start_cmd.append("aria2c")
     aria2_daemon_start_cmd.append("--allow-overwrite=true")
     aria2_daemon_start_cmd.append("--daemon=true")
-    aria2_daemon_start_cmd.append(f"--dir={Config.TMP_DOWNLOAD_DIRECTORY}")
+    # aria2_daemon_start_cmd.append(f"--dir={Config.TMP_DOWNLOAD_DIRECTORY}")
+    # TODO: this does not work, need to investigate this.
+    # but for now, https://t.me/TrollVoiceBot?start=858
     aria2_daemon_start_cmd.append("--enable-rpc")
     aria2_daemon_start_cmd.append("--follow-torrent=mem")
     aria2_daemon_start_cmd.append("--max-connection-per-server=10")
