@@ -79,7 +79,7 @@ if Config.TG_BOT_USER_NAME_BF_HER is not None and tgbot is not None:
             result = builder.article(
                 "Button Parser © @UniBorg",
                 text=f"powered by @UniBorg",
-                buttons=inline_keyboard,
+                buttons=[],
                 link_preview=True
             )
         else:
