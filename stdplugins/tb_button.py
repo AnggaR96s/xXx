@@ -13,10 +13,18 @@ BTN_URL_REGEX = re.compile(r"(\{([^\[]+?)\}\<buttonurl:(?:/{0,2})(.+?)(:same)?\>
 @borg.on(admin_cmd(pattern="cbutton"))  # pylint:disable=E0602
 async def _(event):
     if Config.TG_BOT_USER_NAME_BF_HER is None or tgbot is None:
+        await event.edit("need to set up a @BotFather bot for this module to work")
         return
+
+    if Config.PRIVATE_CHANNEL_BOT_API_ID is None:
+        await event.edit("need to have a `PRIVATE_CHANNEL_BOT_API_ID` for this module to work")
+        return
+
     reply_message = await event.get_reply_message()
     if reply_message is None:
+        await event.edit("reply to a message that I need to parse the magic on")
         return
+
     markdown_note = reply_message.text
     prev = 0
     note_data = ""
@@ -46,13 +54,23 @@ async def _(event):
     message_text = note_data.strip()
     tl_ib_buttons = build_keyboard(buttons)
 
-    logger.info(message_text)
-    logger.info(tl_ib_buttons)
+    # logger.info(message_text)
+    # logger.info(tl_ib_buttons)
+
+    tgbot_reply_message = None
+    if reply_message.media is not None:
+        message_id_in_channel = reply_message.id
+        tgbot_reply_message = await tgbot.get_messages(
+            entity=Config.PRIVATE_CHANNEL_BOT_API_ID,
+            ids=message_id_in_channel
+        )
+        tgbot_reply_message = tgbot_reply_message.media
 
     await tgbot.send_message(
         entity=Config.PRIVATE_CHANNEL_BOT_API_ID,
         message=message_text,
         parse_mode="html",
+        file=tgbot_reply_message,
         link_preview=False,
         buttons=tl_ib_buttons,
         silent=True
