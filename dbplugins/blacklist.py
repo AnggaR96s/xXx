@@ -17,6 +17,8 @@ from uniborg.util import admin_cmd
 @borg.on(admin_cmd(incoming=True))
 async def on_new_message(event):
     # TODO: exempt admins from locks
+    if borg.me.id == event.from_id:
+        return
     name = event.raw_text
     snips = sql.get_chat_blacklist(event.chat_id)
     for snip in snips:
