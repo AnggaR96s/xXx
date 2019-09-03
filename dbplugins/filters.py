@@ -57,11 +57,11 @@ async def on_snip(event):
                     reply_to=message_id,
                     file=media
                 )
-                if event.chat_id not in borg.storage.last_triggered_filters:
-                    borg.storage.last_triggered_filters[event.chat_id] = []
-                borg.storage.last_triggered_filters[event.chat_id].append(name)
+                if event.chat_id not in last_triggered_filters:
+                    last_triggered_filters[event.chat_id] = []
+                last_triggered_filters[event.chat_id].append(name)
                 await asyncio.sleep(DELETE_TIMEOUT)
-                borg.storage.last_triggered_filters[event.chat_id].remove(name)
+                last_triggered_filters[event.chat_id].remove(name)
 
 
 @borg.on(admin_cmd(pattern="savefilter (.*)"))
