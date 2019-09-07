@@ -7,6 +7,7 @@ Available Commands:
 .listblacklist
 .rmblacklist"""
 import asyncio
+import io
 import re
 import sql_helpers.blacklist_sql as sql
 from telethon import events, utils
