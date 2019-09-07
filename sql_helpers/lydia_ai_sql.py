@@ -70,5 +70,5 @@ def remove_s(
 ):
     note = SESSION.query(LydiaAI).get((user_id, chat_id))
     if note:
-        note.delete()
+        SESSION.delete(note)
         SESSION.commit()
