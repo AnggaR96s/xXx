@@ -96,6 +96,13 @@ class Config(object):
     GOOGLE_CHROME_BIN = os.environ.get("GOOGLE_CHROME_BIN", None)
     #
     LYDIA_API = os.environ.get("LYDIA_API", None)
+    #
+    # define "spam" in PMs
+    MAX_FLOOD_IN_P_M_s = int(os.environ.get("MAX_FLOOD_IN_P_M_s", 3))
+    # leave this blank, should be automatically filled for Heroku.com users
+    PM_LOGGR_BOT_API_ID = os.environ.get("PM_LOGGR_BOT_API_ID", None)
+    if PM_LOGGR_BOT_API_ID:
+        PM_LOGGR_BOT_API_ID = int(PM_LOGGR_BOT_API_ID)
 
 
 class Production(Config):
