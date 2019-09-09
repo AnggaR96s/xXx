@@ -189,13 +189,14 @@ async def on_new_private_message(event):
 async def on_new_chat_action_message(event):
     if Config.PM_LOGGR_BOT_API_ID is None:
         return
+    # logger.info(event.stringify())
     chat_id = event.chat_id
-    message_id = event.message.id
+    message_id = event.action_message.id
 
-    added_by_users = event.added_by
-    if added_by_users:
-        users = event.users
-        if borg.uid in users:
+    if event.created or event.user_added:
+        added_by_users = event.action_message.action.users
+        if borg.uid in added_by_users:
+            added_by_user = event.action_message.from_id
             # someone added me to chat
             the_message = ""
             the_message += "#MessageActionChatAddUser\n\n"
@@ -205,7 +206,7 @@ async def on_new_chat_action_message(event):
                 entity=Config.PM_LOGGR_BOT_API_ID,
                 message=the_message,
                 # reply_to=,
-                parse_mode="html",
+                # parse_mode="html",
                 link_preview=False,
                 # file=message_media,
                 silent=True
@@ -213,27 +214,54 @@ async def on_new_chat_action_message(event):
 
 
 @borg.on(events.Raw())
+async def on_new_channel_message(event):
+    if Config.PM_LOGGR_BOT_API_ID is None:
+        return
+    if tgbot is None:
+        return
+    # logger.info(event.stringify())
+    if isinstance(event, types.UpdateChannel):
+        channel_id = event.channel_id
+        message_id = 2
+        # someone added me to channel
+        # TODO: https://t.me/TelethonChat/153947
+        the_message = ""
+        the_message += "#MessageActionChatAddUser\n\n"
+        # the_message += f"[User](tg://user?id={added_by_user}): `{added_by_user}`\n"
+        the_message += f"[Private Link](https://t.me/c/{channel_id}/{message_id})\n"
+        await borg.send_message(
+            entity=Config.PM_LOGGR_BOT_API_ID,
+            message=the_message,
+            # reply_to=,
+            # parse_mode="html",
+            link_preview=False,
+            # file=message_media,
+            silent=True
+        )
+
+
+"""@borg.on(events.Raw())
 async def _(event):
     if Config.PM_LOGGR_BOT_API_ID is None:
         return
     if tgbot is None:
         return
-    logger.info(event.stringify())
+    logger.info(event.stringify())"""
 
 
-if tgbot is not None:
+"""if tgbot is not None:
     @tgbot.on(events.Raw())
     async def _(event):
         if Config.PM_LOGGR_BOT_API_ID is None:
             return
-        logger.info(event.stringify())
+        logger.info(event.stringify())"""
 
 
 async def do_pm_permit_action(chat_id, event):
     if chat_id not in PM_WARNS:
         PM_WARNS.update({chat_id: 0})
     if PM_WARNS[chat_id] == Config.MAX_FLOOD_IN_P_M_s:
-        r = await event.reply(UNIBORG_USER_BOT_WARN_ZERO, parse_mode="html")
+        r = await event.reply(UNIBORG_USER_BOT_WARN_ZERO)
         await asyncio.sleep(3)
         await borg(functions.contacts.BlockRequest(chat_id))
         if chat_id in PREV_REPLY_MESSAGE:
@@ -248,13 +276,13 @@ async def do_pm_permit_action(chat_id, event):
             entity=Config.PM_LOGGR_BOT_API_ID,
             message=the_message,
             # reply_to=,
-            parse_mode="html",
+            # parse_mode="html",
             link_preview=False,
             # file=message_media,
             silent=True
         )
         return
-    r = await event.reply(UNIBORG_USER_BOT_NO_WARN, parse_mode="html")
+    r = await event.reply(UNIBORG_USER_BOT_NO_WARN)
     PM_WARNS[chat_id] += 1
     if chat_id in PREV_REPLY_MESSAGE:
         await PREV_REPLY_MESSAGE[chat_id].delete()
@@ -271,7 +299,7 @@ async def do_log_pm_action(chat_id, message_text, message_media):
         entity=Config.PM_LOGGR_BOT_API_ID,
         message=the_message,
         # reply_to=,
-        parse_mode="html",
+        # parse_mode="html",
         link_preview=False,
         file=message_media,
         silent=True
