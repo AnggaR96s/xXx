@@ -9,6 +9,7 @@ import time
 from datetime import datetime
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
+import math
 import os
 from pySmartDL import SmartDL
 from telethon.tl.types import DocumentAttributeVideo
