@@ -190,7 +190,7 @@ async def on_new_chat_action_message(event):
     if Config.PM_LOGGR_BOT_API_ID is None:
         return
     chat_id = event.chat_id
-    message_id = event.id
+    message_id = event.message.id
 
     added_by_users = event.added_by
     if added_by_users:
