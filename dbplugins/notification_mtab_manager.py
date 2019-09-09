@@ -155,7 +155,7 @@ async def on_new_private_message(event):
     message_id = event.message.id
     message_to_id = event.message.to_id
     chat_id = event.chat_id
-    logger.info(chat_id)
+    # logger.info(chat_id)
 
     current_message_text = message_text.lower()
     if BAALAJI_TG_USER_BOT in current_message_text or \
