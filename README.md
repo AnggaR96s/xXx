@@ -106,4 +106,5 @@ Check out the already-mentioned [plugins](https://github.com/SpEcHiDe/UniBorg/tr
 
 Thanks to:
 - [lonami](https://lonami.dev) for creating [Telethon](https://github.com/lonamiwebs/Telethon)
-- ![CopyLeft](https://telegra.ph/file/fab1017e21c42a5c1e613.mp4)
+- [![CopyLeft](https://telegra.ph/file/b514ed14d994557a724cb.jpg)](https://telegra.ph/file/fab1017e21c42a5c1e613.mp4 "CopyLeft Credit Video")
+
