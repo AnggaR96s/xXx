@@ -1,4 +1,4 @@
-from sqlalchemy import BigInteger, Boolean, Column, String, UnicodeText
+from sqlalchemy import BigInteger, Boolean, Column, LargeBinary, Numeric, String, UnicodeText
 from sql_helpers import SESSION, BASE
 
 
@@ -6,7 +6,10 @@ class Welcome(BASE):
     __tablename__ = "welcome"
     chat_id = Column(String(14), primary_key=True)
     custom_welcome_message = Column(UnicodeText)
-    media_file_id = Column(UnicodeText)
+    message_type = Column(Numeric)
+    media_id = Column(UnicodeText)
+    media_access_hash = Column(UnicodeText)
+    media_file_reference = Column(LargeBinary)
     should_clean_welcome = Column(Boolean, default=False)
     previous_welcome = Column(BigInteger)
 
@@ -16,11 +19,17 @@ class Welcome(BASE):
         custom_welcome_message,
         should_clean_welcome,
         previous_welcome,
-        media_file_id=None,
+        message_type=0,
+        media_id=None,
+        media_access_hash=None,
+        media_file_reference=None,
     ):
         self.chat_id = chat_id
         self.custom_welcome_message = custom_welcome_message
-        self.media_file_id = media_file_id
+        self.message_type = message_type
+        self.media_id = media_id
+        self.media_access_hash = media_access_hash
+        self.media_file_reference = media_file_reference
         self.should_clean_welcome = should_clean_welcome
         self.previous_welcome = previous_welcome
 
@@ -42,7 +51,10 @@ def add_welcome_setting(
     custom_welcome_message,
     should_clean_welcome,
     previous_welcome,
-    media_file_id=None
+    message_type=0,
+    media_id=None,
+    media_access_hash=None,
+    media_file_reference=None
 ):
     # adder = SESSION.query(Welcome).get(chat_id)
     adder = Welcome(
@@ -50,7 +62,10 @@ def add_welcome_setting(
         custom_welcome_message,
         should_clean_welcome,
         previous_welcome,
-        media_file_id
+        message_type,
+        media_id,
+        media_access_hash,
+        media_file_reference
     )
     SESSION.add(adder)
     SESSION.commit()
