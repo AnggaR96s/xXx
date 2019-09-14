@@ -182,7 +182,7 @@ async def on_new_private_message(event):
 
     if not no_log_pms_sql.is_approved(chat_id):
         # log pms
-        await do_log_pm_action(chat_id, message_text, message_media)
+        await do_log_pm_action(chat_id, event, message_text, message_media)
 
 
 @borg.on(events.ChatAction(blacklist_chats=Config.UB_BLACK_LIST_CHAT))
@@ -289,7 +289,7 @@ async def do_pm_permit_action(chat_id, event):
     PREV_REPLY_MESSAGE[chat_id] = r
 
 
-async def do_log_pm_action(chat_id, message_text, message_media):
+async def do_log_pm_action(chat_id, event, message_text, message_media):
     the_message = ""
     the_message += "#LOG_PMs\n\n"
     the_message += f"[User](tg://user?id={chat_id}): {chat_id}\n"
