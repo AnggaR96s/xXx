@@ -20,7 +20,7 @@ async def _(event):
     search_query = event.pattern_match.group(2)
     try:
         output_message = ""
-        bot_results = await borg.inline_query(  # pylint:disable=E0602
+        bot_results = await event.client.inline_query(
             bot_username,
             search_query
         )
@@ -49,7 +49,7 @@ async def _(event):
     i_plus_oneth_result = event.pattern_match.group(2)
     search_query = event.pattern_match.group(3)
     try:
-        bot_results = await borg.inline_query(  # pylint:disable=E0602
+        bot_results = await event.client.inline_query(
             bot_username,
             search_query
         )

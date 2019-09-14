@@ -53,7 +53,7 @@ async def send_plug_in(event):
     input_str = event.pattern_match["shortname"]
     the_plugin_file = "./stdplugins/{}.py".format(input_str)
     start = datetime.now()
-    await borg.send_file(  # pylint:disable=E0602
+    await event.client.send_file(  # pylint:disable=E0602
         event.chat_id,
         the_plugin_file,
         force_document=True,
@@ -73,7 +73,7 @@ async def install_plug_in(event):
         return
     if event.reply_to_msg_id:
         try:
-            downloaded_file_name = await borg.download_media(  # pylint:disable=E0602
+            downloaded_file_name = await event.client.download_media(
                 await event.get_reply_message(),
                 borg.n_plugin_path  # pylint:disable=E0602
             )

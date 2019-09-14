@@ -60,7 +60,7 @@ async def lydia_disable_enable(event):
             if len(output_str) > Config.MAX_MESSAGE_SIZE_LIMIT:
                 with io.BytesIO(str.encode(output_str)) as out_file:
                     out_file.name = "lydia_ai.text"
-                    await borg.send_file(
+                    await event.client.send_file(
                         event.chat_id,
                         out_file,
                         force_document=True,

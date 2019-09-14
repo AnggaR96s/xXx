@@ -263,7 +263,7 @@ async def do_pm_permit_action(chat_id, event):
     if PM_WARNS[chat_id] == Config.MAX_FLOOD_IN_P_M_s:
         r = await event.reply(UNIBORG_USER_BOT_WARN_ZERO)
         await asyncio.sleep(3)
-        await borg(functions.contacts.BlockRequest(chat_id))
+        await event.client(functions.contacts.BlockRequest(chat_id))
         if chat_id in PREV_REPLY_MESSAGE:
             await PREV_REPLY_MESSAGE[chat_id].delete()
         PREV_REPLY_MESSAGE[chat_id] = r
