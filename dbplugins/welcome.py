@@ -31,7 +31,7 @@ async def _(event):
             a_user = await event.get_user()
             msg_o = await event.client.get_messages(
                 entity=Config.PRIVATE_CHANNEL_BOT_API_ID,
-                ids=cws.f_mesg_id
+                ids=int(cws.f_mesg_id)
             )
             current_saved_welcome_message = msg_o.message
             mention = "[{}](tg://user?id={})".format(a_user.first_name, a_user.id)

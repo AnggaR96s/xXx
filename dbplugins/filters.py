@@ -33,7 +33,7 @@ async def on_snip(event):
             if re.search(pattern, name, flags=re.IGNORECASE):
                 msg_o = await event.client.get_messages(
                     entity=Config.PRIVATE_CHANNEL_BOT_API_ID,
-                    ids=snip.f_mesg_id
+                    ids=int(snip.f_mesg_id)
                 )
                 message_id = event.message.id
                 if event.reply_to_msg_id:

@@ -229,7 +229,7 @@ async def on_new_channel_message(event):
         the_message += "#MessageActionChatAddUser\n\n"
         # the_message += f"[User](tg://user?id={added_by_user}): `{added_by_user}`\n"
         the_message += f"[Private Link](https://t.me/c/{channel_id}/{message_id})\n"
-        await event.client.send_message(
+        await borg.send_message(
             entity=Config.PM_LOGGR_BOT_API_ID,
             message=the_message,
             # reply_to=,
