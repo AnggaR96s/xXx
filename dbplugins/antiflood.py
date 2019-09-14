@@ -27,13 +27,13 @@ async def _(event):
     if not should_ban:
         return
     try:
-        await borg(EditBannedRequest(
+        await event.client(EditBannedRequest(
             event.chat_id,
             event.message.from_id,
             ANTI_FLOOD_WARN_MODE
         ))
     except Exception as e:  # pylint:disable=C0103,W0703
-        no_admin_privilege_message = await borg.send_message(
+        no_admin_privilege_message = await event.client.send_message(
             entity=event.chat_id,
             message="""**Automatic AntiFlooder**
 @admin [User](tg://user?id={}) is flooding this chat.
@@ -47,7 +47,7 @@ async def _(event):
             link_preview=False
         )
     else:
-        await borg.send_message(
+        await event.client.send_message(
             entity=event.chat_id,
             message="""**Automatic AntiFlooder**
 [User](tg://user?id={}) has been automatically restricted
