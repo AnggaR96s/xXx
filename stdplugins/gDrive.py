@@ -315,8 +315,11 @@ async def upload_file(http, file_path, file_name, mime_type, event, parent_id):
                     logger.info(str(e))
                     pass
     file_id = response.get("id")
-    # Insert new permissions
-    drive_service.permissions().insert(fileId=file_id, body=permissions).execute()
+    try:
+        # Insert new permissions
+        drive_service.permissions().insert(fileId=file_id, body=permissions).execute()
+    except:
+        pass
     # Define file instance and get url for download
     file = drive_service.files().get(fileId=file_id).execute()
     download_url = file.get("webContentLink")
@@ -339,7 +342,10 @@ async def create_directory(http, directory_name, parent_id):
         file_metadata["parents"] = [{"id": parent_id}]
     file = drive_service.files().insert(body=file_metadata).execute()
     file_id = file.get("id")
-    drive_service.permissions().insert(fileId=file_id, body=permissions).execute()
+    try:
+        drive_service.permissions().insert(fileId=file_id, body=permissions).execute()
+    except:
+        pass
     logger.info("Created Gdrive Folder:\nName: {}\nID: {} ".format(file.get("title"), file_id))
     return file_id
 
