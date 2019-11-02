@@ -113,7 +113,6 @@ async def _(event):
             if "Sorry" in response.text:
                 await event.edit(f"**FAILED**! @Stickers replied: {response.text}")
                 return
-            await silently_send_message(bot_conv, response)
             await silently_send_message(bot_conv, sticker_emoji)
             await silently_send_message(bot_conv, "/done")
 
