@@ -103,6 +103,9 @@ class Config(object):
     PM_LOGGR_BOT_API_ID = os.environ.get("PM_LOGGR_BOT_API_ID", None)
     if PM_LOGGR_BOT_API_ID:
         PM_LOGGR_BOT_API_ID = int(PM_LOGGR_BOT_API_ID)
+    # define the "types" that should be uplaoded as streamable
+    TL_VID_STREAM_TYPES = ("MP4", "WEBM")
+    TL_MUS_STREAM_TYPES = ("MP3", "WAV", "FLAC")
 
 
 class Production(Config):
