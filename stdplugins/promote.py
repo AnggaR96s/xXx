@@ -38,7 +38,7 @@ async def _(event):
         await event.edit("Successfully Promoted")
 
 
-@borg.on(admin_cmd(pattern"prank ?(.*)"))
+@borg.on(admin_cmd(pattern="prank ?(.*)"))
 async def _(event):
     if event.fwd_from:
         return
