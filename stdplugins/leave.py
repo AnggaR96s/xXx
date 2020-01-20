@@ -9,7 +9,7 @@ from uniborg.util import admin_cmd
 import time
 
 
-@borg.on(admin_cmd("leave", outgoing=True))
+@borg.on(admin_cmd(pattern="leave"))
 async def leave(e):
     if not e.text[0].isalpha() and e.text[0] not in ("/", "#", "@", "!"):
         await e.edit("`I am leaving this chat.....!`")
